@@ -1,0 +1,226 @@
+/* ============================================================================
+   SAM (Self-Assessment Manikin) Satisfaction Survey Styles
+   ============================================================================ */
+
+:root {
+  --primary-blue: #7a99b3;
+  --secondary-blue: #5a7a8c;
+  --light-gray: #f0f4f7;
+  --border-gray: #d9e2e8;
+  --white: #ffffff;
+  --text-gray: #8fa5b8;
+}
+
+/* Container and Layout */
+.satisfaction-survey-container {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #7a99b3 0%, #5a7a8c 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.survey-frame {
+  width: 100%;
+  max-width: 1000px;
+  background-color: var(--white);
+  border-radius: 12px;
+  padding: 60px 80px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+}
+
+/* Title */
+.survey-title {
+  font-family: "Inter", sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--primary-blue);
+  margin: 0;
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+/* Question Section */
+.survey-question {
+  text-align: center;
+}
+
+.survey-question p {
+  font-family: "Afacad", sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: var(--text-gray);
+  margin: 0;
+  line-height: 1.5;
+  letter-spacing: 0.2px;
+}
+
+/* Emoji Scale Display */
+.emoji-scale {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 20px 0;
+  width: 125px;
+}
+
+.emoji-item {
+  width: 125px;
+  height: 176px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emoji {
+  width: 125px;
+  height: 176px;
+  object-fit: contain;
+}
+
+/* Manikin Scale Display */
+.manikin-scale {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 20px 0;
+  width: 125px;
+}
+
+.manikin-item {
+  width: 125px;
+  height: 176px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.manikin {
+  width: 125px;
+  height: 176px;
+  object-fit: contain;
+}
+
+/* Character Scale Display */
+.character-scale {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 20px 0;
+  width: 100%;
+}
+
+.character-item {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.character {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Form Structure */
+.survey-form {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+  align-items: center;
+}
+
+/* Scale Options */
+.scale-options {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.scale-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+
+.scale-option input[type="radio"] {
+  appearance: none;
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--text-gray);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: var(--white);
+}
+
+.scale-option input[type="radio"]:hover {
+  border-color: var(--secondary-blue);
+  box-shadow: 0 0 0 3px rgba(122, 153, 179, 0.1);
+}
+
+.scale-option input[type="radio"]:checked {
+  background-color: var(--secondary-blue);
+  border-color: var(--secondary-blue);
+  box-shadow: 0 0 0 3px rgba(90, 122, 140, 0.2);
+}
+
+.scale-number {
+  font-family: "Inter", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-gray);
+  transition: all 0.3s ease;
+}
+
+.scale-option.selected .scale-number {
+  color: var(--secondary-blue);
+  font-weight: 700;
+}
+
+/* Next Button */
+.btn-next {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background-color: var(--primary-blue);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: flex-end;
+}
+
+.btn-next:hover {
+  background-color: #4a6b7c;
+  box-shadow: 0 4px 12px rgba(90, 122, 140, 0.3);
+}
+
+.btn-next:active {
+  transform: translateY(2px);
+}
+
+.btn-next img {
+  width: 30px;
+  height: 30px;
+}

@@ -1,0 +1,291 @@
+/* ===== Cheers & Bye - Closing Page Styling ===== */
+
+.cheers-container {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #7a99b3 0%, #5a7a8c 100%);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cheers-frame {
+  width: 100%;
+  max-width: 1000px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+  text-align: center;
+}
+
+/* Header Section */
+.cheers-header {
+  width: 100%;
+}
+
+.cheers-title {
+  font-family: "Inter", sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #5a7a8c;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+/* Success Section */
+.success-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.success-box {
+  width: 100%;
+  max-width: 500px;
+  border: 2px solid #d9e2e8;
+  border-radius: 12px;
+  padding: 40px 30px;
+  background: #f8f9fb;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.success-message {
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #8fa5b8;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Audio Section */
+.audio-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.audio-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 30px 40px;
+}
+
+.audio-icon-circle {
+  width: 60px;
+  height: 60px;
+  background: #e8eef5;
+  border-radius: 50%;
+  border: 2px solid #d9e2e8;
+  position: relative;
+}
+
+.audio-icon-circle::before {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%237a99b3"><path d="M12 3C6.48 3 2 6.82 2 11.5c0 1.54.36 3 .97 4.29l-1.46 3.76 4.26-2.33C8 18.82 10 19.5 12 19.5c5.52 0 10-3.82 10-8.5S17.52 3 12 3z"/></svg>')
+    center / 16px no-repeat;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.audio-label {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #5a7a8c;
+  margin: 0;
+}
+
+/* Exit Button */
+.cheers-exit-form {
+  margin: 20px 0 0;
+}
+
+.btn-exit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: #5a7a8c;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-exit:hover {
+  background: #4a5f78;
+}
+
+.btn-exit img {
+  width: 18px;
+  height: 18px;
+}
+
+/* ===== Responsive Design ===== */
+
+@media (max-width: 1024px) {
+  .cheers-frame {
+    padding: 40px 30px;
+    gap: 30px;
+  }
+
+  .cheers-title {
+    font-size: 36px;
+  }
+
+  .success-box {
+    padding: 30px 24px;
+  }
+
+  .success-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .success-message {
+    font-size: 14px;
+  }
+
+  .audio-icon-circle {
+    width: 55px;
+    height: 55px;
+  }
+
+  .audio-label {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cheers-container {
+    padding: 20px 10px;
+  }
+
+  .cheers-frame {
+    padding: 30px 20px;
+    gap: 24px;
+  }
+
+  .cheers-title {
+    font-size: 28px;
+  }
+
+  .success-box {
+    padding: 24px 16px;
+    gap: 16px;
+  }
+
+  .success-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .success-message {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .audio-placeholder {
+    gap: 12px;
+    padding: 20px 24px;
+  }
+
+  .audio-icon-circle {
+    width: 50px;
+    height: 50px;
+  }
+
+  .audio-label {
+    font-size: 14px;
+  }
+
+  .btn-exit {
+    padding: 12px 24px;
+    font-size: 13px;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .cheers-container {
+    padding: 16px 8px;
+  }
+
+  .cheers-frame {
+    padding: 24px 16px;
+    gap: 20px;
+  }
+
+  .cheers-title {
+    font-size: 24px;
+  }
+
+  .success-box {
+    padding: 20px 12px;
+    gap: 12px;
+    border-width: 1px;
+  }
+
+  .success-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .success-message {
+    font-size: 12px;
+  }
+
+  .audio-placeholder {
+    gap: 10px;
+    padding: 16px 20px;
+  }
+
+  .audio-icon-circle {
+    width: 45px;
+    height: 45px;
+    border-width: 1px;
+  }
+
+  .audio-label {
+    font-size: 13px;
+  }
+
+  .btn-exit {
+    padding: 10px 16px;
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .btn-exit img {
+    width: 16px;
+    height: 16px;
+  }
+}

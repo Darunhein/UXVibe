@@ -1,0 +1,132 @@
+﻿.login-del-evaluador {
+  font-family: Inter, sans-serif;
+}
+
+body {
+  margin: 0;
+  line-height: normal;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input:not([type]) {
+  font-family: Inter, Arial, sans-serif;
+  color: #4d5d76;
+  background: transparent;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  pointer-events: auto;
+}
+
+input::placeholder {
+  color: #a3a9b0;
+  opacity: 1;
+}
+
+input.form-input {
+  border: none;
+  outline: none;
+  width: 100%;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.form-message {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-family: Inter, Arial, sans-serif;
+  font-size: 14px;
+}
+
+.form-message--error {
+  background: #ffe4e1;
+  color: #b42318;
+}
+
+.form-message--success {
+  background: #e8f7ef;
+  color: #127b4c;
+}
+
+.registro-link {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--color-slategray-300);
+  font-family: Inter, Arial, sans-serif;
+  font-size: 14px;
+  text-decoration: none;
+}
+ 
+:root {
+  /* Common Style Variables */
+
+  /* Color */
+  --color-gainsboro-100: #d9d9d9;
+  --color-gainsboro-200: #e2d5d0;
+  --color-gainsboro: #d9d9d9;
+  --color-lightgray: #dfc5bd;
+  --color-lightslategray: #758fa3;
+  --color-linen: #f1e9e6;
+  --color-silver-100: #c0c8cf;
+  --color-silver-200: #bfc7cf;
+  --color-silver-300: #bfbfbf;
+  --color-silver-400: #b2b9bf;
+  --color-slategray: #5b7689;
+  --color-slategray-100: #627d8f;
+  --color-slategray-200: #61788a;
+  --color-slategray-300: #5f778b;
+  --color-slategray-400: #5b7689;
+  --color-white: #fff;
+  --color-whitesmoke: #f6f5f3;
+  --color-whitesmoke-100: #f7f2ef;
+  --color-whitesmoke-200: #f3edea;
+
+  /* Gap */
+  --gap-4: 4px;
+
+  /* Padding */
+  --padding-0: 0px;
+  --padding-01: 0;
+  --padding-5: 5px;
+  --padding-6: 6px;
+  --padding-10: 10px;
+  --padding-11: 11px;
+  --padding-15: 15px;
+  --padding-20: 20px;
+  --padding-30: 30px;
+  --padding-40: 40px;
+  --padding-60: 60px;
+
+  /* BorderRadius */
+  --br-5: 5px;
+  --br-8: 8px;
+  --br-10: 10px;
+  --br-15: 15px;
+
+  /* Font */
+  --font-actor: Actor, Arial, sans-serif;
+  --font-adlam-display: ADLaM Display, Arial, sans-serif;
+  --font-advent-pro: Advent Pro, Arial, sans-serif;
+  --font-inter: Inter, Arial, sans-serif;
+
+  /* FontSize */
+  --fs-10: 10px;
+  --fs-18: 18px;
+  --fs-20: 20px;
+  --fs-22: 22px;
+
+  /* Borders */
+  --border-1: 1px solid var(--color-slategray);
+  --border-2: 1px solid var(--color-lightslategray);
+
+  /* WidthHeights */
+  --height-1: 1px;
+  --height-36: 36px;
+  --height-40: 40px;
+  --width-1: 1px;
+  --width-40: 40px;
+}
