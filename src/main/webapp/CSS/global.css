@@ -60,6 +60,21 @@ input.form-input {
   font-size: 14px;
   text-decoration: none;
 }
+
+.btn-secondary,
+.btn-primary,
+.btn-back,
+.btn-exit,
+.test-section__run-button,
+.test-section__menu-button,
+.test-section__pagination-link,
+.participante-detalles,
+.participantes-pagination-link,
+.participantes-back,
+.pause-menu__item {
+  text-decoration: none !important;
+  color: inherit;
+}
  
 :root {
   /* Common Style Variables */

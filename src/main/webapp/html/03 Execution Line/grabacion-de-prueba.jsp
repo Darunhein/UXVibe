@@ -20,7 +20,7 @@
       href="https://fonts.googleapis.com/css2?family=ADLaM+Display:wght@400&display=swap"
     />
   </head>
-  <body>
+  <body data-context-path="${pageContext.request.contextPath}">
     <div class="pantalla-escondida-de-prueba">
       <main class="frame">
         <h1 class="punto-de-prueba">Punto de Prueba</h1>
@@ -48,25 +48,28 @@
             <h2 class="h2">00:00</h2>
           </section>
 
-          <div class="pause-stack">
-            <button
-              class="material-symbolspause-icon"
-              type="button"
-              aria-label="Pausar grabación"
-            >
+          <details class="pause-stack">
+            <summary class="material-symbolspause-icon" aria-label="Pausar grabación">
               <span class="pause-button-icon" aria-hidden="true"></span>
-            </button>
-          </div>
+            </summary>
+            <div class="pause-menu">
+              <a class="pause-menu__item" href="${pageContext.request.contextPath}/html/04%20SAM%20Line/cuestionario-sb-1.jsp">Empezar encuesta</a>
+              <form action="${pageContext.request.contextPath}/restart-recording" method="post">
+                <button class="pause-menu__item pause-menu__item--button" type="submit">Reiniciar grabación</button>
+              </form>
+              <a class="pause-menu__item" href="${pageContext.request.contextPath}/cancel-test">Cancelar prueba</a>
+            </div>
+          </details>
         </section>
 
-        <button class="regresar" type="button" aria-label="Regresar">
+        <a class="regresar" href="${pageContext.request.contextPath}/tests" aria-label="Regresar">
           <img
             class="lets-iconsback-light"
             src="${pageContext.request.contextPath}/public/Grabacion de prueba/lets-icons-back-light.svg"
             alt=""
           />
           <div class="regresar2">Regresar</div>
-        </button>
+        </a>
       </main>
 
       <img
@@ -84,14 +87,5 @@
       />
     </div>
 
-    <script>
-      const pauseButton = document.querySelector(".material-symbolspause-icon");
-      if (pauseButton) {
-        pauseButton.addEventListener("click", () => {
-          pauseButton.classList.toggle("is-paused");
-        });
-      }
-    </script>
   </body>
 </html>
-

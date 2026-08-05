@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/encuesta-survey.css" />
   </head>
-  <body>
+  <body data-context-path="${pageContext.request.contextPath}">
     <div class="survey-container">
       <main class="survey-frame">
         <!-- Survey Header Section -->
@@ -37,7 +37,7 @@
         </section>
 
         <!-- Survey Questions Section -->
-        <form class="survey-form" id="surveyForm" name="satisfaction3">
+        <form class="survey-form" id="surveyForm" name="satisfaction3" action="${pageContext.request.contextPath}/html/04%20SAM%20Line/cheers-bye.jsp" method="get">
           <div class="questions-container">
             <!-- Question 11 -->
             <div class="question-row">
@@ -373,53 +373,5 @@
       </main>
     </div>
 
-    <script>
-      const form = document.getElementById("surveyForm");
-
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        // Validate all questions are answered
-        const questions = ["q11", "q12", "q13", "q14", "q15"];
-        let allAnswered = true;
-
-        questions.forEach((q) => {
-          if (!form.elements[q].checked) {
-            allAnswered = false;
-          }
-        });
-
-        if (!allAnswered) {
-          alert("Por favor, responde todas las preguntas antes de continuar.");
-          return;
-        }
-
-        // Collect survey data
-        const surveyData = {
-          q11: form.elements["q11"].value,
-          q12: form.elements["q12"].value,
-          q13: form.elements["q13"].value,
-          q14: form.elements["q14"].value,
-          q15: form.elements["q15"].value,
-        };
-
-        console.log("Encuesta 3 - Datos de respuestas:", surveyData);
-        // Navigate to next page or handle submission
-      });
-
-      // Add visual feedback for selected options
-      document
-        .querySelectorAll('.scale-option input[type="radio"]')
-        .forEach((radio) => {
-          radio.addEventListener("change", function () {
-            const parent = this.closest(".scale-options");
-            parent.querySelectorAll(".scale-option").forEach((option) => {
-              option.classList.remove("selected");
-            });
-            this.closest(".scale-option").classList.add("selected");
-          });
-        });
-    </script>
   </body>
 </html>
-

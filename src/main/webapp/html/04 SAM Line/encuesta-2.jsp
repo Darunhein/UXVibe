@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/encuesta-survey.css" />
   </head>
-  <body>
+  <body data-context-path="${pageContext.request.contextPath}">
     <div class="survey-container">
       <main class="survey-frame">
         <!-- Survey Header Section -->
@@ -37,7 +37,7 @@
         </section>
 
         <!-- Survey Questions Section -->
-        <form class="survey-form" id="surveyForm" name="satisfaction2">
+        <form class="survey-form" id="surveyForm" name="satisfaction2" action="${pageContext.request.contextPath}/html/04%20SAM%20Line/encuesta-3.jsp" method="get">
           <div class="questions-container">
             <!-- Question 6 -->
             <div class="question-row">
@@ -374,4 +374,3 @@
     </div>
   </body>
 </html>
-

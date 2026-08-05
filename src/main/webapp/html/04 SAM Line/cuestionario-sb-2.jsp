@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Afacad:wght@400&display=swap"
     />
   </head>
-  <body>
+  <body data-context-path="${pageContext.request.contextPath}">
     <div class="questionnaire-container">
       <main class="questionnaire-frame">
         <!-- Title Section -->
@@ -27,7 +27,7 @@
         </section>
 
         <!-- Form Content -->
-        <form class="questionnaire-form" id="questionnaireForm">
+        <form class="questionnaire-form" id="questionnaireForm" action="${pageContext.request.contextPath}/html/04%20SAM%20Line/sam-1.jsp" method="get">
           <!-- Stress Question Section -->
           <section class="question-section">
             <h2 class="question-title">
@@ -109,38 +109,16 @@
               alt="Next icon"
             />
           </button>
+          <a class="btn-back" href="${pageContext.request.contextPath}/html/03%20Execution%20Line/grabacion-de-prueba.jsp" aria-label="Regresar a grabación de prueba">
+            <img
+              src="${pageContext.request.contextPath}/public/Cuestionario SB 2/lets-icons-back-light.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <span>Regresar</span>
+          </a>
         </form>
       </main>
     </div>
-
-    <script>
-      const form = document.getElementById("questionnaireForm");
-
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        // Validate all fields are filled
-        const stress = document.querySelector('input[name="stress"]:checked');
-        const relaxation = document.querySelector(
-          'input[name="relaxation"]:checked',
-        );
-
-        if (!stress || !relaxation) {
-          alert("Por favor, responde todas las preguntas");
-          return;
-        }
-
-        // Store form data and proceed to next page
-        const formData = {
-          stress: stress.value,
-          relaxation: relaxation.value,
-        };
-
-        console.log("Form submitted:", formData);
-        // Here you would typically navigate to the next questionnaire
-        // window.location.href = 'cuestionario-sb-3.html';
-      });
-    </script>
   </body>
 </html>
-

@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Afacad:wght@400&display=swap"
     />
   </head>
-  <body>
+  <body data-context-path="${pageContext.request.contextPath}">
     <div class="satisfaction-survey-container">
       <main class="survey-frame">
         <!-- Title -->
@@ -67,7 +67,7 @@
         </div>
 
         <!-- Scale Radio Options (1-9) -->
-        <form class="survey-form" id="impactForm">
+        <form class="survey-form" id="impactForm" action="${pageContext.request.contextPath}/html/04%20SAM%20Line/sam-3.jsp" method="get">
           <div class="scale-options">
             <label class="scale-option" for="rating1">
               <input
@@ -173,43 +173,5 @@
       </main>
     </div>
 
-    <script>
-      const form = document.getElementById("impactForm");
-
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        // Validate rating is selected
-        const rating = document.querySelector('input[name="impact"]:checked');
-
-        if (!rating) {
-          alert("Por favor, selecciona una valoración");
-          return;
-        }
-
-        // Store impact data and proceed to next page
-        const surveyData = {
-          impact: rating.value,
-        };
-
-        console.log("Impact survey submitted:", surveyData);
-        // Here you would typically navigate to the next page
-        // window.location.href = 'sam-3.html';
-      });
-
-      // Optional: Add visual feedback for selected rating
-      const radioButtons = document.querySelectorAll('input[name="impact"]');
-      radioButtons.forEach((radio) => {
-        radio.addEventListener("change", (e) => {
-          // Remove highlight from all options
-          document.querySelectorAll(".scale-option").forEach((opt) => {
-            opt.classList.remove("selected");
-          });
-          // Add highlight to selected option
-          e.target.closest(".scale-option").classList.add("selected");
-        });
-      });
-    </script>
   </body>
 </html>
-

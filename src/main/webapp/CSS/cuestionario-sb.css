@@ -35,6 +35,7 @@
   justify-content: center;
   flex-direction: column;
   gap: 32px;
+  position: relative;
 }
 
 /* Header Section */
@@ -276,4 +277,39 @@
 .btn-next img {
   width: 30px;
   height: 30px;
+}
+
+.btn-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background-color: #5a7a8c;
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: fit-content;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  text-decoration: none;
+}
+
+.btn-back:hover {
+  background-color: #4a6b7c;
+  box-shadow: 0 4px 12px rgba(90, 122, 140, 0.3);
+}
+
+.btn-back:active {
+  transform: translateY(2px);
+}
+
+.btn-back img {
+  width: 16px;
+  height: 16px;
 }

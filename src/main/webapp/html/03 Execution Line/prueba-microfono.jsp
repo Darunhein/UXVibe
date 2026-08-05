@@ -83,15 +83,14 @@
         </div>
 
         <!-- Back Button -->
-        <button class="btn-back" aria-label="Regresar a la página anterior">
+        <a class="btn-back" href="${pageContext.request.contextPath}/html/03%20Execution%20Line/terminos-y-condiciones.jsp" aria-label="Regresar a la página anterior">
           <img
             src="${pageContext.request.contextPath}/public/Prueba de Microfono/lets-icons-back-light.svg"
             alt="Back icon"
           />
           <span>Regresar</span>
-        </button>
+        </a>
       </main>
     </div>
   </body>
 </html>
-

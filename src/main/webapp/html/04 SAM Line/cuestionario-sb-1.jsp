@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Afacad:wght@400&display=swap"
     />
   </head>
-  <body>
+  <body data-context-path="${pageContext.request.contextPath}">
     <div class="questionnaire-container">
       <main class="questionnaire-frame">
         <!-- Title Section -->
@@ -27,7 +27,7 @@
         </section>
 
         <!-- Form Content -->
-        <form class="questionnaire-form" id="questionnaireForm">
+        <form class="questionnaire-form" id="questionnaireForm" action="${pageContext.request.contextPath}/html/04%20SAM%20Line/cuestionario-sb-2.jsp" method="get">
           <!-- Personal Information Section -->
           <section class="form-section">
             <div class="form-row">
@@ -158,42 +158,16 @@
               alt="Next icon"
             />
           </button>
+          <a class="btn-back" href="${pageContext.request.contextPath}/html/03%20Execution%20Line/grabacion-de-prueba.jsp" aria-label="Regresar a grabación de prueba">
+            <img
+              src="${pageContext.request.contextPath}/public/Cuestionario SB 1/lets-icons-back-light.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <span>Regresar</span>
+          </a>
         </form>
       </main>
     </div>
-
-    <script>
-      const form = document.getElementById("questionnaireForm");
-
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        // Validate all fields are filled
-        const fullName = document.getElementById("fullName").value.trim();
-        const age = document.getElementById("age").value;
-        const gender = document.querySelector('input[name="gender"]:checked');
-        const education = document.querySelector(
-          'input[name="education"]:checked',
-        );
-
-        if (!fullName || !age || !gender || !education) {
-          alert("Por favor, completa todos los campos");
-          return;
-        }
-
-        // Store form data and proceed to next page
-        const formData = {
-          fullName,
-          age,
-          gender: gender.value,
-          education: education.value,
-        };
-
-        console.log("Form submitted:", formData);
-        // Here you would typically navigate to the next questionnaire
-        // window.location.href = 'cuestionario-sb-2.html';
-      });
-    </script>
   </body>
 </html>
-
