@@ -176,5 +176,6 @@
       </main>
     </div>
 
+    <script src="${pageContext.request.contextPath}/JavaScript/sam-1.js"></script>
   </body>
 </html>

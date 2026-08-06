@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import mx.edu.utez.uxvibe.model.UserAccount;
+import mx.edu.utez.uxvibe.model.UserRole;
 import mx.edu.utez.uxvibe.service.ParticipantStore;
 
 import java.io.IOException;
@@ -23,17 +24,31 @@ public class CompleteTestServlet extends HttpServlet {
             return;
         }
 
+        UserAccount account = (UserAccount) session.getAttribute("currentUser");
+        boolean participantSession = UserRole.PARTICIPANT.equals(account.getRole());
         String testName = (String) session.getAttribute("currentTestName");
         if (testName == null || testName.trim().isEmpty()) {
-            resp.sendRedirect(req.getContextPath() + "/tests");
-            return;
+            if (participantSession) {
+                testName = "Participación general";
+                session.setAttribute("currentTestName", testName);
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/tests");
+                return;
+            }
         }
 
         if (!Boolean.TRUE.equals(session.getAttribute("currentTestCompletionRecorded"))) {
-            UserAccount account = (UserAccount) session.getAttribute("currentUser");
             LocalDateTime startedAt = (LocalDateTime) session.getAttribute("currentTestStartedAt");
             ParticipantStore.getInstance().registerCompletion(account.getEmail(), testName, startedAt);
             session.setAttribute("currentTestCompletionRecorded", Boolean.TRUE);
+        }
+
+        if (participantSession) {
+            session.removeAttribute("currentTestName");
+            session.removeAttribute("currentTestStartedAt");
+            session.removeAttribute("currentTestCompletionRecorded");
+            resp.sendRedirect(req.getContextPath() + "/logout");
+            return;
         }
 
         resp.sendRedirect(

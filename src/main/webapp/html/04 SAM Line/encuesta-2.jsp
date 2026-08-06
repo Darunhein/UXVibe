@@ -372,5 +372,6 @@
         </form>
       </main>
     </div>
+    <script src="${pageContext.request.contextPath}/JavaScript/encuesta-2.js"></script>
   </body>
 </html>

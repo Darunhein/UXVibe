@@ -120,5 +120,6 @@
         </form>
       </main>
     </div>
+    <script src="${pageContext.request.contextPath}/JavaScript/cuestionario-sb-2.js"></script>
   </body>
 </html>

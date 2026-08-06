@@ -35,6 +35,19 @@
           </div>
 
           <div class="registro-field">
+            <label class="registro-label" for="rol">Rol</label>
+            <div class="registro-input-shell">
+              <img class="registro-icon-panel" alt="" src="${pageContext.request.contextPath}/public/registro/merged-asset-1@2x.png" />
+              <select id="rol" class="form-input registro-input" name="role" required>
+                <option value="">Selecciona un rol</option>
+                <option value="admin" <%= "admin".equals(request.getAttribute("role")) ? "selected" : "" %>>Admin</option>
+                <option value="evaluator" <%= "evaluator".equals(request.getAttribute("role")) ? "selected" : "" %>>Evaluador</option>
+                <option value="participant" <%= "participant".equals(request.getAttribute("role")) ? "selected" : "" %>>Participante</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="registro-field">
             <label class="registro-label" for="contrasena">Contraseña</label>
             <div class="registro-input-shell registro-input-shell--password">
               <img class="registro-icon-panel" alt="" src="${pageContext.request.contextPath}/public/registro/merged-asset-2@2x.png" />

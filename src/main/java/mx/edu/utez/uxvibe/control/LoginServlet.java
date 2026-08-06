@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import mx.edu.utez.uxvibe.model.UserAccount;
+import mx.edu.utez.uxvibe.model.UserRole;
 import mx.edu.utez.uxvibe.service.UserStore;
 
 import java.io.IOException;
@@ -18,8 +19,9 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-        if (session != null && session.getAttribute("currentUser") != null) {
-            resp.sendRedirect(req.getContextPath() + "/tests");
+        if (session != null && session.getAttribute("currentUser") instanceof UserAccount) {
+            UserAccount currentUser = (UserAccount) session.getAttribute("currentUser");
+            resp.sendRedirect(req.getContextPath() + resolveHomePath(currentUser));
             return;
         }
 
@@ -50,7 +52,7 @@ public class LoginServlet extends HttpServlet {
 
         HttpSession session = req.getSession();
         session.setAttribute("currentUser", account);
-        resp.sendRedirect(req.getContextPath() + "/tests");
+        resp.sendRedirect(req.getContextPath() + resolveHomePath(account));
     }
 
     private String consumeFlash(HttpServletRequest req, String attributeName) {
@@ -63,5 +65,12 @@ public class LoginServlet extends HttpServlet {
             session.removeAttribute(attributeName);
         }
         return value == null ? null : String.valueOf(value);
+    }
+
+    private String resolveHomePath(UserAccount account) {
+        if (account != null && UserRole.PARTICIPANT.equals(account.getRole())) {
+            return "/html/03%20Execution%20Line/terminos-y-condiciones.jsp";
+        }
+        return "/tests";
     }
 }

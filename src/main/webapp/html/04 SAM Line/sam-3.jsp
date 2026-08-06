@@ -173,5 +173,6 @@
       </main>
     </div>
 
+    <script src="${pageContext.request.contextPath}/JavaScript/sam-3.js"></script>
   </body>
 </html>

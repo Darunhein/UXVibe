@@ -373,5 +373,6 @@
       </main>
     </div>
 
+    <script src="${pageContext.request.contextPath}/JavaScript/encuesta-3.js"></script>
   </body>
 </html>

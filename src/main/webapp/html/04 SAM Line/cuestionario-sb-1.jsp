@@ -169,5 +169,6 @@
         </form>
       </main>
     </div>
+    <script src="${pageContext.request.contextPath}/JavaScript/cuestionario-sb-1.js"></script>
   </body>
 </html>
