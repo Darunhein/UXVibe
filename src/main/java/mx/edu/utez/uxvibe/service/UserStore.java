@@ -1,59 +1,67 @@
 package mx.edu.utez.uxvibe.service;
 
-import mx.edu.utez.uxvibe.model.UserAccount;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import mx.edu.utez.uxvibe.dao.UserDao;
+import mx.edu.utez.uxvibe.model.UserAccount;
 
-public class UserStore {
-    private static final UserStore INSTANCE = new UserStore();
-    private final Map<String, UserAccount> accounts = new LinkedHashMap<>();
+public class UserStore implements UserDao {
 
-    private UserStore() {
+  private static final UserStore INSTANCE = new UserStore();
+  private final Map<String, UserAccount> accounts = new LinkedHashMap<>();
+
+  private UserStore() {}
+
+  public static UserStore getInstance() {
+    return INSTANCE;
+  }
+
+  @Override
+  public synchronized boolean register(UserAccount account) {
+    if (
+      account == null ||
+      account.getEmail() == null ||
+      account.getPassword() == null
+    ) {
+      return false;
     }
 
-    public static UserStore getInstance() {
-        return INSTANCE;
+    String normalizedEmail = normalizeEmail(account.getEmail());
+    if (normalizedEmail.isEmpty() || accounts.containsKey(normalizedEmail)) {
+      return false;
     }
 
-    public synchronized boolean register(UserAccount account) {
-        if (account == null || account.getEmail() == null || account.getPassword() == null) {
-            return false;
-        }
+    accounts.put(normalizedEmail, account);
+    return true;
+  }
 
-        String normalizedEmail = normalizeEmail(account.getEmail());
-        if (normalizedEmail.isEmpty() || accounts.containsKey(normalizedEmail)) {
-            return false;
-        }
-
-        accounts.put(normalizedEmail, account);
-        return true;
+  @Override
+  public synchronized UserAccount authenticate(String email, String password) {
+    if (email == null || password == null) {
+      return null;
     }
 
-    public synchronized UserAccount authenticate(String email, String password) {
-        if (email == null || password == null) {
-            return null;
-        }
-
-        UserAccount account = accounts.get(normalizeEmail(email));
-        if (account == null) {
-            return null;
-        }
-
-        return password.equals(account.getPassword()) ? account : null;
+    UserAccount account = accounts.get(normalizeEmail(email));
+    if (account == null) {
+      return null;
     }
 
-    public synchronized boolean exists(String email) {
-        return email != null && accounts.containsKey(normalizeEmail(email));
-    }
+    return password.equals(account.getPassword()) ? account : null;
+  }
 
-    public synchronized List<UserAccount> list() {
-        return new ArrayList<>(accounts.values());
-    }
+  @Override
+  public synchronized boolean exists(String email) {
+    return email != null && accounts.containsKey(normalizeEmail(email));
+  }
 
-    private String normalizeEmail(String email) {
-        return email == null ? "" : email.trim().toLowerCase();
-    }
+  @Override
+  public synchronized List<UserAccount> list() {
+    return new ArrayList<>(accounts.values());
+  }
+
+  private String normalizeEmail(String email) {
+    return email == null ? "" : email.trim().toLowerCase();
+  }
 }

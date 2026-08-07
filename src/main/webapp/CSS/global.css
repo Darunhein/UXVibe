@@ -75,7 +75,7 @@ input.form-input {
   text-decoration: none !important;
   color: inherit;
 }
- 
+
 :root {
   /* Common Style Variables */
 
@@ -144,4 +144,11 @@ input.form-input {
   --height-40: 40px;
   --width-1: 1px;
   --width-40: 40px;
+
+  /* Shared page shell sizing */
+  --page-shell-max-width: 1120px;
+  --page-shell-min-height: 720px;
+  --page-card-max-width: 960px;
+  --page-card-min-height: 620px;
+  --page-card-padding: 40px 48px;
 }

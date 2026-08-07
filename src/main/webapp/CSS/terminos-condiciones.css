@@ -15,8 +15,8 @@
 }
 
 .terminos-frame {
-  width: 100%;
-  height: 905px;
+  width: min(100%, 1080px);
+  min-height: 720px;
   max-width: 1440px;
   background-color: #ffffff;
   border-radius: 12px;
@@ -47,8 +47,8 @@
 
 /* Terms Content Section */
 .terms-content {
-  width: 646px;
-  height: 401px;
+  width: min(100%, 680px);
+  min-height: 320px;
   display: flex;
   justify-content: center;
 }

@@ -13,18 +13,19 @@ body {
 
 .participantes-screen {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   background: #bfc7cf;
   display: flex;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
   color: #233244;
+  padding: 24px;
 }
 
 .participantes-card {
-  width: 1165px;
-  height: 860px;
+  width: min(100%, 1120px);
+  min-height: 760px;
   background: #ffffff;
   border-radius: 8px;
   box-shadow: 0 10px 22px rgba(67, 73, 88, 0.14);
@@ -38,7 +39,7 @@ body {
 }
 
 .participantes-table {
-  width: 946px;
+  width: min(100%, 930px);
   border-radius: 8px;
 }
 
@@ -63,8 +64,8 @@ body {
 }
 
 .participantes-body {
-  width: 946px;
-  min-height: 552px;
+  width: 100%;
+  min-height: 520px;
   background: #f8f2ec;
   border-radius: 0 0 8px 8px;
   box-shadow: 0 2px 4px rgba(48, 48, 63, 0.2);
@@ -78,7 +79,10 @@ body {
 .participantes-row {
   min-height: 104px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr) minmax(0, 1fr) minmax(0, 0.9fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr) minmax(0, 1fr) minmax(
+      0,
+      0.9fr
+    );
   align-items: center;
   gap: 16px;
   padding: 12px 28px 12px 30px;
@@ -112,6 +116,7 @@ body {
   font-size: 18px;
   font-weight: 600;
   line-height: 1.2;
+  text-align: center;
 }
 
 .participante-duracion {
@@ -154,8 +159,8 @@ body {
 }
 
 .participantes-empty {
-  width: 946px;
-  height: 552px;
+  width: 100%;
+  min-height: 520px;
   margin: 0 0 0 0;
   position: relative;
   background: #f8f2ec;
@@ -164,13 +169,14 @@ body {
 }
 
 .participantes-empty-content {
-  width: 540px;
-  height: 300px;
-  padding: 100px 200px 150px 200px;
+  width: min(100%, 560px);
+  min-height: 300px;
+  padding: 70px 24px 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  margin: 0 auto;
 }
 
 .participantes-empty-icon {

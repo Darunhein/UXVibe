@@ -5,8 +5,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
     <title>Cuestionario Sociodemográfico y de Bienestar - SB 1</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/cuestionario-sb.css" />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/global.css"
+    />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/cuestionario-sb.css"
+    />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
@@ -27,7 +33,12 @@
         </section>
 
         <!-- Form Content -->
-        <form class="questionnaire-form" id="questionnaireForm" action="${pageContext.request.contextPath}/html/04%20SAM%20Line/cuestionario-sb-2.jsp" method="get">
+        <form
+          class="questionnaire-form"
+          id="questionnaireForm"
+          action="${pageContext.request.contextPath}/html/04%20SAM%20Line/cuestionario-sb-2.jsp"
+          method="get"
+        >
           <!-- Personal Information Section -->
           <section class="form-section">
             <div class="form-row">
@@ -151,14 +162,40 @@
           </section>
 
           <!-- Next Button -->
-          <button type="submit" class="btn-next" aria-label="Siguiente">
+          <button
+            type="button"
+            id="sbNextButton"
+            class="btn-next"
+            aria-label="Siguiente"
+            onclick="
+              var fullName = document.getElementById('fullName').value.trim();
+              var age = document.getElementById('age').value;
+              var gender = document.querySelector(
+                'input[name=&quot;gender&quot;]:checked',
+              );
+              var education = document.querySelector(
+                'input[name=&quot;education&quot;]:checked',
+              );
+              if (!fullName || !age || !gender || !education) {
+                alert('Por favor, completa todos los campos');
+                return;
+              }
+              window.location.href =
+                '${pageContext.request.contextPath}/html/04%20SAM%20Line/cuestionario-sb-2.jsp';
+            "
+          >
             <span>Siguiente</span>
             <img
               src="${pageContext.request.contextPath}/public/Cuestionario SB 1/carbon-next-outline.svg"
               alt="Next icon"
             />
           </button>
-          <a class="btn-back" href="${pageContext.request.contextPath}/html/03%20Execution%20Line/grabacion-de-prueba.jsp" aria-label="Regresar a grabación de prueba">
+          <a
+            class="btn-back"
+            href="#"
+            id="sbBackButton"
+            aria-label="Regresar a la página anterior"
+          >
             <img
               src="${pageContext.request.contextPath}/public/Cuestionario SB 1/lets-icons-back-light.svg"
               alt=""

@@ -24,8 +24,8 @@
 }
 
 .questionnaire-frame {
-  width: 100%;
-  max-width: 1000px;
+  width: min(100%, 1040px);
+  min-height: 720px;
   background-color: var(--white);
   border-radius: 12px;
   padding: 60px 80px;
@@ -50,7 +50,7 @@
 
 /* Form Structure */
 .questionnaire-form {
-  width: 1134px;
+  width: min(100%, 860px);
   display: flex;
   flex-direction: column;
   gap: 32px;

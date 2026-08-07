@@ -5,8 +5,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
     <title>Cuestionario Sociodemográfico y de Bienestar - SB 2</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/cuestionario-sb.css" />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/global.css"
+    />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/cuestionario-sb.css"
+    />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
@@ -27,7 +33,13 @@
         </section>
 
         <!-- Form Content -->
-        <form class="questionnaire-form" id="questionnaireForm" action="${pageContext.request.contextPath}/html/04%20SAM%20Line/sam-1.jsp" method="get">
+        <form
+          class="questionnaire-form"
+          id="questionnaireForm"
+          action="${pageContext.request.contextPath}/html/04%20SAM%20Line/sam-1.jsp"
+          method="get"
+          novalidate
+        >
           <!-- Stress Question Section -->
           <section class="question-section">
             <h2 class="question-title">
@@ -35,23 +47,23 @@
             </h2>
             <div class="radio-group vertical">
               <label class="radio-option">
-                <input type="radio" name="stress" value="never" required />
+                <input type="radio" name="stress" value="never" />
                 <span class="radio-label">Nunca</span>
               </label>
               <label class="radio-option">
-                <input type="radio" name="stress" value="sometimes" required />
+                <input type="radio" name="stress" value="sometimes" />
                 <span class="radio-label">De vez en cuando</span>
               </label>
               <label class="radio-option">
-                <input type="radio" name="stress" value="half-time" required />
+                <input type="radio" name="stress" value="half-time" />
                 <span class="radio-label">Cerca de la mitad del tiempo</span>
               </label>
               <label class="radio-option">
-                <input type="radio" name="stress" value="most-time" required />
+                <input type="radio" name="stress" value="most-time" />
                 <span class="radio-label">La mayor parte del tiempo</span>
               </label>
               <label class="radio-option">
-                <input type="radio" name="stress" value="always" required />
+                <input type="radio" name="stress" value="always" />
                 <span class="radio-label">Siempre</span>
               </label>
             </div>
@@ -64,52 +76,61 @@
             </h2>
             <div class="radio-group vertical">
               <label class="radio-option">
-                <input type="radio" name="relaxation" value="never" required />
+                <input type="radio" name="relaxation" value="never" />
                 <span class="radio-label">Nunca</span>
               </label>
               <label class="radio-option">
-                <input
-                  type="radio"
-                  name="relaxation"
-                  value="sometimes"
-                  required
-                />
+                <input type="radio" name="relaxation" value="sometimes" />
                 <span class="radio-label">De vez en cuando</span>
               </label>
               <label class="radio-option">
-                <input
-                  type="radio"
-                  name="relaxation"
-                  value="half-time"
-                  required
-                />
+                <input type="radio" name="relaxation" value="half-time" />
                 <span class="radio-label">Cerca de la mitad del tiempo</span>
               </label>
               <label class="radio-option">
-                <input
-                  type="radio"
-                  name="relaxation"
-                  value="most-time"
-                  required
-                />
+                <input type="radio" name="relaxation" value="most-time" />
                 <span class="radio-label">La mayor parte del tiempo</span>
               </label>
               <label class="radio-option">
-                <input type="radio" name="relaxation" value="always" required />
+                <input type="radio" name="relaxation" value="always" />
                 <span class="radio-label">Siempre</span>
               </label>
             </div>
           </section>
 
           <!-- Next Button -->
-          <button type="submit" class="btn-next" aria-label="Siguiente">
+          <button
+            type="button"
+            id="sbNextButton"
+            class="btn-next"
+            aria-label="Siguiente"
+            onclick="
+              var stress = document.querySelector(
+                'input[name=&quot;stress&quot;]:checked',
+              );
+              var relaxation = document.querySelector(
+                'input[name=&quot;relaxation&quot;]:checked',
+              );
+              if (!stress || !relaxation) {
+                alert('Por favor, responde todas las preguntas');
+                return;
+              }
+              window.location.href =
+                '${pageContext.request.contextPath}/html/04%20SAM%20Line/sam-1.jsp';
+            "
+          >
             <span>Siguiente</span>
             <img
               src="${pageContext.request.contextPath}/public/Cuestionario SB 2/carbon-next-outline.svg"
               alt="Next icon"
             />
           </button>
-          <a class="btn-back" href="${pageContext.request.contextPath}/html/03%20Execution%20Line/grabacion-de-prueba.jsp" aria-label="Regresar a grabación de prueba">
+          <a
+            class="btn-back"
+            href="#"
+            id="sbBackButton"
+            aria-label="Regresar a la página anterior"
+          >
             <img
               src="${pageContext.request.contextPath}/public/Cuestionario SB 2/lets-icons-back-light.svg"
               alt=""

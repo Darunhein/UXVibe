@@ -1,68 +1,238 @@
 package mx.edu.utez.uxvibe.service;
 
-import mx.edu.utez.uxvibe.model.ParticipantItem;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import mx.edu.utez.uxvibe.bean.ParticipantReportBean;
+import mx.edu.utez.uxvibe.dao.ParticipantDao;
+import mx.edu.utez.uxvibe.model.ParticipantItem;
 
-public class ParticipantStore {
-    private static final ParticipantStore INSTANCE = new ParticipantStore();
-    private final Map<String, List<ParticipantItem>> participantsByUserAndTest = new LinkedHashMap<>();
+public class ParticipantStore implements ParticipantDao {
 
-    private ParticipantStore() {
+  private static final ParticipantStore INSTANCE = new ParticipantStore();
+  private static final ZoneId DEFAULT_ZONE = ZoneId.of("America/Mexico_City");
+  private final Map<String, List<ParticipantItem>> participantsByUserAndTest =
+    new LinkedHashMap<>();
+  private final Map<String, ParticipantReportBean> reportsByParticipant =
+    new LinkedHashMap<>();
+  private final Map<String, String> participantNameByUserAndTest =
+    new LinkedHashMap<>();
+
+  private ParticipantStore() {}
+
+  public static ParticipantStore getInstance() {
+    return INSTANCE;
+  }
+
+  @Override
+  public synchronized ParticipantItem registerCompletion(
+    String email,
+    String testName,
+    LocalDateTime startedAt,
+    String participantName
+  ) {
+    String normalizedEmail = normalize(email);
+    String normalizedTestName = normalize(testName);
+    if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty()) {
+      return null;
     }
 
-    public static ParticipantStore getInstance() {
-        return INSTANCE;
+    List<ParticipantItem> participants =
+      participantsByUserAndTest.computeIfAbsent(
+        normalizedEmail + "|" + normalizedTestName,
+        key -> new ArrayList<>()
+      );
+
+    LocalDateTime completedOn = LocalDateTime.now(DEFAULT_ZONE);
+    int durationMinutes = 5;
+    if (startedAt != null) {
+      durationMinutes = (int) Math.max(
+        1,
+        Duration.between(startedAt, completedOn).toMinutes()
+      );
     }
 
-    public synchronized ParticipantItem registerCompletion(String email, String testName, LocalDateTime startedAt) {
-        String normalizedEmail = normalize(email);
-        String normalizedTestName = normalize(testName);
-        if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty()) {
-            return null;
-        }
+    String participantKey = normalizedEmail + "|" + normalizedTestName;
+    String rememberedParticipantName = participantNameByUserAndTest.get(
+      participantKey
+    );
+    String resolvedParticipantName;
+    if (participantName != null && !participantName.trim().isEmpty()) {
+      resolvedParticipantName = resolveParticipantName(participantName, 1);
+    } else if (participants.isEmpty() && rememberedParticipantName != null) {
+      resolvedParticipantName = resolveParticipantName(
+        rememberedParticipantName,
+        1
+      );
+    } else {
+      resolvedParticipantName = resolveParticipantName(
+        null,
+        participants.size() + 1
+      );
+    }
+    participantNameByUserAndTest.put(participantKey, resolvedParticipantName);
+    ParticipantItem participant = new ParticipantItem(
+      resolvedParticipantName,
+      "Participación completada para la prueba " + safeTestName(testName) + ".",
+      durationMinutes,
+      completedOn
+    );
+    participants.add(participant);
 
-        List<ParticipantItem> participants = participantsByUserAndTest.computeIfAbsent(
-                normalizedEmail + "|" + normalizedTestName,
-                key -> new ArrayList<>()
-        );
+    ParticipantReportBean report = ensureReport(
+      normalizedEmail,
+      normalizedTestName,
+      resolvedParticipantName
+    );
+    report.setParticipantName(participant.getName());
+    report.setTestName(safeTestName(testName));
+    report.setDescription(participant.getDescription());
+    report.setDurationMinutes(participant.getDurationMinutes());
+    report.setCompletedOn(participant.getCompletedOn());
+    return participant;
+  }
 
-        LocalDateTime completedOn = LocalDateTime.now();
-        int durationMinutes = 5;
-        if (startedAt != null) {
-            durationMinutes = (int) Math.max(1, Duration.between(startedAt, completedOn).toMinutes());
-        }
-
-        ParticipantItem participant = new ParticipantItem(
-                "Participante " + (participants.size() + 1),
-                "Participación completada para la prueba " + testName.trim() + ".",
-                durationMinutes,
-                completedOn
-        );
-        participants.add(participant);
-        return participant;
+  @Override
+  public synchronized List<ParticipantItem> listByUserAndTest(
+    String email,
+    String testName
+  ) {
+    String normalizedEmail = normalize(email);
+    String normalizedTestName = normalize(testName);
+    if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty()) {
+      return new ArrayList<>();
     }
 
-    public synchronized List<ParticipantItem> listByUserAndTest(String email, String testName) {
-        String normalizedEmail = normalize(email);
-        String normalizedTestName = normalize(testName);
-        if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        List<ParticipantItem> participants = participantsByUserAndTest.get(normalizedEmail + "|" + normalizedTestName);
-        if (participants == null) {
-            return new ArrayList<>();
-        }
-        return new ArrayList<>(participants);
+    List<ParticipantItem> participants = participantsByUserAndTest.get(
+      normalizedEmail + "|" + normalizedTestName
+    );
+    if (participants == null) {
+      return new ArrayList<>();
     }
+    return new ArrayList<>(participants);
+  }
 
-    private String normalize(String value) {
-        return value == null ? "" : value.trim().toLowerCase();
+  public synchronized void saveSurveyResponse(
+    String email,
+    String testName,
+    String participantName,
+    String question,
+    Object answer
+  ) {
+    String normalizedEmail = normalize(email);
+    String normalizedTestName = normalize(testName);
+    String rememberedParticipantName = resolveParticipantName(
+      participantName,
+      1
+    );
+    participantNameByUserAndTest.put(
+      normalizedEmail + "|" + normalizedTestName,
+      rememberedParticipantName
+    );
+    ParticipantReportBean report = ensureReport(
+      normalizedEmail,
+      normalizedTestName,
+      rememberedParticipantName
+    );
+    report.addSurveyResponse(question, answer);
+  }
+
+  public synchronized void saveAudioAsset(
+    String email,
+    String testName,
+    String participantName,
+    String fileName,
+    String audioUrl
+  ) {
+    String normalizedEmail = normalize(email);
+    String normalizedTestName = normalize(testName);
+    String rememberedParticipantName = resolveParticipantName(
+      participantName,
+      1
+    );
+    participantNameByUserAndTest.put(
+      normalizedEmail + "|" + normalizedTestName,
+      rememberedParticipantName
+    );
+    ParticipantReportBean report = ensureReport(
+      normalizedEmail,
+      normalizedTestName,
+      rememberedParticipantName
+    );
+    report.setAudioFileName(fileName);
+    report.setAudioUrl(audioUrl);
+  }
+
+  public synchronized ParticipantReportBean getReport(
+    String email,
+    String testName,
+    String participantName
+  ) {
+    return reportsByParticipant.get(
+      normalize(email) +
+        "|" +
+        normalize(testName) +
+        "|" +
+        normalize(participantName)
+    );
+  }
+
+  private ParticipantReportBean ensureReport(
+    String normalizedEmail,
+    String normalizedTestName,
+    String participantName
+  ) {
+    String normalizedParticipantName = normalize(participantName);
+    String cacheKey =
+      normalizedEmail +
+      "|" +
+      normalizedTestName +
+      "|" +
+      normalizedParticipantName;
+    ParticipantReportBean report = reportsByParticipant.get(cacheKey);
+    if (report == null) {
+      report = new ParticipantReportBean();
+      report.setParticipantName(
+        resolveParticipantName(
+          participantName,
+          participantNameByUserAndTest.containsKey(
+            normalizedEmail + "|" + normalizedTestName
+          )
+            ? 1
+            : 1
+        )
+      );
+      report.setTestName("Prueba sin nombre");
+      report.setDescription("Participación iniciada para la prueba.");
+      reportsByParticipant.put(cacheKey, report);
     }
+    return report;
+  }
+
+  private String resolveParticipantName(
+    String participantName,
+    int fallbackIndex
+  ) {
+    String trimmed = participantName == null ? "" : participantName.trim();
+    if (!trimmed.isEmpty()) {
+      return trimmed;
+    }
+    return "Participante " + fallbackIndex;
+  }
+
+  private String safeTestName(String testName) {
+    if (testName == null) {
+      return "Prueba sin nombre";
+    }
+    String trimmed = testName.trim();
+    return trimmed.isEmpty() ? "Prueba sin nombre" : trimmed;
+  }
+
+  private String normalize(String value) {
+    return value == null ? "" : value.trim().toLowerCase();
+  }
 }

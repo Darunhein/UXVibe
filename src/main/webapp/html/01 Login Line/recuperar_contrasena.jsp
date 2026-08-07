@@ -6,8 +6,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
 
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/recuperar-contrasena.css" />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/global.css"
+    />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/recuperar-contrasena.css"
+    />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
@@ -44,9 +50,13 @@
             </div>
           </section>
 
-          <label class="email-label" for="recuperar-email">Email</label>
+          <form
+            action="${pageContext.request.contextPath}/recover"
+            method="post"
+            class="email-row"
+          >
+            <label class="email-label" for="recuperar-email">Email</label>
 
-          <section class="email-row">
             <div class="email-shell">
               <img
                 class="email-icon-panel"
@@ -55,29 +65,30 @@
               />
               <input
                 id="recuperar-email"
+                name="email"
                 class="form-input email-input"
                 placeholder="Ingresa tu email"
                 type="email"
                 autocomplete="email"
+                required
               />
             </div>
-          </section>
 
-          <button class="submit-btn" type="button">
-            <img
-              class="submit-btn-icon"
-              src="${pageContext.request.contextPath}/public/recuperar-contrasena/material-symbols-light-link.svg"
-              alt=""
-            />
-            <span>Enviar enlace</span>
-          </button>
+            <button class="submit-btn" type="submit">
+              <img
+                class="submit-btn-icon"
+                src="${pageContext.request.contextPath}/public/recuperar-contrasena/material-symbols-light-link.svg"
+                alt=""
+              />
+              <span>Enviar enlace</span>
+            </button>
+          </form>
 
-          <button class="back-btn" type="button">
-            Volver al inicio de sesion
-          </button>
+          <a class="back-btn" href="${pageContext.request.contextPath}/login">
+            Volver al inicio de sesión
+          </a>
         </section>
       </main>
     </div>
   </body>
 </html>
-

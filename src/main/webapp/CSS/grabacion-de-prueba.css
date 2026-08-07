@@ -23,15 +23,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 38px 30px;
+  padding: 24px;
   box-sizing: border-box;
   isolation: isolate;
   z-index: 0;
 }
 
 .frame {
-  width: min(1298px, 100%);
-  min-height: 700px;
+  width: min(100%, 1100px);
+  min-height: 680px;
   position: relative;
   border-radius: 10px;
   background-color: var(--color-whitesmoke);
@@ -45,14 +45,11 @@ body {
 }
 
 .frame2 {
-  position: absolute;
-  top: 150px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   border-radius: 10px;
   background-color: var(--color-gainsboro);
-  width: 786px;
-  height: 366px;
+  width: min(100%, 760px);
+  min-height: 360px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -60,6 +57,7 @@ body {
   box-sizing: border-box;
   isolation: isolate;
   z-index: 0;
+  margin: 24px auto 0;
 }
 
 .wave-card {

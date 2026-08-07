@@ -5,18 +5,28 @@
   }
 
   var contextPath = document.body.dataset.contextPath || "";
+  var nextButton = document.getElementById("samNextButton");
+  var backButton = document.getElementById("samBackButton");
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+  if (nextButton) {
+    nextButton.addEventListener("click", function () {
+      var rating = document.querySelector('input[name="control"]:checked');
+      if (!rating) {
+        alert("Por favor, selecciona una valoración");
+        return;
+      }
 
-    var rating = document.querySelector('input[name="control"]:checked');
-    if (!rating) {
-      alert("Por favor, selecciona una valoración");
-      return;
-    }
+      window.location.href =
+        contextPath + "/html/04%20SAM%20Line/encuesta-1.jsp";
+    });
+  }
 
-    window.location.href = contextPath + "/html/04%20SAM%20Line/cheers-bye.jsp";
-  });
+  if (backButton) {
+    backButton.addEventListener("click", function (event) {
+      event.preventDefault();
+      window.history.back();
+    });
+  }
 
   document.querySelectorAll('input[name="control"]').forEach(function (radio) {
     radio.addEventListener("change", function (e) {
@@ -26,4 +36,4 @@
       e.target.closest(".scale-option").classList.add("selected");
     });
   });
-}());
+})();

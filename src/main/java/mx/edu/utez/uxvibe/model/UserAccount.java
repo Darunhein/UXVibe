@@ -1,40 +1,43 @@
 package mx.edu.utez.uxvibe.model;
 
-public class UserAccount {
-    private String fullName;
-    private String email;
-    private String password;
-    private String role = UserRole.EVALUATOR;
+import java.io.Serializable;
 
-    public String getFullName() {
-        return fullName;
-    }
+public class UserAccount implements Serializable {
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
+  private String fullName;
+  private String email;
+  private String password;
+  private String role = UserRole.EVALUATOR;
 
-    public String getEmail() {
-        return email;
-    }
+  public String getFullName() {
+    return fullName;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public String getRole() {
-        return UserRole.isValid(role) ? role : UserRole.EVALUATOR;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setRole(String role) {
-        this.role = UserRole.normalize(role);
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public String getRole() {
+    return UserRole.isValid(role) ? role : UserRole.EVALUATOR;
+  }
+
+  public void setRole(String role) {
+    this.role = UserRole.normalize(role);
+  }
 }

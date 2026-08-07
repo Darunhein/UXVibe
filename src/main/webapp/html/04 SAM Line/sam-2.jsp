@@ -5,8 +5,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
     <title>Encuesta de Satisfacción - SAM 2</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/sam-survey.css" />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/global.css"
+    />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/sam-survey.css"
+    />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
@@ -67,7 +73,12 @@
         </div>
 
         <!-- Scale Radio Options (1-9) -->
-        <form class="survey-form" id="impactForm" action="${pageContext.request.contextPath}/html/04%20SAM%20Line/sam-3.jsp" method="get">
+        <form
+          class="survey-form"
+          id="impactForm"
+          action="${pageContext.request.contextPath}/html/04%20SAM%20Line/sam-3.jsp"
+          method="get"
+        >
           <div class="scale-options">
             <label class="scale-option" for="rating1">
               <input
@@ -162,7 +173,23 @@
           </div>
 
           <!-- Next Button -->
-          <button type="submit" class="btn-next" aria-label="Siguiente">
+          <button
+            type="button"
+            id="samNextButton"
+            class="btn-next"
+            aria-label="Siguiente"
+            onclick="
+              var rating = document.querySelector(
+                'input[name=&quot;impact&quot;]:checked',
+              );
+              if (!rating) {
+                alert('Por favor, selecciona una valoración');
+                return;
+              }
+              window.location.href =
+                '${pageContext.request.contextPath}/html/04%20SAM%20Line/sam-3.jsp';
+            "
+          >
             <span>Siguiente</span>
             <img
               src="${pageContext.request.contextPath}/public/SAM 2/carbon-next-outline.svg"
@@ -170,6 +197,19 @@
             />
           </button>
         </form>
+        <a
+          class="btn-back"
+          href="#"
+          id="samBackButton"
+          aria-label="Regresar a la página anterior"
+        >
+          <img
+            src="${pageContext.request.contextPath}/public/SAM 2/lets-icons-back-light.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <span>Regresar</span>
+        </a>
       </main>
     </div>
 

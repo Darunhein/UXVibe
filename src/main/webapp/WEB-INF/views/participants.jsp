@@ -68,7 +68,7 @@
                   </div>
                   <a
                     class="participante-detalles"
-                    href="${pageContext.request.contextPath}/html/02%20Selection%20Line/reporte-participante.jsp"
+                    href="${pageContext.request.contextPath}/participant-report?testName=<%= java.net.URLEncoder.encode(selectedTestName == null ? "" : selectedTestName, "UTF-8") %>&participantName=<%= java.net.URLEncoder.encode(participant.getName(), "UTF-8") %>"
                     aria-label="Ver estadísticas de <%= escapeHtml(participant.getName()) %>">
                     <span>Detalles</span>
                     <img src="${pageContext.request.contextPath}/public/participantes/ant-design-ellipsis-outlined.svg" alt="" />

@@ -5,8 +5,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
     <title>Grabación de prueba</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/grabacion-de-prueba.css" />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/global.css"
+    />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/grabacion-de-prueba.css"
+    />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400&display=swap"
@@ -49,20 +55,43 @@
           </section>
 
           <details class="pause-stack">
-            <summary class="material-symbolspause-icon" aria-label="Pausar grabación">
+            <summary
+              class="material-symbolspause-icon"
+              aria-label="Pausar grabación"
+            >
               <span class="pause-button-icon" aria-hidden="true"></span>
             </summary>
             <div class="pause-menu">
-              <a class="pause-menu__item" href="${pageContext.request.contextPath}/html/04%20SAM%20Line/cuestionario-sb-1.jsp">Empezar encuesta</a>
-              <form action="${pageContext.request.contextPath}/restart-recording" method="post">
-                <button class="pause-menu__item pause-menu__item--button" type="submit">Reiniciar grabación</button>
+              <a
+                class="pause-menu__item"
+                href="${pageContext.request.contextPath}/html/04%20SAM%20Line/cuestionario-sb-1.jsp"
+                >Empezar encuesta</a
+              >
+              <form
+                action="${pageContext.request.contextPath}/restart-recording"
+                method="post"
+              >
+                <button
+                  class="pause-menu__item pause-menu__item--button"
+                  type="submit"
+                >
+                  Reiniciar grabación
+                </button>
               </form>
-              <a class="pause-menu__item" href="${pageContext.request.contextPath}/cancel-test">Cancelar prueba</a>
+              <a
+                class="pause-menu__item"
+                href="${pageContext.request.contextPath}/cancel-test"
+                >Cancelar prueba</a
+              >
             </div>
           </details>
         </section>
 
-        <a class="regresar" href="${pageContext.request.contextPath}/tests" aria-label="Regresar">
+        <a
+          class="regresar"
+          href="${pageContext.request.contextPath}/tests"
+          aria-label="Regresar"
+        >
           <img
             class="lets-iconsback-light"
             src="${pageContext.request.contextPath}/public/Grabacion de prueba/lets-icons-back-light.svg"
@@ -87,5 +116,6 @@
       />
     </div>
 
+    <script src="${pageContext.request.contextPath}/JavaScript/grabacion-de-prueba.js"></script>
   </body>
 </html>

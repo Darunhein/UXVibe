@@ -11,8 +11,14 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Afacad:wght@400&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/encuesta-survey.css" />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/global.css"
+    />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/encuesta-survey.css"
+    />
   </head>
   <body data-context-path="${pageContext.request.contextPath}">
     <div class="survey-container">
@@ -36,7 +42,13 @@
         </section>
 
         <!-- Survey Questions Section -->
-        <form class="survey-form" id="surveyForm" name="satisfaction" action="${pageContext.request.contextPath}/html/04%20SAM%20Line/encuesta-2.jsp" method="get">
+        <form
+          class="survey-form"
+          id="surveyForm"
+          name="satisfaction"
+          action="${pageContext.request.contextPath}/survey-submit"
+          method="post"
+        >
           <div class="questions-container">
             <!-- Question 1 -->
             <div class="question-row">
@@ -360,7 +372,12 @@
           </div>
 
           <!-- Next Button -->
-          <button type="submit" class="btn-next" aria-label="Siguiente">
+          <button
+            type="button"
+            id="surveyNextButton"
+            class="btn-next"
+            aria-label="Siguiente"
+          >
             <span>Siguiente</span>
             <img
               src="${pageContext.request.contextPath}/public/encuesta 1/carbon-next-outline.svg"
@@ -369,6 +386,19 @@
             />
           </button>
         </form>
+        <a
+          class="btn-back"
+          href="javascript:history.back()"
+          id="surveyBackButton"
+          aria-label="Regresar a la página anterior"
+        >
+          <img
+            src="${pageContext.request.contextPath}/public/encuesta 1/lets-icons-back-light.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <span>Regresar</span>
+        </a>
       </main>
     </div>
 

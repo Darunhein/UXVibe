@@ -13,65 +13,67 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 28px 24px 44px;
+  justify-content: center;
+  padding: 24px;
   box-sizing: border-box;
   gap: 18px;
   color: #3f5669;
 }
 
 .bienvenido {
-  width: 349px;
-  height: 77px;
-  margin-bottom: 20px;
-  font-size: 64px;
+  width: auto;
+  height: auto;
+  margin: 0 0 12px;
+  font-size: 54px;
   font-weight: 800;
   line-height: 1.1;
   color: #627d8f;
+  text-align: center;
 }
 
 .frame {
-  width: 1215px;
-  height: 818px;
+  width: min(100%, 1060px);
+  min-height: 700px;
   border-radius: 12px;
   background: #efe9e4;
   box-shadow: 0 10px 22px rgba(67, 73, 88, 0.14);
-  padding: 24px 32px 24px;
+  padding: 28px 32px;
   box-sizing: border-box;
 }
 
 .frame2 {
-  width: min(100%, 1060px);
+  width: min(100%, 860px);
   height: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 }
 
 .recuperar-contrasena-title h2 {
-  margin: 0 0 46px 0;
-  width: 434px;
-  height: 48px;
-  font-size: 40px;
+  margin: 0 0 12px 0;
+  width: auto;
+  height: auto;
+  font-size: 36px;
   font-weight: 800;
   color: #627d8f;
   text-align: center;
 }
 
 .recuperar-contrasena-copy p {
-  width: 850px;
-  height: 30px;
-  margin-bottom: 69px;
+  width: min(100%, 760px);
+  height: auto;
+  margin: 0 0 20px;
   text-align: center;
   color: #5b7689;
-  font-size: 25px;
+  font-size: 22px;
 }
 
 .notice {
-  width: min(100%, 863px);
-  height: 106px;
-  margin: 0 0 50px;
+  width: min(100%, 780px);
+  min-height: 106px;
+  margin: 0 0 20px;
   border: 1px solid #acb6bf;
   border-radius: 8px;
   background: #ecece2;
@@ -90,8 +92,8 @@ body {
 }
 
 .notice-copy h3 {
-  width: 200px;
-  height: 30px;
+  width: auto;
+  height: auto;
   margin: 0 0 7px;
   color: #75955f;
   font-size: 25px;
@@ -100,8 +102,9 @@ body {
 }
 
 .notice-copy p {
-  width: 698px;
-  height: 48px;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
   margin: 0;
   color: #66894e;
   font-size: 20px;
@@ -109,23 +112,24 @@ body {
 }
 
 .email-label {
-  width: 950px;
-  height: 24px;
+  width: 100%;
+  max-width: 780px;
+  height: auto;
   margin: 0 0 10px;
-  font-size: 25px;
+  font-size: 22px;
   font-weight: 600;
   color: #658393;
   text-align: left;
 }
 
 .email-row {
-  width: min(100%, 950px);
+  width: min(100%, 780px);
 }
 
 .email-shell {
   width: 100%;
-  min-height: 80px;
-  margin: 0 0 40px;
+  min-height: 76px;
+  margin: 0 0 24px;
   border-radius: 8px;
   border: 1px solid #d8dadb;
   background: #f8f2ec;
@@ -164,9 +168,9 @@ body {
 }
 
 .submit-btn {
-  margin: 0 0 20px 0;
-  width: 348px;
-  height: 68px;
+  margin: 0 0 14px 0;
+  width: min(100%, 320px);
+  height: 60px;
   border: none;
   border-radius: 8px;
   background: #6c8597;
@@ -191,8 +195,8 @@ body {
 }
 
 .back-btn {
-  width: 320px;
-  height: 30px;
+  width: auto;
+  height: auto;
   border: none;
   background: transparent;
   color: #658393;
