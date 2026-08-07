@@ -1,68 +1,85 @@
 package mx.edu.utez.uxvibe.model;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class ParticipantItem {
-    private static final DateTimeFormatter DATE_TIME_FORMATTER =
-            DateTimeFormatter.ofPattern("d/MM/yyyy, h:mm a", new Locale("es", "MX"));
 
-    private String name;
-    private String description;
-    private int durationMinutes;
-    private LocalDateTime completedOn;
+  private static final DateTimeFormatter DATE_TIME_FORMATTER =
+    DateTimeFormatter.ofPattern(
+      "d/MM/yyyy, h:mm a",
+      Locale.forLanguageTag("es-MX")
+    );
 
-    public ParticipantItem() {
-        this.completedOn = LocalDateTime.now();
-    }
+  private String name;
+  private String description;
+  private int durationMinutes;
+  private LocalDateTime completedOn;
 
-    public ParticipantItem(String name, String description, int durationMinutes, LocalDateTime completedOn) {
-        this.name = name;
-        this.description = description;
-        this.durationMinutes = durationMinutes;
-        this.completedOn = completedOn == null ? LocalDateTime.now() : completedOn;
-    }
+  public ParticipantItem() {
+    this.completedOn = LocalDateTime.now(ZoneId.systemDefault());
+  }
 
-    public String getName() {
-        return name;
-    }
+  public ParticipantItem(
+    String name,
+    String description,
+    int durationMinutes,
+    LocalDateTime completedOn
+  ) {
+    this.name = name;
+    this.description = description;
+    this.durationMinutes = durationMinutes;
+    this.completedOn =
+      completedOn == null
+        ? LocalDateTime.now(ZoneId.systemDefault())
+        : completedOn;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public int getDurationMinutes() {
-        return durationMinutes;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setDurationMinutes(int durationMinutes) {
-        this.durationMinutes = durationMinutes;
-    }
+  public int getDurationMinutes() {
+    return durationMinutes;
+  }
 
-    public LocalDateTime getCompletedOn() {
-        return completedOn;
-    }
+  public void setDurationMinutes(int durationMinutes) {
+    this.durationMinutes = durationMinutes;
+  }
 
-    public void setCompletedOn(LocalDateTime completedOn) {
-        this.completedOn = completedOn == null ? LocalDateTime.now() : completedOn;
-    }
+  public LocalDateTime getCompletedOn() {
+    return completedOn;
+  }
 
-    public String getDurationLabel() {
-        return durationMinutes + " min";
-    }
+  public void setCompletedOn(LocalDateTime completedOn) {
+    this.completedOn =
+      completedOn == null
+        ? LocalDateTime.now(ZoneId.systemDefault())
+        : completedOn;
+  }
 
-    public String getCompletedOnFormatted() {
-        return completedOn.format(DATE_TIME_FORMATTER)
-                .replace("AM", "a.m.")
-                .replace("PM", "p.m.");
-    }
+  public String getDurationLabel() {
+    return durationMinutes + " min";
+  }
+
+  public String getCompletedOnFormatted() {
+    return completedOn
+      .format(DATE_TIME_FORMATTER)
+      .replace("AM", "a.m.")
+      .replace("PM", "p.m.");
+  }
 }
