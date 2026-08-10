@@ -207,5 +207,6 @@
       </main>
     </div>
     <script src="${pageContext.request.contextPath}/JavaScript/cuestionario-sb-1.js"></script>
+    <script src="${pageContext.request.contextPath}/JavaScript/text-only-validation.js"></script>
   </body>
 </html>
