@@ -1,189 +1,522 @@
-/* Create test screen styles */
+/* =========================================
+   CREAR PRUEBA
+   ========================================= */
+
 body {
   margin: 0;
-  background: #b9c5d1;
+  background: #bfc7cf;
   font-family: Inter, sans-serif;
   min-height: 100vh;
 }
+
+
+/* =========================================
+   CONTENEDOR PRINCIPAL
+   ========================================= */
 
 .crear-prueba {
   width: 100%;
   min-height: 100vh;
+
+  box-sizing: border-box;
+
   background: #bfc7cf;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  box-sizing: border-box;
+
+  padding: 20px;
+
   color: #233244;
-  padding: 24px;
 }
+
+
+/* =========================================
+   CONTENEDOR EXTERIOR
+   ========================================= */
 
 .crear-prueba__shell {
-  width: min(100%, 1120px);
-  min-height: 720px;
+  width: min(100%, 1050px);
+  height: min(92vh, 680px);
+
   background: #f7f2ef;
+
   border-radius: 8px;
-  box-shadow: 0 8px 18px rgba(67, 73, 88, 0.14);
+
+  box-shadow: 0 6px 16px rgba(67, 73, 88, 0.14);
+
   box-sizing: border-box;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+
+  padding: 20px;
 }
 
+
+/* =========================================
+   TARJETA
+   ========================================= */
+
 .crear-prueba__card {
-  width: min(100%, 900px);
-  min-height: 620px;
-  padding: 32px 24px;
+  width: min(100%, 820px);
+  height: 100%;
+
+  padding: 20px 38px;
+
   border-radius: 8px;
+
   background: #f5eae6;
-  box-shadow: 0 6px 14px rgba(67, 73, 88, 0.16);
+
+  box-shadow: 0 5px 12px rgba(67, 73, 88, 0.14);
+
   box-sizing: border-box;
+
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  overflow: hidden;
 }
+
+
+/* =========================================
+   LÍNEA SUPERIOR
+   ========================================= */
 
 .crear-prueba__top-line {
-  margin: 20px 0 30px;
+  margin: 5px 0 12px;
+
   width: 100%;
   height: 1px;
+
   background: #acb6bf;
 }
 
-.crear-prueba__bottom-line {
-  margin: 30px 0 20px;
-  width: 900px;
-  height: 1px;
-  background: #acb6bf;
-}
+
+/* =========================================
+   IMAGEN PRINCIPAL
+   ========================================= */
 
 .crear-prueba__hero {
-  width: 230px;
-  height: 230px;
-  margin: 0 0 8px 0;
+  width: 145px;
+  height: 145px;
+
+  margin: 0 0 3px;
+
   object-fit: contain;
+
+  flex-shrink: 0;
 }
+
+
+/* =========================================
+   TÍTULO
+   ========================================= */
 
 .crear-prueba__title {
-  margin: 0 0 20px;
-  font-size: 30px;
+  margin: 0 0 7px;
+
+  font-size: 28px;
   font-weight: 700;
+
+  line-height: 1.1;
+
   color: #5b7689;
+
   text-align: center;
 }
+
+
+/* =========================================
+   SUBTÍTULO
+   ========================================= */
 
 .crear-prueba__subtitle {
-  margin: 0 0 10px 0;
-  font-size: 20px;
+  margin: 0 0 8px;
+
+  font-size: 17px;
+  font-weight: 500;
+
+  line-height: 1.2;
+
   color: #acb6bf;
+
   text-align: center;
 }
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
+
+/* =========================================
+   FORMULARIO
+   ========================================= */
 
 .crear-prueba__form {
   width: min(100%, 560px);
+
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  box-sizing: border-box;
 }
+
+
+/* =========================================
+   INPUT
+   ========================================= */
 
 .crear-prueba__input-shell {
   width: 100%;
-  min-height: 60px;
-  margin: 10px 0 16px;
-  border-radius: 8px;
+  height: 50px;
+
+  margin: 6px 0 10px;
+
+  border-radius: 7px;
+
   background: #f8f2ec;
-  box-shadow: 0 4px 10px rgba(67, 73, 88, 0.16);
+
+  box-shadow: 0 3px 8px rgba(67, 73, 88, 0.14);
+
   display: flex;
   align-items: stretch;
+
   overflow: hidden;
 }
 
+
+/* =========================================
+   TEXTAREA
+   ========================================= */
+
 .crear-prueba__input-shell--textarea {
-  min-height: 120px;
-  align-items: flex-start;
+  height: 82px;
+
+  min-height: 82px;
+
+  align-items: stretch;
 }
 
+
+/* =========================================
+   ICONO
+   ========================================= */
+
 .crear-prueba__input-icon {
-  width: 55px;
-  height: 60px;
-  flex: 0 0 44px;
+  width: 50px;
+  height: 50px;
+
+  flex: 0 0 50px;
+
   object-fit: cover;
 }
 
+
+/* =========================================
+   INPUT
+   ========================================= */
+
 .crear-prueba__input {
   width: 100%;
+  min-width: 0;
+
   border: none;
   outline: none;
+
   background: transparent;
-  padding: 0 16px;
+
+  padding: 0 15px;
+
   box-sizing: border-box;
+
   font-family: Inter, sans-serif;
-  font-size: 20px;
+
+  font-size: 17px;
+  font-weight: 400;
+
   color: #5f6f7a;
 }
 
+
+/* =========================================
+   TEXTAREA
+   ========================================= */
+
 .crear-prueba__textarea {
-  resize: vertical;
-  min-height: 120px;
-  padding: 16px;
-  line-height: 1.4;
+  resize: none;
+
+  min-height: 82px;
+
+  padding: 12px 15px;
+
+  line-height: 1.35;
 }
+
+
+/* =========================================
+   PLACEHOLDER
+   ========================================= */
 
 .crear-prueba__input::placeholder {
   color: #b4bcc5;
+
   opacity: 1;
 }
 
+
+/* =========================================
+   LÍNEA INFERIOR
+   ========================================= */
+
+.crear-prueba__bottom-line {
+  width: 100%;
+
+  height: 1px;
+
+  margin: 10px 0 12px;
+
+  background: #acb6bf;
+}
+
+
+/* =========================================
+   BOTONES
+   ========================================= */
+
 .crear-prueba__actions {
   width: 100%;
-  margin-top: 16px;
+
+  margin-top: 2px;
+
   display: flex;
+
   justify-content: space-between;
+
   gap: 18px;
 }
+
+
+/* =========================================
+   BOTONES PRINCIPAL / SECUNDARIO
+   ========================================= */
 
 .crear-prueba__primary,
 .crear-prueba__secondary {
   border: none;
+
   border-radius: 6px;
+
   background: #5b7689;
+
   color: #ffffff;
+
   display: inline-flex;
+
   align-items: center;
+
   justify-content: center;
-  gap: 8px;
+
+  gap: 7px;
+
   font-family: Inter, sans-serif;
-  font-size: 20px;
+
+  font-size: 17px;
+
   font-weight: 500;
-  height: 56px;
-  padding: 0 14px;
+
+  height: 44px;
+
+  padding: 0 18px;
+
   cursor: pointer;
-  box-shadow: 0 3px 10px rgba(67, 73, 88, 0.18);
+
+  box-shadow: 0 3px 8px rgba(67, 73, 88, 0.16);
 }
 
-.crear-prueba__primary {
-  cursor: pointer;
-}
 
 .crear-prueba__secondary {
   text-decoration: none;
 }
 
+
+/* =========================================
+   ICONOS DE BOTONES
+   ========================================= */
+
 .crear-prueba__action-icon {
-  width: 25px;
-  height: 25px;
+  width: 21px;
+  height: 21px;
+
   flex: 0 0 auto;
+}
+
+
+/* =========================================
+   ELEMENTO OCULTO
+   ========================================= */
+
+.visually-hidden {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  padding: 0;
+  margin: -1px;
+
+  overflow: hidden;
+
+  clip: rect(0, 0, 0, 0);
+
+  white-space: nowrap;
+
+  border: 0;
+}
+
+
+/* =========================================
+   PANTALLAS CON POCA ALTURA
+   ========================================= */
+
+@media (max-height: 750px) {
+
+  .crear-prueba {
+    padding: 12px;
+  }
+
+  .crear-prueba__shell {
+    height: 96vh;
+
+    padding: 15px;
+  }
+
+  .crear-prueba__card {
+    padding: 14px 32px;
+  }
+
+  .crear-prueba__hero {
+    width: 115px;
+    height: 115px;
+  }
+
+  .crear-prueba__title {
+    font-size: 25px;
+  }
+
+  .crear-prueba__subtitle {
+    font-size: 15px;
+  }
+
+  .crear-prueba__input-shell {
+    height: 45px;
+
+    margin: 4px 0 7px;
+  }
+
+  .crear-prueba__input-icon {
+    width: 45px;
+    height: 45px;
+
+    flex-basis: 45px;
+  }
+
+  .crear-prueba__input {
+    font-size: 16px;
+  }
+
+  .crear-prueba__input-shell--textarea {
+    height: 65px;
+    min-height: 65px;
+  }
+
+  .crear-prueba__textarea {
+    min-height: 65px;
+  }
+
+  .crear-prueba__bottom-line {
+    margin: 7px 0 8px;
+  }
+
+  .crear-prueba__primary,
+  .crear-prueba__secondary {
+    height: 40px;
+    font-size: 16px;
+  }
+}
+
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 900px) {
+
+  .crear-prueba {
+    padding: 15px;
+  }
+
+  .crear-prueba__shell {
+    width: 100%;
+  }
+
+  .crear-prueba__card {
+    width: 100%;
+  }
+}
+
+
+/* =========================================
+   CELULAR
+   ========================================= */
+
+@media (max-width: 600px) {
+
+  .crear-prueba {
+    min-height: 100vh;
+
+    padding: 10px;
+  }
+
+  .crear-prueba__shell {
+    height: auto;
+    min-height: calc(100vh - 20px);
+
+    padding: 12px;
+  }
+
+  .crear-prueba__card {
+    height: auto;
+    min-height: calc(100vh - 44px);
+
+    padding: 18px 15px;
+
+    overflow: visible;
+  }
+
+  .crear-prueba__hero {
+    width: 110px;
+    height: 110px;
+  }
+
+  .crear-prueba__title {
+    font-size: 24px;
+  }
+
+  .crear-prueba__subtitle {
+    font-size: 15px;
+  }
+
+  .crear-prueba__form {
+    width: 100%;
+  }
+
+  .crear-prueba__actions {
+    flex-direction: column;
+  }
+
+  .crear-prueba__primary,
+  .crear-prueba__secondary {
+    width: 100%;
+  }
 }

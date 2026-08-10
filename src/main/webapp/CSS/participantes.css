@@ -46,7 +46,7 @@ body {
 .participantes-head {
   height: 75px;
   display: grid;
-  grid-template-columns: 1fr 1.5fr 1fr 0.9fr;
+  grid-template-columns: 1fr 1.4fr 1fr 1fr;
   align-items: center;
   background: #5b7689;
   color: #ffffff;
@@ -61,6 +61,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 
 .participantes-body {
