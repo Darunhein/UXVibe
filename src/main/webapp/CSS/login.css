@@ -1,263 +1,459 @@
-﻿/* Login screen styles */
+﻿/* =========================================
+   LOGIN DEL EVALUADOR
+   ========================================= */
+
 body {
   margin: 0;
   background: #f7e4de;
-  font-family: Inter, sans-serif;
-  min-height: 100vh;
 }
 
 .login-del-evaluador {
   width: 100%;
   min-height: 100vh;
-  position: relative;
-  overflow: hidden;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 24px;
+
   box-sizing: border-box;
-  gap: 18px;
-  text-align: center;
-  font-size: 35px;
-  color: #4d5d76;
+
+  padding: 50px 20px;
+
   font-family: Inter, sans-serif;
+  color: #4d5d76;
 }
+
+
+/* =========================================
+   TÍTULO
+   ========================================= */
 
 .bienvenido {
-  width: 349px;
-  height: 77px;
-  margin: 49px;
-  font-size: 64px;
+  margin: 0 0 30px 0;
+
+  font-size: 44px;
   font-weight: 800;
-  font-family: inherit;
+
   line-height: 1.1;
+
+  color: #4d5d76;
 }
+
+
+/* =========================================
+   TARJETA
+   ========================================= */
 
 .frame {
-  border-radius: 10px;
+  width: 846px;
+  height: 487px;
+
+  box-sizing: border-box;
+
+  padding: 38px 48px;
+
+  border-radius: 8px;
+
   background: #efe9e4;
+
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 28px 36px 24px;
-  box-sizing: border-box;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0);
-  width: min(100%, 1040px);
-  min-height: 640px;
-  max-width: 100%;
+  align-items: flex-start;
+
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
 }
+
+
+/* =========================================
+   CONTENIDO
+   ========================================= */
 
 .frame2 {
-  width: min(100%, 860px);
-  max-width: 100%;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 740px;
+
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+
+  box-sizing: border-box;
 }
 
-.merged-field.merged-field-email {
-  position: relative;
+
+/* =========================================
+   EMAIL
+   ========================================= */
+
+.merged-field-email {
   width: 100%;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 82px;
+
+  margin-bottom: 25px;
 }
 
-.merged-field.merged-field-password {
-  position: relative;
+
+/* =========================================
+   CONTRASEÑA
+   ========================================= */
+
+.merged-field-password {
   width: 100%;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 55px;
+
+  margin-bottom: 30px;
 }
 
-.email {
-  margin: 8px;
-  font-size: 27px;
-  width: 71px;
-  height: 33px;
-  font-weight: 600;
-  color: #658393;
-  font-family: Inter, sans-serif;
-  line-height: 1.15;
-}
 
+/* =========================================
+   LABELS
+   ========================================= */
+
+.email,
 .contrasea {
-  margin: 8px;
-  font-size: 27px;
-  width: 154px;
-  height: 33px;
+  margin: 0 0 6px 7px;
+
+  font-size: 20px;
   font-weight: 600;
-  color: #658393;
-  font-family: Inter, sans-serif;
+
   line-height: 1.15;
+
+  color: #658393;
 }
+
+
+/* =========================================
+   CAMPO
+   ========================================= */
 
 .merged-image-wrapper {
   position: relative;
-  width: 1063px;
-  height: 110px;
-  max-width: 100%;
-  margin: 0 auto;
+
+  width: 100%;
+  height: 68px;
+
   overflow: hidden;
-  border-radius: 8px;
+
+  border-radius: 7px;
+
+  box-sizing: border-box;
 }
+
+
+/* =========================================
+   IMÁGENES DE LOS CAMPOS
+   ========================================= */
 
 .merged-asset-1-icon,
 .merged-asset-2-icon {
   width: calc(100% + 24px);
-  border-radius: 10px;
-  max-width: none;
-  margin-left: -12px;
-  height: 110px;
+  height: 100%;
+
   display: block;
+
   object-fit: cover;
   object-position: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+
+  margin-left: -12px;
+
+  max-width: none;
+
+  border-radius: 7px;
 }
+
+
+/* =========================================
+   EMAIL INPUT
+   ========================================= */
 
 .email-field-group {
   position: absolute;
   inset: 0;
+
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding-left: 182px;
-  padding-right: 24px;
-  text-align: center;
-  pointer-events: auto;
+
+  padding-left: 145px;
+  padding-right: 20px;
+
+  box-sizing: border-box;
   z-index: 2;
 }
 
+
 .ingresa-tu-email {
-  margin: 0;
-  font-size: 30px;
-  font-weight: 500;
-  color: #4d5d76;
-  font-family: Inter, sans-serif;
-  text-align: left;
-  line-height: 1.1;
-}
-
-.ingresa-tu-contraseña {
-  margin: 0;
-  font-size: 30px;
-  font-weight: 500;
-  color: #4d5d76;
-  font-family: Inter, sans-serif;
-  text-align: left;
-  line-height: 1.1;
-}
-
-.email-field-group input,
-.password-field-group input {
   width: 100%;
-  height: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
+
+  margin: 0;
+
+  font-size: 19px;
+  font-weight: 400;
+
   color: #4d5d76;
-  font: inherit;
-  padding: 0;
-  pointer-events: auto;
+
+  text-align: left;
+
+  background: transparent;
 }
+
+
+/* =========================================
+   PASSWORD INPUT
+   ========================================= */
 
 .password-field-group {
   position: absolute;
   inset: 0;
+
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding-left: 182px;
-  padding-right: 86px;
-  text-align: center;
-  pointer-events: auto;
+
+  padding-left: 145px;
+  padding-right: 65px;
+
+  box-sizing: border-box;
   z-index: 2;
 }
 
-.password-field-group input {
-  padding-right: 58px;
+
+.ingresa-tu-contraseña {
+  width: 100%;
+
+  margin: 0;
+
+  font-size: 19px;
+  font-weight: 400;
+
+  color: #4d5d76;
+
+  text-align: left;
+
+  background: transparent;
 }
 
-.registro-visibility {
+
+/* =========================================
+   OJO
+   ========================================= */
+
+.login-password-visibility {
   position: absolute;
-  right: 22px;
+
+  right: 16px;
   top: 50%;
+
   transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: transparent;
+
+  width: 36px;
+  height: 36px;
+
   padding: 0;
-  display: inline-flex;
+
+  border: none;
+
+  background: transparent;
+
+  display: flex;
   align-items: center;
   justify-content: center;
+
   cursor: pointer;
+
+  z-index: 5;
 }
 
-.registro-visibility img {
-  width: 34px;
-  height: 34px;
-  display: block;
+
+.login-password-visibility img {
+  width: 28px;
+  height: 28px;
+
+  object-fit: contain;
 }
+
+
+/* =========================================
+   ACCIONES
+   ========================================= */
+
+.actions-group {
+  width: 100%;
+}
+
 
 .actions-group2 {
   width: 100%;
+
   display: flex;
   flex-direction: column;
-  gap: 22px;
   align-items: center;
+
+  gap: 10px;
 }
 
-.entrar,
-.crear-cuenta,
-.olvid-mi-contrasea {
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  font-family: Inter, sans-serif;
-  font-size: 17px;
-}
+
+/* =========================================
+   BOTÓN ENTRAR
+   ========================================= */
 
 .entrar {
+  width: 174px;
+  height: 42px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 6px;
+
   background: #6c8597;
-  width: 250px;
-  height: 60px;
-  border-radius: 10px;
-  padding: 12px 0 10px;
+
   display: flex;
-  justify-content: center;
   align-items: center;
-  font-weight: 600;
+  justify-content: center;
+
+  cursor: pointer;
 }
+
 
 .entrar-text {
-  color: #ffffff;
-  font-size: 25px;
-  width: 72px;
-  height: 30px;
+  margin: 0;
+
+  font-size: 17px;
   font-weight: 600;
+
   line-height: 1.15;
+
+  color: #ffffff;
 }
+
+
+/* =========================================
+   CREAR CUENTA
+   ========================================= */
 
 .crear-cuenta {
-  color: #6c8597;
-  font-size: 25px;
-  width: 155px;
-  height: 30px;
+  width: auto;
+  height: auto;
+
+  padding: 0;
+
+  border: none;
+
   background: transparent;
+
+  color: #005078;
+
+  font-family: Inter, sans-serif;
+
+  font-size: 17px;
+  font-weight: 500;
+
+  cursor: pointer;
 }
 
+
+/* =========================================
+   OLVIDÉ MI CONTRASEÑA
+   ========================================= */
+
 .olvid-mi-contrasea {
-  color: #6c8597;
-  font-size: 25px;
-  width: 253px;
-  height: 30px;
+  width: auto;
+  height: auto;
+
+  padding: 0;
+
+  border: none;
+
   background: transparent;
+
+  color: #005078;
+
+  font-family: Inter, sans-serif;
+
+  font-size: 17px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+
+/* =========================================
+   MENSAJES
+   ========================================= */
+
+.form-message {
+  width: 740px;
+  max-width: 100%;
+
+  box-sizing: border-box;
+
+  margin: -15px 0 20px;
+
+  padding: 10px 14px;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 900px) {
+
+  .login-del-evaluador {
+    padding: 35px 20px;
+  }
+
+  .bienvenido {
+    font-size: 38px;
+  }
+
+  .frame {
+    width: 100%;
+    height: auto;
+    min-height: 487px;
+
+    padding: 35px 25px;
+  }
+
+  .frame2 {
+    width: 100%;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .bienvenido {
+    font-size: 32px;
+
+    margin-bottom: 25px;
+  }
+
+  .frame {
+    padding: 30px 18px;
+  }
+
+  .email,
+  .contrasea {
+    font-size: 18px;
+  }
+
+  .email-field-group,
+  .password-field-group {
+    padding-left: 80px;
+  }
+
+  .ingresa-tu-email,
+  .ingresa-tu-contraseña {
+    font-size: 17px;
+  }
+
 }

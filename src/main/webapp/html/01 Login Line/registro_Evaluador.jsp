@@ -6,8 +6,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
 
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/registro.css" />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/global.css"
+    />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/registro.css"
+    />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
@@ -79,7 +85,10 @@
                 aria-pressed="false"
                 data-target="contrasena"
               >
-                <img src="${pageContext.request.contextPath}/public/registro/mdi-light-eye@2x.png" alt="" />
+                <img
+                  src="${pageContext.request.contextPath}/public/registro/mdi-light-eye@2x.png"
+                  alt=""
+                />
               </button>
             </div>
           </div>
@@ -108,7 +117,10 @@
                 aria-pressed="false"
                 data-target="confirmar-contrasena"
               >
-                <img src="${pageContext.request.contextPath}/public/registro/mdi-light-eye@2x.png" alt="" />
+                <img
+                  src="${pageContext.request.contextPath}/public/registro/mdi-light-eye@2x.png"
+                  alt=""
+                />
               </button>
             </div>
           </div>
@@ -117,6 +129,6 @@
         </form>
       </main>
     </div>
+    <script src="${pageContext.request.contextPath}/JavaScript/text-only-validation.js"></script>
   </body>
 </html>
-

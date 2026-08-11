@@ -107,10 +107,10 @@ body {
 .test-section__row {
   min-height: 104px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr) minmax(0, 1fr) 72px;
+  grid-template-columns: 1fr 1fr 1fr 0.75fr;
   align-items: center;
   gap: 16px;
-  padding: 12px 28px 12px 30px;
+  padding: 12px 28px;
   box-sizing: border-box;
   color: #ffffff;
 }
@@ -141,12 +141,13 @@ body {
 .test-section__date,
 .test-section__cell.test-section__date {
   margin: 0;
+  width: 100%;
   max-width: 290px;
   font-size: 18px;
   font-weight: 600;
   line-height: 1.15;
   color: #ffffff;
-  white-space: pre-wrap;
+  white-space: normal;
   text-align: center;
   justify-self: center;
 }
@@ -183,10 +184,12 @@ body {
 
 .test-section__action-form--run {
   justify-self: start;
+  transform: translateX(35px);
 }
 
 .test-section__action-form--menu {
   justify-self: center;
+  transform: translateX(20px);
 }
 
 .test-section__menu-button,
@@ -306,12 +309,6 @@ body {
   box-shadow: 0 3px 10px rgba(67, 73, 88, 0.18);
   cursor: pointer;
   position: absolute;
-  bottom: 40px;
-  left: 30px;
-}
-
-.test-section__logout-icon {
-  width: 24px;
-  height: 24px;
-  flex: 0 0 auto;
+  bottom: 25px; /* ↓ baja un poquito el botón */
+  left: 30px;   /* ← se queda exactamente igual */
 }

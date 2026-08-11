@@ -45,5 +45,6 @@
         </section>
       </main>
     </div>
+    <script src="${pageContext.request.contextPath}/JavaScript/text-only-validation.js"></script>
   </body>
 </html>

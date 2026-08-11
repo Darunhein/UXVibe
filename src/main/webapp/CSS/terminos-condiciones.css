@@ -4,231 +4,272 @@
 
 /* Container and Layout */
 .terminos-container {
-  width: 100%;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #d4dfe9 0%, #c5d5e3 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #d4dfe9 0%, #c5d5e3 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
 }
 
 .terminos-frame {
-  width: min(100%, 1080px);
-  min-height: 720px;
-  max-width: 1440px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 52px 36px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 32px;
-  position: relative;
+    width: min(100%, 1080px);
+    min-height: 720px;
+    max-width: 1440px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 52px 36px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    position: relative;
 }
 
 /* Header Section */
 .terminos-header {
-  text-align: center;
+    text-align: center;
 }
 
 .terminos-title {
-  font-family: "ADLaM Display", serif;
-  font-size: 48px;
-  font-weight: 400;
-  color: #5a7a8c;
-  margin: 0;
-  line-height: 1.2;
-  letter-spacing: -0.5px;
+    font-family: "ADLaM Display", serif;
+    font-size: 48px;
+    font-weight: 400;
+    color: #5a7a8c;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
 }
 
 /* Terms Content Section */
 .terms-content {
-  width: min(100%, 680px);
-  min-height: 320px;
-  display: flex;
-  justify-content: center;
+    width: min(100%, 680px);
+    min-height: 320px;
+    display: flex;
+    justify-content: center;
 }
 
 .terms-box {
-  width: 100%;
-  max-width: 500px;
-  background-color: #faf3f3;
-  border: 1px solid #e8d4d4;
-  border-radius: 8px;
-  padding: 30px 25px;
-  position: relative;
-  display: flex;
-  gap: 15px;
+    width: 100%;
+    max-width: 500px;
+    background-color: #faf3f3;
+    border: 1px solid #e8d4d4;
+    border-radius: 8px;
+    padding: 30px 25px;
+    position: relative;
+    display: flex;
+    gap: 15px;
 }
 
 .terms-text {
-  font-family: "Inter", sans-serif;
-  font-size: 20px;
-  font-weight: 400;
-  color: #7b9ab5;
-  line-height: 1.6;
-  letter-spacing: 0.3px;
-  flex: 1;
-  text-align: justify;
+    font-family: "Inter", sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #7b9ab5;
+    line-height: 1.6;
+    letter-spacing: 0.3px;
+    flex: 1;
+    text-align: justify;
 }
 
 .terms-icon {
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-  opacity: 0.6;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    opacity: 0.6;
 }
 
 /* Acceptance Section */
 .acceptance-section {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
 .acceptance-label {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
 }
 
 .acceptance-checkbox {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  accent-color: #5a7a8c;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #5a7a8c;
 }
 
 .acceptance-text {
-  font-family: "Inter", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  color: #5a7a8c;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #5a7a8c;
 }
 
 /* Buttons Section */
 .buttons-section {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
 .btn-secondary,
 .btn-primary {
-  font-family: "Inter", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  padding: 12px 32px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 180px;
-  text-decoration: none;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 12px 32px;
+    border: 2px solid #5a7a8c;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 180px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
 }
 
 .btn-secondary {
-  background-color: #5a7a8c;
-  color: #ffffff;
+    background-color: #5a7a8c;
+    color: #ffffff;
 }
 
 .btn-secondary:hover {
-  background-color: #4a6b7c;
+    background-color: #4a6b7c;
 }
 
 .btn-primary {
-  background-color: #5a7a8c;
-  color: #ffffff;
+    background-color: #5a7a8c;
+    color: #ffffff;
 }
 
 .btn-primary:hover {
-  background-color: #4a6b7c;
+    background-color: #4a6b7c;
 }
 
 /* Back Button */
 .btn-back {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #5a7a8c;
-  color: #ffffff;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #5a7a8c;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
 }
 
 .btn-back:hover {
-  background-color: #4a6b7c;
+    background-color: #4a6b7c;
 }
 
 .btn-back img {
-  width: 16px;
-  height: 16px;
+    width: 16px;
+    height: 16px;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .terminos-frame {
-    padding: 40px 20px;
-    gap: 30px;
-  }
+    .terminos-frame {
+        padding: 40px 20px;
+        gap: 30px;
+    }
 
-  .terminos-title {
-    font-size: 32px;
-  }
+    .terminos-title {
+        font-size: 32px;
+    }
 
-  .terms-box {
-    max-width: 100%;
-    padding: 20px;
-  }
+    .terms-box {
+        max-width: 100%;
+        padding: 20px;
+    }
 
-  .terms-text {
-    font-size: 13px;
-  }
+    .terms-text {
+        font-size: 13px;
+    }
 
-  .buttons-section {
-    flex-direction: column;
-  }
+    .buttons-section {
+        flex-direction: column;
+    }
 
-  .btn-secondary,
-  .btn-primary {
-    width: 100%;
-    min-width: unset;
-  }
-}
+    .btn-secondary,
+    .btn-primary {
+        font-family: "Inter", sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        padding: 12px 32px;
+        border: 2px solid #5a7a8c;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 180px;
+        text-decoration: none;
+        text-align: center;
+    }
 
-@media (max-width: 480px) {
-  .terminos-container {
-    padding: 10px;
-  }
+    /* Secondary: outlined */
+    .btn-secondary {
+        background-color: transparent;
+        color: #5a7a8c;
+    }
 
-  .terminos-frame {
-    padding: 20px;
-    border-radius: 8px;
-  }
+    .btn-secondary:hover {
+        background-color: #eef3f6;
+    }
 
-  .terminos-title {
-    font-size: 24px;
-  }
+    /* Primary: solid, stands out as the main action */
+    .btn-primary {
+        background-color: #5a7a8c;
+        color: #ffffff;
+    }
 
-  .btn-back {
-    width: 100%;
-    justify-content: center;
-    position: relative;
-    bottom: auto;
-    left: auto;
-  }
+    .btn-primary:hover {
+        background-color: #4a6b7c;
+    }
+
+    /* Disabled state while terms aren't accepted */
+    .btn-secondary.disabled,
+    .btn-primary.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+
+    @media (max-width: 480px) {
+        .terminos-container {
+            padding: 10px;
+        }
+
+        .terminos-frame {
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .terminos-title {
+            font-size: 24px;
+        }
+
+        .btn-back {
+            width: 100%;
+            justify-content: center;
+            position: relative;
+            bottom: auto;
+            left: auto;
+        }
+    }
 }

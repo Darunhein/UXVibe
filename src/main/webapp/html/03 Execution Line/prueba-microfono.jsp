@@ -5,8 +5,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
     <title>Prueba de Micrófono</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/prueba-microfono.css" />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/global.css"
+    />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/CSS/prueba-microfono.css"
+    />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
@@ -74,16 +80,16 @@
         </div>
 
         <!-- Waveform Visualization -->
-        <div class="waveform-container">
-          <img
-            class="waveform-image"
-            src="${pageContext.request.contextPath}/public/Prueba de Microfono/merged-asset-4@2x.png"
-            alt="Audio waveform"
-          />
+        <div class="waveform-container" aria-live="polite">
+          <div class="waveform-placeholder">Esperando acceso al micrófono…</div>
         </div>
 
         <!-- Back Button -->
-        <a class="btn-back" href="${pageContext.request.contextPath}/html/03%20Execution%20Line/terminos-y-condiciones.jsp" aria-label="Regresar a la página anterior">
+        <a
+          class="btn-back"
+          href="${pageContext.request.contextPath}/html/03%20Execution%20Line/terminos-y-condiciones.jsp"
+          aria-label="Regresar a la página anterior"
+        >
           <img
             src="${pageContext.request.contextPath}/public/Prueba de Microfono/lets-icons-back-light.svg"
             alt="Back icon"
@@ -92,5 +98,6 @@
         </a>
       </main>
     </div>
+    <script src="${pageContext.request.contextPath}/JavaScript/prueba-microfono.js"></script>
   </body>
 </html>
