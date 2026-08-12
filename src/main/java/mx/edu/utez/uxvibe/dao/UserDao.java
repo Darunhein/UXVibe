@@ -1,4 +1,4 @@
-﻿package mx.edu.utez.uxvibe.dao;
+package mx.edu.utez.uxvibe.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

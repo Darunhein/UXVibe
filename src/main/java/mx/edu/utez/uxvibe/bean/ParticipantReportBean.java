@@ -1,4 +1,4 @@
-﻿package mx.edu.utez.uxvibe.bean;
+package mx.edu.utez.uxvibe.bean;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

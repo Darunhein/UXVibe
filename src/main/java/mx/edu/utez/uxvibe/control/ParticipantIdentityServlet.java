@@ -1,4 +1,4 @@
-﻿package mx.edu.utez.uxvibe.control;
+package mx.edu.utez.uxvibe.control;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
