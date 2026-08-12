@@ -153,13 +153,23 @@ public class ParticipantStore implements ParticipantDao {
     String testName,
     String participantName
   ) {
-    return reportsByParticipant.get(
-      normalize(email) +
-        "|" +
-        normalize(testName) +
-        "|" +
-        normalize(participantName)
-    );
+    String key = normalize(email) + "|" + normalize(testName) + "|" + normalize(participantName);
+    ParticipantReportBean report = reportsByParticipant.get(key);
+    if (report != null) {
+      return report;
+    }
+
+    // Fallback: if participantName is null or not found, try to find any report for this user/test
+    if (participantName == null || participantName.trim().isEmpty()) {
+      String prefix = normalize(email) + "|" + normalize(testName) + "|";
+      for (Map.Entry<String, ParticipantReportBean> entry : reportsByParticipant.entrySet()) {
+        if (entry.getKey().startsWith(prefix)) {
+          return entry.getValue();
+        }
+      }
+    }
+
+    return null;
   }
 
   private ParticipantReportBean ensureReport(

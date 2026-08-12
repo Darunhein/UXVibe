@@ -215,33 +215,41 @@
           <div class="reporte-graphs">
             <div class="reporte-graph-item">
               <div class="reporte-graph-title">Estrés (SB2)</div>
-              <div class="reporte-graph-bar" aria-hidden="true" style="--pct:<%= Math.min(100, (int)(stressAvg / 5.0 * 100)) %>">
-                <span class="reporte-graph-value"><%= stressLabel %> / 5</span>
+              <div class="pie-chart" role="img" aria-label="Estrés promedio">
+                <div class="pie" style="--pct:<%= Math.min(100, (int)(stressAvg / 5.0 * 100)) %>; --color: #FF9F80;">
+                  <div class="pie-center"><span><%= stressLabel %></span><small>/5</small></div>
+                </div>
               </div>
             </div>
 
             <div class="reporte-graph-item">
               <div class="reporte-graph-title">SAM (promedio)</div>
-              <div class="reporte-graph-bar" aria-hidden="true" style="--pct:<%= Math.min(100, (int)(samAvg / 9.0 * 100)) %>">
-                <span class="reporte-graph-value"><%= samLabel %> / 9</span>
+              <div class="pie-chart" role="img" aria-label="SAM promedio">
+                <div class="pie" style="--pct:<%= Math.min(100, (int)(samAvg / 9.0 * 100)) %>; --color: #6FB1FF;">
+                  <div class="pie-center"><span><%= samLabel %></span><small>/9</small></div>
+                </div>
               </div>
             </div>
 
             <div class="reporte-graph-item">
               <div class="reporte-graph-title">Encuestas (últimas 3 partes)</div>
-              <div class="reporte-graph-bar" aria-hidden="true" style="--pct:<%= Math.min(100, (int)(encuestaAvg / 5.0 * 100)) %>">
-                <span class="reporte-graph-value"><%= encuestaLabel %> / 5</span>
+              <div class="pie-chart" role="img" aria-label="Encuestas promedio">
+                <div class="pie" style="--pct:<%= Math.min(100, (int)(encuestaAvg / 5.0 * 100)) %>; --color: #7AD29F;">
+                  <div class="pie-center"><span><%= encuestaLabel %></span><small>/5</small></div>
+                </div>
               </div>
             </div>
           </div>
 
           <style>
-            .reporte-graphs{display:flex;gap:16px;margin-top:12px}
-            .reporte-graph-item{flex:1}
-            .reporte-graph-bar{background:#eee;border-radius:8px;height:28px;position:relative;overflow:hidden}
-            .reporte-graph-bar::after{content:"";position:absolute;left:0;top:0;height:100%;width:calc(var(--pct,0)%);background:linear-gradient(90deg,#6fb1ff,#7ad29f)}
-            .reporte-graph-value{position:absolute;right:8px;top:3px;font-weight:600;font-size:13px}
-            .reporte-graph-title{font-size:14px;margin-bottom:6px}
+            .reporte-graphs{display:flex;gap:24px;margin-top:12px}
+            .reporte-graph-item{flex:1;display:flex;flex-direction:column;align-items:center}
+            .reporte-graph-title{font-size:14px;margin-bottom:8px}
+            .pie-chart{width:120px;height:120px;display:flex;align-items:center;justify-content:center}
+            .pie{width:100%;height:100%;border-radius:50%;background:conic-gradient(var(--color) var(--pct,0)%, #eee 0);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
+            .pie::before{content:"";position:absolute;width:70%;height:70%;background:white;border-radius:50%}
+            .pie-center{position:relative;text-align:center;font-weight:700}
+            .pie-center small{display:block;font-weight:600;font-size:12px;color:#666;margin-top:4px}
           </style>
         </section>
 
