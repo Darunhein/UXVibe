@@ -1,4 +1,4 @@
-﻿<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!doctype html>
 <html lang="es">
   <head>
@@ -440,3 +440,5 @@
     <script src="${pageContext.request.contextPath}/JavaScript/encuesta-3.js"></script>
   </body>
 </html>
+
+
