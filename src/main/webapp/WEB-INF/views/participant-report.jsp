@@ -173,6 +173,78 @@
           </div>
         </section>
 
+        <section class="reporte-block-1">
+          <h2>Gráficas rápidas</h2>
+          <%
+            // calculate stress average (sb2)
+            double stressTotal = 0; int stressCount = 0;
+            double samTotal = 0; int samCount = 0;
+            double encuestaTotal = 0; int encuestaCount = 0;
+            if (responses != null) {
+              for (Map<String, Object> r : responses) {
+                String q = r == null ? null : String.valueOf(r.get("question"));
+                Object ans = r == null ? null : r.get("answer");
+                Integer numeric = null;
+                try {
+                  Object numObj = r.get("numeric");
+                  if (numObj != null) {
+                    numeric = Integer.parseInt(String.valueOf(numObj));
+                  } else if (ans != null) {
+                    numeric = Integer.parseInt(String.valueOf(ans));
+                  }
+                } catch (Exception ignore) {}
+                if (numeric == null) continue;
+
+                if ("stress".equals(q) || "relaxation".equals(q)) {
+                  stressTotal += numeric; stressCount++;
+                } else if ("satisfaction".equals(q) || "impact".equals(q) || "control".equals(q)) {
+                  samTotal += numeric; samCount++;
+                } else if (q != null && q.startsWith("q")) {
+                  encuestaTotal += numeric; encuestaCount++;
+                }
+              }
+            }
+            double stressAvg = stressCount == 0 ? 0 : stressTotal / stressCount;
+            double samAvg = samCount == 0 ? 0 : samTotal / samCount;
+            double encuestaAvg = encuestaCount == 0 ? 0 : encuestaTotal / encuestaCount;
+            String stressLabel = String.format("%.2f", stressAvg);
+            String samLabel = String.format("%.2f", samAvg);
+            String encuestaLabel = String.format("%.2f", encuestaAvg);
+          %>
+
+          <div class="reporte-graphs">
+            <div class="reporte-graph-item">
+              <div class="reporte-graph-title">Estrés (SB2)</div>
+              <div class="reporte-graph-bar" aria-hidden="true" style="--pct:<%= Math.min(100, (int)(stressAvg / 5.0 * 100)) %>">
+                <span class="reporte-graph-value"><%= stressLabel %> / 5</span>
+              </div>
+            </div>
+
+            <div class="reporte-graph-item">
+              <div class="reporte-graph-title">SAM (promedio)</div>
+              <div class="reporte-graph-bar" aria-hidden="true" style="--pct:<%= Math.min(100, (int)(samAvg / 9.0 * 100)) %>">
+                <span class="reporte-graph-value"><%= samLabel %> / 9</span>
+              </div>
+            </div>
+
+            <div class="reporte-graph-item">
+              <div class="reporte-graph-title">Encuestas (últimas 3 partes)</div>
+              <div class="reporte-graph-bar" aria-hidden="true" style="--pct:<%= Math.min(100, (int)(encuestaAvg / 5.0 * 100)) %>">
+                <span class="reporte-graph-value"><%= encuestaLabel %> / 5</span>
+              </div>
+            </div>
+          </div>
+
+          <style>
+            .reporte-graphs{display:flex;gap:16px;margin-top:12px}
+            .reporte-graph-item{flex:1}
+            .reporte-graph-bar{background:#eee;border-radius:8px;height:28px;position:relative;overflow:hidden}
+            .reporte-graph-bar::after{content:"";position:absolute;left:0;top:0;height:100%;width:calc(var(--pct,0)%);background:linear-gradient(90deg,#6fb1ff,#7ad29f)}
+            .reporte-graph-value{position:absolute;right:8px;top:3px;font-weight:600;font-size:13px}
+            .reporte-graph-title{font-size:14px;margin-bottom:6px}
+          </style>
+        </section>
+
         <% if (responses != null && !responses.isEmpty()) { %>
           <section class="reporte-block-1">
             <h2>Respuestas registradas</h2>

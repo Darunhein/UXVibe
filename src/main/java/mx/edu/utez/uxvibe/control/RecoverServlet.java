@@ -1,4 +1,4 @@
-package mx.edu.utez.uxvibe.control;
+﻿package mx.edu.utez.uxvibe.control;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.SecureRandom;
 import mx.edu.utez.uxvibe.service.UserStore;
 
 @WebServlet(value = "/recover")
@@ -52,11 +53,27 @@ public class RecoverServlet extends HttpServlet {
       return;
     }
 
+    // Generate a temporary password
+    String newPassword = generateRandomPassword(10);
+    boolean updated = UserStore.getInstance().resetPassword(email, newPassword);
+
+    boolean emailSent = false;
+    if (updated) {
+      // try to send email (depends on SMTP env vars)
+      emailSent = mx.edu.utez.uxvibe.service.EmailService.sendPasswordResetEmail(email, newPassword);
+    }
+
     HttpSession session = req.getSession();
-    session.setAttribute(
-      FLASH_SUCCESS_ATTR,
-      "Te enviamos un enlace de recuperación a " + email
-    );
+    if (updated && emailSent) {
+      session.setAttribute(FLASH_SUCCESS_ATTR, "Te enviamos la nueva contraseña a " + email);
+    } else if (updated) {
+      session.setAttribute(FLASH_SUCCESS_ATTR, "Se restableció la contraseña. No fue posible enviar el correo (configuración SMTP faltante). La nueva contraseña es: " + newPassword);
+    } else {
+      // fallback
+      forwardToRecover(req, resp, "No fue posible restablecer la contraseña. Intenta de nuevo más tarde.");
+      return;
+    }
+
     redirectToLogin(req, resp);
   }
 
@@ -97,5 +114,15 @@ public class RecoverServlet extends HttpServlet {
 
   private boolean isBlank(String value) {
     return value == null || value.trim().isEmpty();
+  }
+
+  private String generateRandomPassword(int length) {
+    final String chars = "ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+    SecureRandom rnd = new SecureRandom();
+    StringBuilder sb = new StringBuilder(length);
+    for (int i = 0; i < length; i++) {
+      sb.append(chars.charAt(rnd.nextInt(chars.length())));
+    }
+    return sb.toString();
   }
 }

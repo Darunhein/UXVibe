@@ -1,5 +1,5 @@
-(function () {
-  var form = document.getElementById("controlForm");
+﻿(function () {
+  var form = document.getElementById("satisfactionForm");
   if (!form) {
     return;
   }
@@ -16,8 +16,29 @@
         return;
       }
 
-      window.location.href =
-        contextPath + "/html/04%20SAM%20Line/encuesta-1.jsp";
+      var body = new URLSearchParams();
+      body.append('control', rating.value);
+
+      fetch(contextPath + "/participant-identity", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        },
+        body: body.toString(),
+      })
+        .then(function (res) {
+          if (!res.ok) {
+            return res.text().then(function (text) {
+              throw new Error(text || 'Error al guardar datos');
+            });
+          }
+        })
+        .then(function () {
+          window.location.href = contextPath + "/html/04%20SAM%20Line/encuesta-1.jsp";
+        })
+        .catch(function (err) {
+          alert(err.message || 'Error al guardar datos');
+        });
     });
   }
 
@@ -27,13 +48,4 @@
       window.history.back();
     });
   }
-
-  document.querySelectorAll('input[name="control"]').forEach(function (radio) {
-    radio.addEventListener("change", function (e) {
-      document.querySelectorAll(".scale-option").forEach(function (option) {
-        option.classList.remove("selected");
-      });
-      e.target.closest(".scale-option").classList.add("selected");
-    });
-  });
 })();

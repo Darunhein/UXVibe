@@ -74,7 +74,7 @@
                   name="age"
                   class="form-input-age"
                   placeholder="Ingresa tu edad"
-                  min="0"
+                  min="3"
                   required
                 />
               </div>

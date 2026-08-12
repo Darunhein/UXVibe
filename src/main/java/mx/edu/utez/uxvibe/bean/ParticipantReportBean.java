@@ -1,4 +1,4 @@
-package mx.edu.utez.uxvibe.bean;
+﻿package mx.edu.utez.uxvibe.bean;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -80,6 +80,59 @@ public class ParticipantReportBean {
     Map<String, Object> response = new java.util.LinkedHashMap<>();
     response.put("question", question);
     response.put("answer", answer);
+    // compute numeric equivalent
+    Integer numeric = computeNumericEquivalent(question, answer);
+    response.put("numeric", numeric);
     surveyResponses.add(response);
+  }
+
+  private Integer computeNumericEquivalent(String question, Object rawAnswer) {
+    if (rawAnswer == null) {
+      return null;
+    }
+    String answer = String.valueOf(rawAnswer).trim();
+    try {
+      // Likert questions q1..qN (1-5)
+      if (question != null && question.startsWith("q")) {
+        int v = Integer.parseInt(answer);
+        // inverted questions q3, q9, q15 -> invert 1..5 => 6 - value
+        if ("q3".equals(question) || "q9".equals(question) || "q15".equals(question)) {
+          return 6 - v;
+        }
+        return v;
+      }
+      // SAM questions (satisfaction, impact, control) range 1-9
+      if ("satisfaction".equals(question) || "impact".equals(question) || "control".equals(question)) {
+        return Integer.parseInt(answer);
+      }
+      // Stress questions use textual options: never, sometimes, half-time, most-time, always -> map 1..5
+      if ("stress".equals(question) || "relaxation".equals(question)) {
+        switch (answer.toLowerCase()) {
+          case "never":
+            return 1;
+          case "sometimes":
+            return 2;
+          case "half-time":
+          case "half time":
+          case "half_time":
+            return 3;
+          case "most-time":
+          case "most time":
+          case "most_time":
+            return 4;
+          case "always":
+            return 5;
+          default:
+            return null;
+        }
+      }
+      // Age stored as numeric
+      if ("age".equals(question)) {
+        return Integer.parseInt(answer);
+      }
+    } catch (Exception ex) {
+      return null;
+    }
+    return null;
   }
 }

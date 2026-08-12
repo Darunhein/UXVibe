@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   var form = document.getElementById("satisfactionForm");
   if (!form) {
     return;
@@ -16,7 +16,29 @@
         return;
       }
 
-      window.location.href = contextPath + "/html/04%20SAM%20Line/sam-2.jsp";
+      var body = new URLSearchParams();
+      body.append('satisfaction', rating.value);
+
+      fetch(contextPath + "/participant-identity", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        },
+        body: body.toString(),
+      })
+        .then(function (res) {
+          if (!res.ok) {
+            return res.text().then(function (text) {
+              throw new Error(text || 'Error al guardar datos');
+            });
+          }
+        })
+        .then(function () {
+          window.location.href = contextPath + "/html/04%20SAM%20Line/sam-2.jsp";
+        })
+        .catch(function (err) {
+          alert(err.message || 'Error al guardar datos');
+        });
     });
   }
 
