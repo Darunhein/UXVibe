@@ -171,7 +171,6 @@
 
 /* Next Button */
 .btn-next {
-  align-self: flex-end;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -185,13 +184,61 @@
   font-weight: 500;
   cursor: pointer;
   transition: background 0.3s ease;
-  margin-top: 20px;
 }
 
 .btn-next:hover {
   background: #3d4d5c;
 }
 
+.btn-next img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Navigation Buttons */
+
+.survey-navigation {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 20px;
+}
+
+.btn-back,
+.btn-next {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 14px 28px;
+
+  background: #5a7a8c;
+  color: #ffffff;
+
+  border: none;
+  border-radius: 8px;
+
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-back:hover,
+.btn-next:hover {
+  background: #3d4d5c;
+}
+
+.btn-back img,
 .btn-next img {
   width: 20px;
   height: 20px;
