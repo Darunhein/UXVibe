@@ -196,11 +196,8 @@
             id="sbBackButton"
             aria-label="Regresar a la página anterior"
           >
-            <img
-              src="${pageContext.request.contextPath}/public/Cuestionario SB 1/lets-icons-back-light.svg"
-              alt=""
+            <img src="${pageContext.request.contextPath}/public/participantes/lets-icons-back-light.svg" alt="" />              alt=""
               aria-hidden="true"
-            />
             <span>Regresar</span>
           </a>
         </form>
