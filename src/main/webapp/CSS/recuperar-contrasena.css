@@ -1,4 +1,7 @@
-/* Recover password screen styles */
+/* ============================================================================
+   RECOVER PASSWORD SCREEN STYLES
+   ============================================================================ */
+
 body {
   margin: 0;
   background: #f7e8e6;
@@ -6,209 +9,479 @@ body {
   min-height: 100vh;
 }
 
+/* ============================================================================
+   CONTENEDOR PRINCIPAL
+   ============================================================================ */
+
 .recuperar-contrasena {
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(180deg, #f8ebe9 0%, #f6e7e2 100%);
+
+  background: linear-gradient(
+          180deg,
+          #f8ebe9 0%,
+          #f6e7e2 100%
+  );
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
   padding: 24px;
   box-sizing: border-box;
-  gap: 18px;
+
+  gap: 14px;
+
   color: #3f5669;
 }
 
+/* ============================================================================
+   BIENVENIDO
+   ============================================================================ */
+
 .bienvenido {
-  width: auto;
-  height: auto;
-  margin: 0 0 12px;
-  font-size: 54px;
+  margin: 0;
+
+  font-size: 52px;
   font-weight: 800;
   line-height: 1.1;
+
   color: #627d8f;
+
   text-align: center;
 }
+
+/* ============================================================================
+   TARJETA PRINCIPAL
+   ============================================================================ */
 
 .frame {
   width: min(100%, 1060px);
-  min-height: 700px;
+
+  min-height: 620px;
+
   border-radius: 12px;
+
   background: #efe9e4;
-  box-shadow: 0 10px 22px rgba(67, 73, 88, 0.14);
-  padding: 28px 32px;
+
+  box-shadow:
+          0 10px 22px rgba(67, 73, 88, 0.14);
+
+  padding: 72px 48px 50px;
+
   box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
+/* ============================================================================
+   CONTENIDO INTERNO
+   ============================================================================ */
+
 .frame2 {
-  width: min(100%, 860px);
-  height: 100%;
-  margin: 0 auto;
+  width: min(100%, 760px);
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+
+  padding: 0;
+
+  gap: 0;
 }
+
+/* ============================================================================
+   TITULO
+   ============================================================================ */
 
 .recuperar-contrasena-title h2 {
-  margin: 0 0 12px 0;
-  width: auto;
-  height: auto;
-  font-size: 36px;
-  font-weight: 800;
-  color: #627d8f;
+  margin: 0 0 18px;
+
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  color: #3f5669;
+
   text-align: center;
 }
+
+/* ============================================================================
+   DESCRIPCION
+   ============================================================================ */
 
 .recuperar-contrasena-copy p {
-  width: min(100%, 760px);
-  height: auto;
-  margin: 0 0 20px;
+  width: min(100%, 620px);
+
+  margin: 0 0 44px;
+
+  font-size: 18px;
+  line-height: 1.45;
+
+  color: #244f6d;
+
   text-align: center;
-  color: #5b7689;
-  font-size: 22px;
 }
+
+/* ============================================================================
+   AVISO DE EMAIL
+   ============================================================================ */
+
+/*
+   El aviso está oculto inicialmente.
+   Se muestra únicamente cuando se agrega la clase "show".
+*/
 
 .notice {
-  width: min(100%, 780px);
-  min-height: 106px;
-  margin: 0 0 20px;
-  border: 1px solid #acb6bf;
-  border-radius: 8px;
-  background: #ecece2;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  padding: 12px 14px;
+  display: none;
+
+  width: min(100%, 620px);
+
+  min-height: 65px;
+
+  margin: 0 0 32px;
+
+  padding: 10px 14px;
+
   box-sizing: border-box;
-  display: flex;
+
+  border: 1px solid #acb6bf;
+  border-radius: 7px;
+
+  background: #ecece2;
+
+  box-shadow:
+          0 2px 5px rgba(67, 73, 88, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.7);
+
   align-items: center;
-  gap: 14px;
+
+  gap: 12px;
 }
+
+/* Cuando se presiona "Enviar enlace" */
+
+.notice.show {
+  display: flex;
+}
+
+/* Icono del aviso */
 
 .notice-icon {
-  width: 74px;
-  height: 74px;
-  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+
+  flex: 0 0 42px;
 }
 
+/* Contenido del aviso */
+
+.notice-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Titulo del aviso */
+
 .notice-copy h3 {
-  width: auto;
-  height: auto;
-  margin: 0 0 7px;
-  color: #75955f;
-  font-size: 25px;
+  margin: 0 0 3px;
+
+  color: #66894e;
+
+  font-size: 17px;
   font-weight: 600;
+
   line-height: 1.1;
 }
 
+/* Texto del aviso */
+
 .notice-copy p {
-  width: 100%;
-  max-width: 100%;
-  height: auto;
+  width: auto;
+
   margin: 0;
+
   color: #66894e;
-  font-size: 20px;
-  line-height: 1.2;
+
+  font-size: 14px;
+  line-height: 1.25;
+
+  text-align: left;
 }
+
+/* ============================================================================
+   EMAIL
+   ============================================================================ */
 
 .email-label {
   width: 100%;
-  max-width: 780px;
-  height: auto;
-  margin: 0 0 10px;
-  font-size: 22px;
+  max-width: 620px;
+
+  margin: 0 0 7px;
+
+  font-size: 18px;
   font-weight: 600;
+
   color: #658393;
+
   text-align: left;
 }
 
 .email-row {
-  width: min(100%, 780px);
+  width: 100%;
+  max-width: 620px;
 }
+
+/* ============================================================================
+   CAMPO DE EMAIL
+   ============================================================================ */
 
 .email-shell {
   width: 100%;
-  min-height: 76px;
-  margin: 0 0 24px;
-  border-radius: 8px;
+  max-width: 620px;
+
+  height: 68px;
+
+  margin: 0 0 38px;
+
+  border-radius: 7px;
+
   border: 1px solid #d8dadb;
+
   background: #f8f2ec;
-  box-shadow: 0 4px 10px rgba(67, 73, 88, 0.16);
+
+  box-shadow:
+          0 4px 9px rgba(67, 73, 88, 0.16);
+
   display: flex;
   align-items: stretch;
+
   overflow: hidden;
+
+  box-sizing: border-box;
 }
 
+/* Panel del icono */
+
 .email-icon-panel {
-  width: 100px;
-  height: 100px;
-  flex: 0 0 100px;
+  width: 68px;
+  height: 68px;
+
+  flex: 0 0 68px;
+
   object-fit: cover;
   object-position: center;
+
   transform: scaleX(1.08);
   transform-origin: center;
 }
 
+/* Input */
+
 .email-input {
   width: 100%;
+
   border: none;
   outline: none;
+
   background: transparent;
+
   padding: 0 18px;
+
   box-sizing: border-box;
+
   font-family: Inter, sans-serif;
-  font-size: 25px;
+
+  font-size: 18px;
   font-weight: 500;
-  color: #a9afb5;
+
+  color: #8fa5b8;
 }
 
 .email-input::placeholder {
-  color: #b0b7bf;
+  color: #aeb8c1;
   opacity: 1;
 }
 
+/* ============================================================================
+   BOTON ENVIAR ENLACE
+   ============================================================================ */
+
 .submit-btn {
-  margin: 0 0 14px 0;
-  width: min(100%, 320px);
-  height: 60px;
-  border: none;
-  border-radius: 8px;
+  width: 230px;
+  height: 52px;
+
+  margin: 0 auto 30px;
+
+  border: 1px solid #56758a;
+
+  border-radius: 7px;
+
   background: #6c8597;
-  font-weight: 600;
-  display: inline-flex;
+
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+
+  gap: 14px;
+
   cursor: pointer;
+
+  box-shadow:
+          0 3px 6px rgba(67, 73, 88, 0.15);
+
+  transition:
+          background 0.2s ease,
+          transform 0.15s ease,
+          box-shadow 0.2s ease;
 }
+
+/* Hover */
+
+.submit-btn:hover {
+  background: #607b8e;
+
+  box-shadow:
+          0 4px 8px rgba(67, 73, 88, 0.20);
+}
+
+/* Click */
+
+.submit-btn:active {
+  transform: translateY(1px);
+}
+
+/* Texto del botón */
 
 .submit-btn span {
   color: #ffffff;
-  font-weight: 600;
+
   font-family: Inter, sans-serif;
-  font-size: 25px;
+
+  font-size: 18px;
+  font-weight: 600;
 }
 
+/* Icono del botón */
+
 .submit-btn-icon {
-  width: 45px;
-  height: 45px;
+  width: 25px;
+  height: 25px;
 }
+
+/* ============================================================================
+   BOTON VOLVER
+   ============================================================================ */
 
 .back-btn {
   width: auto;
   height: auto;
+
+  margin: 0;
+
   border: none;
+
   background: transparent;
+
   color: #658393;
+
   font-family: Inter, sans-serif;
-  font-size: 25px;
+
+  font-size: 17px;
   font-weight: 500;
+
   cursor: pointer;
+
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
+/* Hover */
+
+.back-btn:hover {
+  color: #3f5669;
+}
+
+/* ============================================================================
+   TABLET
+   ============================================================================ */
+
 @media (max-width: 900px) {
+
   .recuperar-contrasena {
     padding: 20px 14px 28px;
+  }
+
+  .bienvenido {
+    font-size: 38px;
+  }
+
+  .frame {
+    width: min(100%, 760px);
+
+    min-height: auto;
+
+    padding: 50px 24px 40px;
+  }
+
+  .recuperar-contrasena-title h2 {
+    font-size: 30px;
+
+    margin-bottom: 16px;
+  }
+
+  .recuperar-contrasena-copy p {
+    font-size: 17px;
+
+    margin-bottom: 32px;
+  }
+
+  .notice {
+    width: 100%;
+  }
+
+  .email-label,
+  .email-row {
+    width: 100%;
+  }
+
+  .email-shell {
+    height: 64px;
+  }
+
+  .email-icon-panel {
+    width: 64px;
+    height: 64px;
+
+    flex-basis: 64px;
+  }
+
+  .email-input {
+    font-size: 16px;
+  }
+
+  .submit-btn {
+    width: 220px;
+    height: 50px;
+  }
+
+  .submit-btn span {
+    font-size: 17px;
+  }
+}
+
+/* ============================================================================
+   CELULAR
+   ============================================================================ */
+
+@media (max-width: 620px) {
+
+  .recuperar-contrasena {
+    padding: 18px 12px 24px;
   }
 
   .bienvenido {
@@ -216,84 +489,90 @@ body {
   }
 
   .frame {
-    padding: 16px;
+    padding: 38px 16px 32px;
   }
 
   .recuperar-contrasena-title h2 {
-    font-size: 30px;
+    font-size: 25px;
   }
 
   .recuperar-contrasena-copy p {
-    font-size: 17px;
+    font-size: 15px;
+
+    margin-bottom: 28px;
   }
 
-  .notice-copy h3 {
-    font-size: 22px;
-  }
+  /* Aviso */
 
-  .notice-copy p {
-    font-size: 16px;
-  }
-
-  .email-label,
-  .email-input,
-  .submit-btn,
-  .back-btn {
-    font-size: 16px;
-  }
-
-  .email-shell {
-    min-height: 72px;
-  }
-
-  .email-icon-panel {
-    width: 132px;
-    height: 72px;
-    flex-basis: 132px;
-  }
-
-  .submit-btn {
-    width: min(100%, 348px);
-    height: 68px;
-  }
-
-  .submit-btn-icon {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-@media (max-width: 620px) {
   .notice {
-    padding: 12px;
+    min-height: 64px;
+
+    padding: 9px 10px;
+
+    gap: 9px;
   }
 
   .notice-icon {
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
+
+    flex-basis: 36px;
   }
 
-  .email-label,
-  .email-input,
-  .submit-btn,
-  .back-btn {
+  .notice-copy h3 {
     font-size: 15px;
   }
 
+  .notice-copy p {
+    font-size: 12px;
+  }
+
+  /* Email */
+
+  .email-label {
+    font-size: 16px;
+  }
+
   .email-shell {
-    min-height: 64px;
+    height: 58px;
+
+    margin-bottom: 30px;
   }
 
   .email-icon-panel {
-    width: 120px;
-    height: 64px;
-    flex-basis: 120px;
+    width: 58px;
+    height: 58px;
+
+    flex-basis: 58px;
   }
 
+  .email-input {
+    font-size: 15px;
+
+    padding: 0 14px;
+  }
+
+  /* Botón */
+
   .submit-btn {
-    width: 100%;
-    max-width: 238px;
+    width: 210px;
     height: 46px;
-    gap: 8px;
+
+    margin-bottom: 28px;
+  }
+
+  .submit-btn span {
+    font-size: 16px;
+  }
+
+  .submit-btn-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Volver */
+
+  .back-btn {
+    font-size: 15px;
   }
 }
