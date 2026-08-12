@@ -1,8 +1,6 @@
 package mx.edu.utez.uxvibe.service;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,7 +12,7 @@ import mx.edu.utez.uxvibe.model.ParticipantItem;
 public class ParticipantStore implements ParticipantDao {
 
   private static final ParticipantStore INSTANCE = new ParticipantStore();
-  private static final ZoneId DEFAULT_ZONE = ZoneId.of("America/Mexico_City");
+  private final ParticipantDao dao = new ParticipantDao() {};
   private final Map<String, List<ParticipantItem>> participantsByUserAndTest =
     new LinkedHashMap<>();
   private final Map<String, ParticipantReportBean> reportsByParticipant =
@@ -35,58 +33,32 @@ public class ParticipantStore implements ParticipantDao {
     LocalDateTime startedAt,
     String participantName
   ) {
-    String normalizedEmail = normalize(email);
-    String normalizedTestName = normalize(testName);
-    if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty()) {
+    ParticipantItem participant = dao.registerCompletion(
+      email,
+      testName,
+      startedAt,
+      participantName
+    );
+    if (participant == null) {
       return null;
     }
 
-    List<ParticipantItem> participants =
-      participantsByUserAndTest.computeIfAbsent(
-        normalizedEmail + "|" + normalizedTestName,
-        key -> new ArrayList<>()
-      );
-
-    LocalDateTime completedOn = LocalDateTime.now(DEFAULT_ZONE);
-    int durationMinutes = 5;
-    if (startedAt != null) {
-      durationMinutes = (int) Math.max(
-        1,
-        Duration.between(startedAt, completedOn).toMinutes()
-      );
+    String normalizedEmail = normalize(email);
+    String normalizedTestName = normalize(testName);
+    if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty()) {
+      return participant;
     }
 
     String participantKey = normalizedEmail + "|" + normalizedTestName;
-    String rememberedParticipantName = participantNameByUserAndTest.get(
-      participantKey
-    );
-    String resolvedParticipantName;
-    if (participantName != null && !participantName.trim().isEmpty()) {
-      resolvedParticipantName = resolveParticipantName(participantName, 1);
-    } else if (participants.isEmpty() && rememberedParticipantName != null) {
-      resolvedParticipantName = resolveParticipantName(
-        rememberedParticipantName,
-        1
-      );
-    } else {
-      resolvedParticipantName = resolveParticipantName(
-        null,
-        participants.size() + 1
-      );
-    }
-    participantNameByUserAndTest.put(participantKey, resolvedParticipantName);
-    ParticipantItem participant = new ParticipantItem(
-      resolvedParticipantName,
-      "Participación completada para la prueba " + safeTestName(testName) + ".",
-      durationMinutes,
-      completedOn
-    );
+    List<ParticipantItem> participants =
+      participantsByUserAndTest.computeIfAbsent(participantKey, key -> new ArrayList<>());
     participants.add(participant);
+    participantNameByUserAndTest.put(participantKey, participant.getName());
 
     ParticipantReportBean report = ensureReport(
       normalizedEmail,
       normalizedTestName,
-      resolvedParticipantName
+      participant.getName()
     );
     report.setParticipantName(participant.getName());
     report.setTestName(safeTestName(testName));
@@ -107,13 +79,22 @@ public class ParticipantStore implements ParticipantDao {
       return new ArrayList<>();
     }
 
-    List<ParticipantItem> participants = participantsByUserAndTest.get(
+    List<ParticipantItem> participants = dao.listByUserAndTest(email, testName);
+    if (!participants.isEmpty()) {
+      participantsByUserAndTest.put(
+        normalizedEmail + "|" + normalizedTestName,
+        new ArrayList<>(participants)
+      );
+      return new ArrayList<>(participants);
+    }
+
+    List<ParticipantItem> cachedParticipants = participantsByUserAndTest.get(
       normalizedEmail + "|" + normalizedTestName
     );
-    if (participants == null) {
+    if (cachedParticipants == null) {
       return new ArrayList<>();
     }
-    return new ArrayList<>(participants);
+    return new ArrayList<>(cachedParticipants);
   }
 
   public synchronized void saveSurveyResponse(
