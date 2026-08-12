@@ -176,43 +176,38 @@
           </div>
 
           <!-- Next Button -->
-          <button
-            type="button"
-            id="samNextButton"
-            class="btn-next"
-            aria-label="Siguiente"
-            onclick="
-              var rating = document.querySelector(
-                'input[name=&quot;satisfaction&quot;]:checked',
-              );
-              if (!rating) {
-                alert('Por favor, selecciona una valoración');
-                return;
-              }
-              window.location.href =
-                '${pageContext.request.contextPath}/html/04%20SAM%20Line/sam-2.jsp';
-            "
-          >
-            <span>Siguiente</span>
-            <img
-              src="${pageContext.request.contextPath}/public/SAM 1/carbon-next-outline.svg"
-              alt="Next icon"
-            />
-          </button>
+
+          <div class="survey-navigation">
+
+            <a
+                    class="btn-back"
+                    href="#"
+                    id="samBackButton"
+                    aria-label="Regresar a la página anterior"
+            >
+              <img
+                      src="${pageContext.request.contextPath}/public/SAM 1/lets-icons-back-light.svg"
+                      alt=""
+                      aria-hidden="true"
+              />
+              <span>Regresar</span>
+            </a>
+
+            <button
+                    type="button"
+                    id="samNextButton"
+                    class="btn-next"
+                    aria-label="Siguiente"
+                    onclick="goToNextPage()"
+            >
+              <span>Siguiente</span>
+              <img
+                      src="${pageContext.request.contextPath}/public/SAM 1/carbon-next-outline.svg"
+                      alt="Next icon"
+              />
+            </button>
+          </div>
         </form>
-        <a
-          class="btn-back"
-          href="#"
-          id="samBackButton"
-          aria-label="Regresar a la página anterior"
-        >
-          <img
-            src="${pageContext.request.contextPath}/public/SAM 1/lets-icons-back-light.svg"
-            alt=""
-            aria-hidden="true"
-          />
-          <span>Regresar</span>
-        </a>
       </main>
     </div>
 

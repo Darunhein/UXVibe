@@ -372,57 +372,65 @@
             </div>
           </div>
 
-          <!-- Next Button -->
-          <button
-            type="button"
-            id="surveyNextButton"
-            class="btn-next"
-            aria-label="Siguiente"
-            onclick="
-              (function () {
-                var form = document.getElementById('surveyForm');
-                var questions = ['q6', 'q7', 'q8', 'q9', 'q10'];
-                for (var i = 0; i < questions.length; i++) {
-                  var element = questions[i];
-                  var selected = form.querySelector(
-                    'input[name="' + element + '"]:checked',
-                  );
-                  if (!selected) {
-                    alert('Por favor, responde todas las preguntas antes de seguir.');
-                    return;
-                  }
-                }
-                fetch('${pageContext.request.contextPath}/survey-submit', {
-                  method: 'POST',
-                  body: new FormData(form),
-                }).then(function () {
-                  window.location.href =
-                    '${pageContext.request.contextPath}/html/04%20SAM%20Line/encuesta-3.jsp';
-                });
-              })()
-            "
-          >
-            <span>Siguiente</span>
-            <img
-              src="${pageContext.request.contextPath}/public/encuesta 2/carbon-next-outline.svg"
-              alt=""
-              aria-hidden="true"
-            />
-          </button>
+          <div class="survey-navigation">
+
+            <a
+                    class="btn-back"
+                    href="#"
+                    id="surveyBackButton"
+                    aria-label="Regresar a la página anterior"
+            >
+              <img
+                      src="${pageContext.request.contextPath}/public/encuesta 2/lets-icons-back-light.svg"
+                      alt=""
+                      aria-hidden="true"
+              />
+              <span>Regresar</span>
+            </a>
+
+            <button
+                    type="button"
+                    id="surveyNextButton"
+                    class="btn-next"
+                    aria-label="Siguiente"
+                    onclick="
+                            (function () {
+                            var form = document.getElementById('surveyForm');
+                            var questions = ['q6', 'q7', 'q8', 'q9', 'q10'];
+
+                            for (var i = 0; i < questions.length; i++) {
+                            var selected = form.querySelector(
+                            'input[name=&quot;' + questions[i] + '&quot;]:checked'
+                            );
+
+                            if (!selected) {
+                            alert('Por favor, responde todas las preguntas antes de seguir.');
+                            return;
+                            }
+                            }
+
+                            fetch('${pageContext.request.contextPath}/survey-submit', {
+                            method: 'POST',
+                            body: new FormData(form),
+                            }).then(function () {
+                            window.location.href =
+                            '${pageContext.request.contextPath}/html/04%20SAM%20Line/encuesta-3.jsp';
+                            });
+                            })()
+                            "
+            >
+              <span>Siguiente</span>
+
+              <img
+                      src="${pageContext.request.contextPath}/public/encuesta 2/carbon-next-outline.svg"
+                      alt=""
+                      aria-hidden="true"
+              />
+            </button>
+
+          </div>
+
         </form>
-        <a
-          class="btn-back"
-          href="#"
-          id="surveyBackButton"
-          aria-label="Regresar a la página anterior"
-        >
-          <img
-            src="${pageContext.request.contextPath}/public/encuesta 2/lets-icons-back-light.svg"
-            alt=""
-            aria-hidden="true"
-          />
-          <span>Regresar</span>
-        </a>
       </main>
     </div>
     <script src="${pageContext.request.contextPath}/JavaScript/encuesta-2.js"></script>

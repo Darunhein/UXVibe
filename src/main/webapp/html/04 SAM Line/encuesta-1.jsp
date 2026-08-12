@@ -372,33 +372,39 @@
           </div>
 
           <!-- Next Button -->
-          <button
-            type="button"
-            id="surveyNextButton"
-            class="btn-next"
-            aria-label="Siguiente"
-          >
-            <span>Siguiente</span>
-            <img
-              src="${pageContext.request.contextPath}/public/encuesta 1/carbon-next-outline.svg"
-              alt=""
-              aria-hidden="true"
-            />
-          </button>
+          <div class="survey-navigation">
+
+            <a
+                    class="btn-back"
+                    href="javascript:history.back()"
+                    id="surveyBackButton"
+                    aria-label="Regresar a la página anterior"
+            >
+              <img
+                      src="${pageContext.request.contextPath}/public/encuesta 1/lets-icons-back-light.svg"
+                      alt=""
+                      aria-hidden="true"
+              />
+              <span>Regresar</span>
+            </a>
+
+            <button
+                    type="button"
+                    id="surveyNextButton"
+                    class="btn-next"
+                    aria-label="Siguiente"
+            >
+              <span>Siguiente</span>
+              <img
+                      src="${pageContext.request.contextPath}/public/encuesta 1/carbon-next-outline.svg"
+                      alt=""
+                      aria-hidden="true"
+              />
+            </button>
+
+          </div>
         </form>
-        <a
-          class="btn-back"
-          href="javascript:history.back()"
-          id="surveyBackButton"
-          aria-label="Regresar a la página anterior"
-        >
-          <img
-            src="${pageContext.request.contextPath}/public/encuesta 1/lets-icons-back-light.svg"
-            alt=""
-            aria-hidden="true"
-          />
-          <span>Regresar</span>
-        </a>
+
       </main>
     </div>
 
