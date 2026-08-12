@@ -1,10 +1,9 @@
-/* 
-============================================================================
-   Grabación de prueba screen
-============================================================================ 
+/*
+Grabación de prueba screen
+
 */
 
-* {
+{
   box-sizing: border-box;
 }
 
@@ -63,7 +62,7 @@ body {
 .wave-card {
   width: 124px;
   height: 114px;
-  margin-top: 8px;
+  margin-top: 35px; /* antes: 8px */
   border-radius: 6px;
   background: #f9f4f1;
   display: flex;
@@ -198,9 +197,9 @@ body {
   align-items: center;
   justify-content: center;
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    opacity 0.2s ease;
+          transform 0.2s ease,
+          box-shadow 0.2s ease,
+          opacity 0.2s ease;
 }
 
 .pause-stack > summary.material-symbolspause-icon {
@@ -320,18 +319,18 @@ body {
 
 .punto-de-prueba {
   margin: 0;
-  position: absolute;
-  top: 42px;
-  left: 0;
+  position: relative; /* antes: absolute */
+  top: auto;
+  left: auto;
+  width: 100%;
+  text-align: center;
   font-weight: 400;
   font-family: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
   color: #5f7d93;
   font-size: 24px;
   z-index: 4;
+  margin-top: 25px;
+  margin-bottom: 30px;
 }
 
 .merged-asset-1-icon {

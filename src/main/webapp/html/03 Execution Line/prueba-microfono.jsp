@@ -79,9 +79,18 @@
           </div>
         </div>
 
-        <!-- Waveform Visualization -->
         <div class="waveform-container" aria-live="polite">
-          <div class="waveform-placeholder">Esperando acceso al micrófono…</div>
+          <div class="wave">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
 
         <!-- Back Button -->

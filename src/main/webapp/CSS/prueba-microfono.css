@@ -1,194 +1,344 @@
 /* ============================================================================
-   Prueba de Micrófono Page Styles
+   PRUEBA DE MICRÓFONO
    ============================================================================ */
 
-/* Container and Layout */
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  min-height: 100vh;
+}
+
+
+/* ============================================================================
+   CONTENEDOR PRINCIPAL
+   ============================================================================ */
+
 .microphone-test-container {
   width: 100%;
   min-height: 100vh;
+
+  box-sizing: border-box;
+
   background: linear-gradient(135deg, #d4dfe9 0%, #c5d5e3 100%);
+
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+
+  padding: 18px;
 }
+
+
+/* ============================================================================
+   TARJETA PRINCIPAL
+   ============================================================================ */
 
 .microphone-test-frame {
-  width: min(100%, 1040px);
-  min-height: 720px;
+  width: min(100%, 900px);
+  height: min(92vh, 670px);
+
+  box-sizing: border-box;
+
   background-color: #ffffff;
-  border-radius: 12px;
-  padding: 52px 36px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+
+  border-radius: 10px;
+
+  padding: 28px 38px;
+
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.12);
+
   display: flex;
   flex-direction: column;
+
   align-items: center;
   justify-content: center;
-  gap: 32px;
+
+  gap: 18px;
+
   position: relative;
+
+  overflow: hidden;
 }
 
-/* Header Section */
+
+/* ============================================================================
+   ENCABEZADO
+   ============================================================================ */
+
 .test-header {
+  width: 100%;
+
   text-align: center;
+
   border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 30px;
+
+  padding-bottom: 18px;
+
+  flex-shrink: 0;
 }
+
 
 .header-content {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+
+  gap: 7px;
 }
+
 
 .title-with-icon {
   display: flex;
+
   align-items: center;
   justify-content: center;
-  gap: 12px;
+
+  gap: 10px;
 }
+
 
 .test-title {
   font-family: "Inter", sans-serif;
-  font-size: 36px;
+
+  font-size: 30px;
   font-weight: 600;
+
   color: #4a6b87;
+
   margin: 0;
+
   line-height: 1.2;
 }
 
+
 .microphone-icon {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
 }
+
 
 .test-subtitle {
   font-family: "Inter", sans-serif;
-  font-size: 16px;
+
+  font-size: 15px;
   font-weight: 400;
+
   color: #9db3c4;
+
   margin: 0;
 }
 
-/* Status Section */
+
+/* ============================================================================
+   ESTADO DEL MICRÓFONO
+   ============================================================================ */
+
 .status-section {
   display: flex;
+
   flex-direction: column;
-  gap: 30px;
-  width: 100%;
-}
 
-.status-item {
-  display: flex;
-  gap: 15px;
-  align-items: flex-start;
-  padding: 20px;
-  background-color: #f8fafb;
-  border-radius: 8px;
-  border: 1px solid #e8eef5;
-}
+  gap: 12px;
 
-.status-icon {
-  width: 48px;
-  height: 48px;
+  width: min(100%, 650px);
+
   flex-shrink: 0;
 }
 
+
+.status-item {
+  display: flex;
+
+  gap: 14px;
+
+  align-items: center;
+
+  padding: 14px 18px;
+
+  background-color: #f8fafb;
+
+  border-radius: 8px;
+
+  border: 1px solid #e8eef5;
+
+  box-sizing: border-box;
+}
+
+
+.status-icon {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+}
+
+
 .status-text {
   display: flex;
+
   flex-direction: column;
-  gap: 4px;
+
+  gap: 3px;
 }
+
 
 .status-label {
   font-family: "Inter", sans-serif;
+
   font-size: 14px;
   font-weight: 600;
+
   color: #4a6b87;
+
   margin: 0;
 }
+
 
 .status-value {
   font-family: "Inter", sans-serif;
+
   font-size: 13px;
   font-weight: 400;
+
   color: #9db3c4;
+
   margin: 0;
 }
 
-.status-value.is-active {
-  color: #2f7d4f;
-  font-weight: 600;
-}
 
-.status-value.is-error {
-  color: #c24f4f;
-  font-weight: 600;
-}
+/* ============================================================================
+ONDA DEL MICRÓFONO
+============================================================================ */
 
-/* Waveform Container */
 .waveform-container {
-  width: min(100%, 680px);
-  min-height: 220px;
-  background: linear-gradient(135deg, #e8eef5 0%, #f5f8fc 100%);
-  border-radius: 12px;
+  width: min(100%, 650px);
+  height: 145px;
+  box-sizing: border-box;
+  background-color: #e8eef5;
+  border-radius: 8px;
   border: 2px solid #d0dce8;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 24px;
+  padding: 14px;
+  flex-shrink: 1;
 }
 
-.waveform-placeholder {
-  color: #4a6b87;
-  font-family: "Inter", sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  text-align: center;
-}
-
-.waveform-bars {
-  width: 100%;
-  height: 140px;
+.wave {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  width: 100%;
+  height: 100%;
 }
 
-.wave-bar {
-  display: inline-block;
+.wave span {
+  display: block;
   width: 10px;
-  min-height: 16%;
-  max-height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #5a7a8c 0%, #91b9ce 100%);
-  height: var(--wave-height, 16%);
-  transition: height 0.08s ease-out;
+  background-color: #5a7a8c;
+  border-radius: 20px;
+  transform-origin: center;
+  animation: pulse 1.2s infinite ease-in-out;
 }
 
-/* Back Button */
+.wave span:nth-child(1) {
+  height: 20px;
+  animation-delay: 0s;
+}
+
+.wave span:nth-child(2) {
+  height: 40px;
+  animation-delay: 0.1s;
+}
+
+.wave span:nth-child(3) {
+  height: 70px;
+  animation-delay: 0.2s;
+}
+
+.wave span:nth-child(4) {
+  height: 100px;
+  animation-delay: 0.3s;
+}
+
+.wave span:nth-child(5) {
+  height: 120px;
+  animation-delay: 0.4s;
+}
+
+.wave span:nth-child(6) {
+  height: 100px;
+  animation-delay: 0.5s;
+}
+
+.wave span:nth-child(7) {
+  height: 70px;
+  animation-delay: 0.6s;
+}
+
+.wave span:nth-child(8) {
+  height: 40px;
+  animation-delay: 0.7s;
+}
+
+.wave span:nth-child(9) {
+  height: 20px;
+  animation-delay: 0.8s;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scaleY(0.5);
+  }
+
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+/* ============================================================================
+   BOTÓN REGRESAR
+   ============================================================================ */
+
 .btn-back {
   display: flex;
+
   align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
+
+  gap: 7px;
+
+  padding: 9px 17px;
+
   background-color: #5a7a8c;
+
   color: #ffffff;
+
   border: none;
+
   border-radius: 6px;
+
   font-family: "Inter", sans-serif;
-  font-size: 14px;
+
+  font-size: 13px;
+
   font-weight: 600;
+
   cursor: pointer;
+
   transition: all 0.3s ease;
+
   width: fit-content;
+
   position: absolute;
-  bottom: 20px;
-  left: 20px;
+
+  bottom: 16px;
+  left: 18px;
+
   text-decoration: none;
 }
+
 
 .btn-back:hover {
   background-color: #4a6b7c;
@@ -199,7 +349,127 @@
   transform: translateY(1px);
 }
 
+
 .btn-back img {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
+}
+
+
+/* ============================================================================
+   PANTALLAS CON POCA ALTURA
+   ============================================================================ */
+
+@media (max-height: 750px) {
+
+  .microphone-test-container {
+    padding: 10px;
+  }
+
+  .microphone-test-frame {
+    height: 96vh;
+
+    padding: 20px 30px;
+
+    gap: 12px;
+  }
+
+  .test-title {
+    font-size: 27px;
+  }
+
+  .microphone-icon {
+    width: 27px;
+    height: 27px;
+  }
+
+  .test-subtitle {
+    font-size: 14px;
+  }
+
+  .status-item {
+    padding: 11px 15px;
+  }
+
+  .status-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .waveform-container {
+    height: 120px;
+  }
+}
+
+
+/* ============================================================================
+   TABLET
+   ============================================================================ */
+
+@media (max-width: 900px) {
+
+  .microphone-test-container {
+    padding: 15px;
+  }
+
+  .microphone-test-frame {
+    width: 100%;
+  }
+}
+
+
+/* ============================================================================
+   CELULAR
+   ============================================================================ */
+
+@media (max-width: 600px) {
+
+  .microphone-test-container {
+    padding: 10px;
+  }
+
+  .microphone-test-frame {
+    width: 100%;
+
+    height: auto;
+
+    min-height: calc(100vh - 20px);
+
+    padding: 25px 18px 60px;
+
+    overflow: visible;
+  }
+
+  .test-title {
+    font-size: 24px;
+  }
+
+  .test-subtitle {
+    font-size: 13px;
+  }
+
+  .status-section {
+    width: 100%;
+  }
+
+  .status-item {
+    padding: 12px;
+  }
+
+  .waveform-container {
+    width: 100%;
+
+    height: 120px;
+  }
+
+  .btn-back {
+    position: relative;
+
+    left: auto;
+    bottom: auto;
+
+    align-self: center;
+
+    margin-top: 5px;
+  }
 }
