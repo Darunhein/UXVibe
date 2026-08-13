@@ -202,16 +202,36 @@ body {
 /* =========================================
    ICONO
    ========================================= */
+.crear-prueba__input-shell {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+.crear-prueba__input-shell--textarea {
+  align-items: stretch !important;
+  padding: 0 !important;
+}
+
+.crear-prueba__input-shell--textarea .crear-prueba__input-icon {
+  height: 100% !important;
+  align-self: stretch !important;
+  margin: 0 !important;
+}
+
+.crear-prueba__textarea {
+  margin: 0 !important;
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+  box-sizing: border-box;
+}
 
 .crear-prueba__input-icon {
   width: 50px;
   height: 50px;
-
   flex: 0 0 50px;
-
   object-fit: cover;
 }
-
 
 /* =========================================
    INPUT

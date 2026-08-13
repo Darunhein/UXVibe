@@ -37,9 +37,19 @@
           <h1 id="crear-prueba-title" class="crear-prueba__title">
             Crear prueba nueva
           </h1>
+          <img
+                  class="crear-prueba__hero"
+                  src="${pageContext.request.contextPath}/public/crear-prueba/merged-asset-2@2x.2.png"
+                  alt="Nombre de la prueba"
+          />
           <p class="crear-prueba__subtitle">
             Ingresa el nombre de la prueba que deseas crear
           </p>
+          <img
+                  class="crear-prueba__hero"
+                  src="${pageContext.request.contextPath}/public/crear-prueba/merged-asset-2@2x.2.png"
+                  alt="Nombre de la prueba"
+          />
 
           <label class="visually-hidden" for="nombre-prueba"
             >Nombre de la prueba</label
@@ -50,6 +60,7 @@
               src="${pageContext.request.contextPath}/public/crear-prueba/merged-asset-2@2x.png"
               alt=""
             />
+
             <input
               id="nombre-prueba"
               class="crear-prueba__input"

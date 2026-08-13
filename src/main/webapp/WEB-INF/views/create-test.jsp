@@ -33,13 +33,13 @@
 
             <label class="visually-hidden" for="descripcion-prueba">Descripción de la prueba</label>
             <div class="crear-prueba__input-shell crear-prueba__input-shell--textarea">
-              <img class="crear-prueba__input-icon" src="${pageContext.request.contextPath}/public/crear-prueba/merged-asset-3@2x.png" alt="" />
+              <img class="crear-prueba__input-icon" src="${pageContext.request.contextPath}/public/crear-prueba/merged-asset-2@2x.png" alt="" />
               <textarea id="descripcion-prueba" class="form-input crear-prueba__input crear-prueba__textarea" name="description" placeholder="Descripción de la prueba" rows="4"><%= request.getAttribute("description") != null ? request.getAttribute("description") : "" %></textarea>
             </div>
 
             <label class="visually-hidden" for="sistema-prueba">Sistema a evaluar</label>
             <div class="crear-prueba__input-shell">
-              <img class="crear-prueba__input-icon" src="${pageContext.request.contextPath}/public/crear-prueba/merged-asset-4@2x.png" alt="" />
+              <img class="crear-prueba__input-icon" src="${pageContext.request.contextPath}/public/crear-prueba/merged-asset-2@2x.png" alt="" />
               <input id="sistema-prueba" class="form-input crear-prueba__input" type="text" name="systemLink" placeholder="Enlace del sistema que se probará" autocomplete="off" value="<%= request.getAttribute("systemLink") != null ? request.getAttribute("systemLink") : "" %>" />
             </div>
 

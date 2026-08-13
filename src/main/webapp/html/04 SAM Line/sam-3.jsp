@@ -182,9 +182,8 @@
                     aria-label="Regresar a la página anterior"
             >
               <img
-                      src="${pageContext.request.contextPath}/public/SAM 3/lets-icons-back-light.svg"
-                      alt=""
-                      aria-hidden="true"
+                      src="${pageContext.request.contextPath}/public/participantes/lets-icons-back-light.svg" alt=""
+
               />
               <span>Regresar</span>
             </a>

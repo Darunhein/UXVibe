@@ -132,8 +132,8 @@
             aria-label="Regresar a la página anterior"
           >
             <img
-              src="${pageContext.request.contextPath}/public/Cuestionario SB 2/lets-icons-back-light.svg"
-              alt=""
+                    src="${pageContext.request.contextPath}/public/participantes/lets-icons-back-light.svg" alt=""
+                    alt=""
               aria-hidden="true"
             />
             <span>Regresar</span>
