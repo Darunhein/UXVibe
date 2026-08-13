@@ -81,6 +81,33 @@
     }
     return count == 0 ? 0 : total / count;
   }
+
+  // helper to parse numeric from response robustly
+  private Integer parseNumeric(Map<String, Object> r) {
+    if (r == null) return null;
+    Object numObj = r.get("numeric");
+    if (numObj != null) {
+      try { return Integer.parseInt(String.valueOf(numObj)); } catch(Exception e) {}
+    }
+    Object ans = r.get("answer");
+    String q = r.get("question") == null ? null : String.valueOf(r.get("question"));
+    if (q != null && q.startsWith("q")) {
+      return normalizeLikertScore(q, ans);
+    }
+    if (ans == null) return null;
+    String s = String.valueOf(ans).trim();
+    try { return Integer.parseInt(s); } catch(Exception e) {}
+    // stress textual mapping (english and spanish)
+    String low = s.toLowerCase();
+    switch(low) {
+      case "never": case "nunca": return 1;
+      case "sometimes": case "a veces": case "aveces": return 2;
+      case "half-time": case "half time": case "medio tiempo": case "medio-tiempo": case "mitad del tiempo": return 3;
+      case "most-time": case "most time": case "la mayor parte": case "la mayor parte del tiempo": case "casi siempre": case "frecuentemente": return 4;
+      case "always": case "siempre": return 5;
+      default: return null;
+    }
+  }
 %>
 <%
   ParticipantReportBean report = (ParticipantReportBean) request.getAttribute("report");
@@ -95,12 +122,40 @@
   String description = report.getDescription() == null ? "" : report.getDescription();
   Integer durationMinutes = report.getDurationMinutes();
   String durationLabel = durationMinutes == null ? "Sin información" : durationMinutes + " min";
-  String completedOn = report.getCompletedOn() == null ? "Sin información" : report.getCompletedOn().toString();
+  java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+  String completedOn = report.getCompletedOn() == null ? "Sin información" : report.getCompletedOn().format(dtf);
   String audioUrl = report.getAudioUrl();
   List<Map<String, Object>> responses = report.getSurveyResponses();
-  double satisfactionAverage = calculateSatisfactionAverage(responses);
-  String satisfactionAverageLabel = String.format("%.1f", satisfactionAverage);
-  String satisfactionSummaryLabel = getSummaryLabel(satisfactionAverage);
+
+  // compute averages robustly
+  double stressTotal = 0; int stressCount = 0;
+  double samTotal = 0; int samCount = 0;
+  double encuestaTotal = 0; int encuestaCount = 0;
+  if (responses != null) {
+    for (Map<String,Object> r : responses) {
+      String q = r == null ? null : String.valueOf(r.get("question"));
+      Integer numeric = parseNumeric(r);
+      if (numeric == null) continue;
+      if ("stress".equals(q) || "relaxation".equals(q)) { stressTotal += numeric; stressCount++; }
+      else if ("satisfaction".equals(q) || "impact".equals(q) || "control".equals(q)) { samTotal += numeric; samCount++; }
+      else if (q != null && q.startsWith("q")) { encuestaTotal += numeric; encuestaCount++; }
+    }
+  }
+  double stressAvg = stressCount == 0 ? 0 : stressTotal / stressCount;
+  double samAvg = samCount == 0 ? 0 : samTotal / samCount;
+  double encuestaAvg = encuestaCount == 0 ? 0 : encuestaTotal / encuestaCount;
+  // overall final average: combine encuesta (1-5), stress (1-5), sam scaled to 5
+  double samScaled = samAvg == 0 ? 0 : (samAvg / 9.0 * 5.0);
+  double overallAvg = 0;
+  int overallParts = 0;
+  if (encuestaCount>0) { overallAvg += encuestaAvg; overallParts++; }
+  if (stressCount>0) { overallAvg += stressAvg; overallParts++; }
+  if (samCount>0) { overallAvg += samScaled; overallParts++; }
+  overallAvg = overallParts==0?0: overallAvg / overallParts;
+  String overallLabel = String.format("%.2f", overallAvg);
+  String stressLabel = String.format("%.2f", stressAvg);
+  String samLabel = String.format("%.2f", samAvg);
+  String encuestaLabel = String.format("%.2f", encuestaAvg);
 %>
 <!doctype html>
 <html lang="es">
@@ -162,55 +217,14 @@
           <div class="reporte-summary-grid">
             <article class="reporte-summary-card">
               <span class="reporte-summary-title">Promedio final</span>
-              <span class="reporte-summary-value"><%= satisfactionAverageLabel %>/5</span>
-              <span class="reporte-summary-note"><%= satisfactionSummaryLabel %></span>
-            </article>
-            <article class="reporte-summary-card">
-              <span class="reporte-summary-title">Respuestas registradas</span>
-              <span class="reporte-summary-value"><%= responses == null ? 0 : responses.size() %></span>
-              <span class="reporte-summary-note">Incluye cuestionarios y SAM</span>
+              <span class="reporte-summary-value"><%= overallLabel %>/5</span>
+              <span class="reporte-summary-note"><%= getSummaryLabel(overallAvg) %></span>
             </article>
           </div>
         </section>
 
         <section class="reporte-block-1">
           <h2>Gráficas rápidas</h2>
-          <%
-            // calculate stress average (sb2)
-            double stressTotal = 0; int stressCount = 0;
-            double samTotal = 0; int samCount = 0;
-            double encuestaTotal = 0; int encuestaCount = 0;
-            if (responses != null) {
-              for (Map<String, Object> r : responses) {
-                String q = r == null ? null : String.valueOf(r.get("question"));
-                Object ans = r == null ? null : r.get("answer");
-                Integer numeric = null;
-                try {
-                  Object numObj = r.get("numeric");
-                  if (numObj != null) {
-                    numeric = Integer.parseInt(String.valueOf(numObj));
-                  } else if (ans != null) {
-                    numeric = Integer.parseInt(String.valueOf(ans));
-                  }
-                } catch (Exception ignore) {}
-                if (numeric == null) continue;
-
-                if ("stress".equals(q) || "relaxation".equals(q)) {
-                  stressTotal += numeric; stressCount++;
-                } else if ("satisfaction".equals(q) || "impact".equals(q) || "control".equals(q)) {
-                  samTotal += numeric; samCount++;
-                } else if (q != null && q.startsWith("q")) {
-                  encuestaTotal += numeric; encuestaCount++;
-                }
-              }
-            }
-            double stressAvg = stressCount == 0 ? 0 : stressTotal / stressCount;
-            double samAvg = samCount == 0 ? 0 : samTotal / samCount;
-            double encuestaAvg = encuestaCount == 0 ? 0 : encuestaTotal / encuestaCount;
-            String stressLabel = String.format("%.2f", stressAvg);
-            String samLabel = String.format("%.2f", samAvg);
-            String encuestaLabel = String.format("%.2f", encuestaAvg);
-          %>
 
           <div class="reporte-graphs">
             <div class="reporte-graph-item">
@@ -245,44 +259,41 @@
             .reporte-graphs{display:flex;gap:24px;margin-top:12px}
             .reporte-graph-item{flex:1;display:flex;flex-direction:column;align-items:center}
             .reporte-graph-title{font-size:14px;margin-bottom:8px}
-            .pie-chart{width:120px;height:120px;display:flex;align-items:center;justify-content:center}
+            .pie-chart{width:160px;height:160px;display:flex;align-items:center;justify-content:center}
             .pie{width:100%;height:100%;border-radius:50%;background:conic-gradient(var(--color) var(--pct,0)%, #eee 0);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
-            .pie::before{content:"";position:absolute;width:70%;height:70%;background:white;border-radius:50%}
-            .pie-center{position:relative;text-align:center;font-weight:700}
-            .pie-center small{display:block;font-weight:600;font-size:12px;color:#666;margin-top:4px}
+            .pie::before{content:"";position:absolute;width:60%;height:60%;background:white;border-radius:50%}
+            .pie-center{position:relative;display:flex;align-items:baseline;gap:6px;font-weight:700}
+            .pie-center span{font-size:20px}
+            .pie-center small{font-weight:600;font-size:14px;color:#666}
           </style>
         </section>
 
-        <% if (responses != null && !responses.isEmpty()) { %>
-          <section class="reporte-block-1">
-            <h2>Respuestas registradas</h2>
-            <div class="reporte-response-list">
-              <% for (Map<String, Object> surveyResponse : responses) { %>
-                <article class="reporte-response-item">
-                  <div class="reporte-response-head">
-                    <strong><%= getDisplayLabel(String.valueOf(surveyResponse.get("question"))) %></strong>
-                    <span class="reporte-response-badge"><%= formatResponseValue(String.valueOf(surveyResponse.get("question")), surveyResponse.get("answer")) %></span>
-                  </div>
-                  <div class="reporte-response-meta">
-                    <span>Marcada: <%= surveyResponse.get("answer") == null ? "Sin respuesta" : String.valueOf(surveyResponse.get("answer")) %></span>
-                    <span>
-                      <% if (surveyResponse.get("question") != null && String.valueOf(surveyResponse.get("question")).startsWith("q")) { %>
-                        Escala: <%= isInvertedSurveyQuestion(String.valueOf(surveyResponse.get("question"))) ? "valor invertido" : "valor directo" %>
-                      <% } else { %>
-                        Escala: SAM / 9
-                      <% } %>
-                    </span>
-                  </div>
-                </article>
+        <section class="reporte-block-1">
+          <h2>Respuestas (resumen)</h2>
+          <div class="reporte-box">
+            <ul class="reporte-simple-list">
+              <%
+                int shown = 0;
+                if (responses != null) {
+                  for (int i = 0; i < responses.size() && shown < 15; i++) {
+                    Map<String,Object> r = responses.get(i);
+                    String q = r == null ? null : String.valueOf(r.get("question"));
+                    Object a = r == null ? null : r.get("answer");
+                    if (q == null) continue;
+                    %>
+                    <li><strong><%= getDisplayLabel(q) %>:</strong> <%= formatResponseValue(q, a) %></li>
+                    <%
+                    shown++;
+                  }
+                }
+                if (shown == 0) {
+              %>
+                <li>No hay respuestas registradas.</li>
               <% } %>
-            </div>
-          </section>
-        <% } else { %>
-          <section class="reporte-block-1">
-            <h2>Respuestas registradas</h2>
-            <div class="reporte-box reporte-box--summary">No se registraron respuestas de encuesta para este participante.</div>
-          </section>
-        <% } %>
+            </ul>
+          </div>
+        </section>
+
 
         <% if (audioUrl != null && !audioUrl.isEmpty()) { %>
           <section class="reporte-block-2">

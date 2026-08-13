@@ -198,7 +198,6 @@
                     id="samNextButton"
                     class="btn-next"
                     aria-label="Siguiente"
-                    onclick="goToNextPage()"
             >
               <span>Siguiente</span>
               <img

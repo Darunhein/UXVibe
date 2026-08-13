@@ -22,6 +22,7 @@ public interface TestDao {
   String LIST_BY_USER_SQL =
    "SELECT NOMBRE, DESCRIPCION, SYSTEM_LINK, CREATED_ON FROM PRUEBAS WHERE LOWER(EMAIL_USUARIO)=LOWER(?) ORDER BY CREATED_ON, ID_PRUEBA";
   Map<String, List<TestItem>> IN_MEMORY_TESTS_BY_USER = new LinkedHashMap<>();
+  String DELETE_TEST_SQL = "DELETE FROM PRUEBAS WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE)=LOWER(?)";
 
   default void createTest(
    String email,
@@ -100,4 +101,28 @@ public interface TestDao {
   private static String normalizeEmail(String email) {
    return email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
   }
+
+ default boolean deleteTest(String email, String testName) {
+   String normalizedEmail = normalizeEmail(email);
+   String normalizedTestName = testName == null ? "" : testName.trim();
+   if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty()) {
+     return false;
+   }
+   try (
+     Connection conn = ConexionBD.getInstancia().getConnection();
+     PreparedStatement ps = conn.prepareStatement(DELETE_TEST_SQL)
+   ) {
+     ps.setString(1, normalizedEmail);
+     ps.setString(2, normalizedTestName);
+     ps.executeUpdate();
+   } catch (SQLException ex) {
+     ex.printStackTrace();
+   }
+   List<TestItem> list = IN_MEMORY_TESTS_BY_USER.get(normalizedEmail);
+   if (list != null) {
+     list.removeIf(t -> normalizedTestName.equals(t.getName()));
+   }
+   return true;
+ }
 }
+

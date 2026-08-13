@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   var form = document.getElementById("satisfactionForm");
   if (!form) {
     return;

@@ -77,6 +77,10 @@
                       <img src="${pageContext.request.contextPath}/public/test-section/Group-7.svg" alt="" />
                     </button>
                   </form>
+                  <form class="test-section__action-form test-section__action-form--delete" action="${pageContext.request.contextPath}/delete-test" method="post" onsubmit="return confirm('¿Borrar la prueba &quot;'+ document.getElementsByName('testName' )[0].value + '&quot;? Esta acción eliminará participantes y respuestas.')">
+                    <input type="hidden" name="testName" value="<%= escapedTestName %>" />
+                    <button class="test-section__delete-button" type="submit" aria-label="Borrar prueba <%= escapedTestName %>">Borrar</button>
+                  </form>
                 </article>
               <% } %>
             </section>

@@ -1,4 +1,4 @@
-﻿<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!doctype html>
 <html lang="es">
   <head>
@@ -22,7 +22,7 @@
       href="https://fonts.googleapis.com/css2?family=Actor:wght@400&display=swap"
     />
   </head>
-  <body>
+  <body data-context-path="${pageContext.request.contextPath}">
     <div class="microphone-test-container">
       <main class="microphone-test-frame">
         <!-- Header Section -->
@@ -50,7 +50,7 @@
             />
             <div class="status-text">
               <h3 class="status-label">Estado</h3>
-              <p class="status-value">Micrófono funcionando correctamente</p>
+              <p class="status-value">Micrófono sin iniciar</p>
             </div>
           </div>
 
@@ -62,7 +62,7 @@
             />
             <div class="status-text">
               <h3 class="status-label">Duración de la prueba</h3>
-              <p class="status-value">00:08</p>
+              <p class="status-value" id="test-duration">00:00</p>
             </div>
           </div>
 
@@ -73,25 +73,25 @@
               alt="Device icon"
             />
             <div class="status-text">
-              <h3 class="status-label">Dispositivo detectado</h3>
-              <p class="status-value">Microphone Array (Realtek® audio)</p>
+              <h3 class="status-label">Dispositivo</h3>
+              <p class="status-value" id="device-name">No detectado</p>
             </div>
           </div>
         </div>
 
         <div class="waveform-container" aria-live="polite">
-          <div class="wave">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+          <!-- waveform bars inserted by JS -->
         </div>
+
+        <div class="microphone-controls">
+          <!-- Simplified controls: single record toggle and play -->
+          <button id="btn-record" class="btn-primary">Grabar</button>
+          <button id="btn-play" class="btn-secondary" disabled>Reproducir</button>
+          <span id="record-status" class="record-status">Sin grabación</span>
+        </div>
+
+        <!-- Hidden audio element for playback -->
+        <audio id="preview-audio" controls style="display:none"></audio>
 
         <!-- Back Button -->
         <a

@@ -105,9 +105,11 @@ public class ParticipantReportBean {
       if ("satisfaction".equals(question) || "impact".equals(question) || "control".equals(question)) {
         return Integer.parseInt(answer);
       }
-      // Stress questions use textual options: never, sometimes, half-time, most-time, always -> map 1..5
+      // Stress questions use textual options: support English and Spanish labels -> map 1..5
       if ("stress".equals(question) || "relaxation".equals(question)) {
-        switch (answer.toLowerCase()) {
+        String a = answer.toLowerCase();
+        switch (a) {
+          // English
           case "never":
             return 1;
           case "sometimes":
@@ -121,6 +123,25 @@ public class ParticipantReportBean {
           case "most_time":
             return 4;
           case "always":
+            return 5;
+          // Spanish variants
+          case "nunca":
+            return 1;
+          case "a veces":
+          case "aveces":
+          case "a_veces":
+            return 2;
+          case "medio tiempo":
+          case "medio-tiempo":
+          case "medio_tiempo":
+          case "mitad del tiempo":
+            return 3;
+          case "la mayor parte":
+          case "la mayor parte del tiempo":
+          case "casi siempre":
+          case "frecuentemente":
+            return 4;
+          case "siempre":
             return 5;
           default:
             return null;
