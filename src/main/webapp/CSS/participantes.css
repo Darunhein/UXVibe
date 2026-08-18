@@ -429,72 +429,69 @@ body {
 
     grid-template-rows: auto auto;
 
-    gap: 14px 8px;
+    gap: 16px 10px;
 
     padding: 18px 10px;
 
     border-radius: 0;
+
+    align-items: center;
+    justify-items: center;
   }
 
 
-  /* Nombre */
-
   .participante-nombre {
-    font-size: 18px;
+    width: 100%;
 
+    font-size: 18px;
     line-height: 1.15;
 
     display: flex;
     align-items: center;
     justify-content: center;
+
+    text-align: center;
   }
-
-
-  /* Descripción */
 
   .participante-descripcion {
     width: 100%;
-
     max-width: none;
 
     font-size: 14px;
-
     line-height: 1.25;
 
     display: flex;
     align-items: center;
     justify-content: center;
+
+    text-align: center;
   }
-
-
-  /* Duración */
 
   .participante-duracion {
     width: 100%;
 
     font-size: 15px;
-
     gap: 6px;
 
+    display: flex;
+    align-items: center;
     justify-content: center;
+
+    text-align: center;
   }
-
-  .participante-duracion img {
-    width: 21px;
-    height: 21px;
-  }
-
-
-  /* Botón detalles */
 
   .participante-detalles {
     width: 115px;
-
     height: 40px;
 
-    font-size: 14px;
+    margin: 0 auto;
 
+    font-size: 14px;
     gap: 6px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .participante-detalles img {

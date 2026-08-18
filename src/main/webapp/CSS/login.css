@@ -522,12 +522,9 @@ body {
 
 
   /* Campo */
-
   .merged-image-wrapper {
-    width: 100%;
-    height: 58px;
-
-    border-radius: 7px;
+    position: relative;
+    overflow: hidden;
   }
 
 
@@ -535,22 +532,31 @@ body {
 
   .merged-asset-1-icon,
   .merged-asset-2-icon {
-    width: calc(100% + 20px);
+    position: absolute;
+    inset: 0;
 
+    width: 100%;
     height: 100%;
 
-    margin-left: -10px;
+    margin: 0;
 
-    border-radius: 7px;
+    object-fit: cover;
+    object-position: center;
+
+    display: block;
+
+    z-index: 1;
   }
 
 
   /* Input email */
 
-  .email-field-group {
-    padding-left: 72px;
-    padding-right: 12px;
+
+  .email-field-group,
+  .password-field-group {
+    z-index: 2;
   }
+
 
 
   /* Input contraseña */
@@ -570,10 +576,7 @@ body {
   /* Ojo */
 
   .login-password-visibility {
-    right: 9px;
-
-    width: 32px;
-    height: 32px;
+    z-index: 5;
   }
 
   .login-password-visibility img {
@@ -713,6 +716,75 @@ body {
   .crear-cuenta,
   .olvid-mi-contrasea {
     font-size: 14px;
+  }
+}
+
+/* ============================================================================
+   CORRECCIÓN PERSONAJITOS EN CELULAR
+============================================================================ */
+
+@media (max-width: 600px) {
+
+  .merged-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 58px;
+    overflow: hidden;
+  }
+
+  .merged-asset-1-icon,
+  .merged-asset-2-icon {
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    margin: 0;
+
+    object-fit: fill;
+    object-position: center;
+
+    display: block;
+
+    z-index: 1;
+  }
+
+  .email-field-group,
+  .password-field-group {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+
+  .login-password-visibility {
+    z-index: 5;
+  }
+}
+
+
+/* CELULAR PEQUEÑO */
+
+@media (max-width: 400px) {
+
+  .merged-image-wrapper {
+    height: 54px;
+  }
+
+  .merged-asset-1-icon,
+  .merged-asset-2-icon {
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    margin: 0;
+
+    object-fit: fill;
+    object-position: center;
   }
 }
 

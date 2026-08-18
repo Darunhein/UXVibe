@@ -720,3 +720,116 @@
     padding: 7px 10px;
   }
 }
+
+/* ============================================================================
+   CORRECCIÓN SOLO PARA CELULAR
+============================================================================ */
+
+@media (max-width: 600px) {
+
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .questionnaire-container {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  .questionnaire-frame {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .questionnaire-form,
+  .form-section,
+  .question-section,
+  .gender-section,
+  .education-section,
+  .form-row,
+  .form-group,
+  .education-grid {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .form-input-name,
+  .form-input-age,
+  .form-select {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 600px) {
+    .questionnaire-frame {
+      width: calc(100% - 0px);
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+  }
+
+
+
+  .questionnaire-frame {
+    min-height: 0;
+    height: auto;
+  }
+}
+
+@media (max-width: 400px) {
+  .questionnaire-container {
+    min-height: 100dvh;
+  }
+
+  .questionnaire-frame {
+    min-height: 0;
+    height: auto;
+  }
+}
+
+@media (max-width: 600px) {
+
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .questionnaire-container,
+  .questionnaire-frame,
+  .questionnaire-form,
+  .form-section,
+  .question-section,
+  .gender-section,
+  .education-section,
+  .form-row,
+  .form-group,
+  .input-label-group,
+  .section-header,
+  .radio-group,
+  .radio-option,
+  .education-grid {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .form-input-name,
+  .form-input-age,
+  .form-select {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+}

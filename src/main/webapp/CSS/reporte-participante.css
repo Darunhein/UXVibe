@@ -587,3 +587,16 @@ body {
     padding: 8px 14px;
   }
 }
+.reporte-chart-card:first-child {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.reporte-chart-card:first-child img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
