@@ -312,3 +312,328 @@ body {
   bottom: 25px; /* ↓ baja un poquito el botón */
   left: 30px;   /* ← se queda exactamente igual */
 }
+
+/* ============================================================================
+   RESPONSIVE - TABLET
+   ============================================================================ */
+
+@media (max-width: 1000px) {
+
+  .test-section {
+    padding: 18px;
+  }
+
+  .test-section__card {
+    width: 100%;
+    min-height: 700px;
+    padding: 32px 24px;
+  }
+
+  .test-section__table {
+    width: 100%;
+  }
+
+  .test-section__head {
+    font-size: 21px;
+  }
+
+  .test-section__row {
+    grid-template-columns: 1fr 1fr 1fr 0.8fr;
+    padding: 12px 20px;
+    gap: 10px;
+  }
+
+  .test-section__name {
+    font-size: 22px;
+  }
+
+  .test-section__date {
+    font-size: 16px;
+  }
+
+  .test-section__run-button,
+  .test-section__action {
+    font-size: 17px;
+  }
+
+  .test-section__action-form--run {
+    transform: translateX(15px);
+  }
+
+  .test-section__action-form--menu {
+    transform: translateX(8px);
+  }
+}
+
+
+/* ============================================================================
+   RESPONSIVE - TABLET PEQUEÑA
+   ============================================================================ */
+
+@media (max-width: 750px) {
+
+  .test-section {
+    padding: 12px;
+    align-items: flex-start;
+  }
+
+  .test-section__card {
+    min-height: calc(100vh - 24px);
+    padding: 25px 12px 90px;
+    overflow-x: hidden;
+  }
+
+  .test-section__table {
+    width: 100%;
+  }
+
+  .test-section__head {
+    height: 65px;
+    font-size: 18px;
+    grid-template-columns: 1.05fr 1.2fr 0.85fr 0.8fr;
+  }
+
+  .test-section__row {
+    min-height: 90px;
+    grid-template-columns: 1.05fr 1.2fr 0.85fr 0.8fr;
+    padding: 10px 10px;
+    gap: 6px;
+  }
+
+  .test-section__name {
+    font-size: 19px;
+  }
+
+  .test-section__date {
+    font-size: 14px;
+    max-width: 150px;
+  }
+
+  .test-section__run-button,
+  .test-section__action {
+    font-size: 15px;
+    padding: 6px 9px;
+    gap: 3px;
+  }
+
+  .test-section__run-button img,
+  .test-section__action img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .test-section__menu-button,
+  .test-section__menu {
+    width: 34px;
+    height: 30px;
+  }
+
+  .test-section__action-form--run,
+  .test-section__action-form--menu {
+    transform: none;
+  }
+
+  .test-section__empty {
+    min-height: 450px;
+  }
+
+  .test-section__empty-title {
+    font-size: 26px;
+  }
+
+  .test-section__empty-text {
+    font-size: 19px;
+  }
+
+  .test-section__logout {
+    left: 20px;
+    bottom: 20px;
+    font-size: 17px;
+    padding: 7px 15px;
+  }
+}
+
+
+/* ============================================================================
+   RESPONSIVE - CELULAR
+   ============================================================================ */
+
+@media (max-width: 600px) {
+
+  .test-section {
+    padding: 8px;
+    align-items: flex-start;
+  }
+
+  .test-section__card {
+    width: 100%;
+    min-height: calc(100vh - 16px);
+    padding: 18px 7px 82px;
+    border-radius: 8px;
+    overflow-x: hidden;
+  }
+
+  .test-section__table {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .test-section__head {
+    width: 100%;
+    height: 55px;
+    font-size: 14px;
+    grid-template-columns: 1.05fr 1.25fr 0.8fr 0.75fr;
+  }
+
+  .test-section__row {
+    width: 100%;
+    min-height: 78px;
+    grid-template-columns: 1.05fr 1.25fr 0.8fr 0.75fr;
+    gap: 4px;
+    padding: 8px 5px;
+  }
+
+  .test-section__name {
+    font-size: 14px;
+    line-height: 1.05;
+  }
+
+  .test-section__date {
+    font-size: 11px;
+    line-height: 1.1;
+    max-width: 100%;
+  }
+
+  .test-section__run-button,
+  .test-section__action {
+    font-size: 11px;
+    padding: 5px 6px;
+    gap: 2px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .test-section__run-button img,
+  .test-section__action img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .test-section__menu-button,
+  .test-section__menu {
+    width: 28px;
+    height: 25px;
+  }
+
+  .test-section__action-form--run,
+  .test-section__action-form--menu {
+    transform: none;
+  }
+
+  .test-section__empty {
+    min-height: 400px;
+  }
+
+  .test-section__empty-content {
+    padding: 50px 15px 25px;
+  }
+
+  .test-section__empty-icon {
+    width: 105px;
+    height: 105px;
+  }
+
+  .test-section__empty-title {
+    font-size: 21px;
+  }
+
+  .test-section__empty-text {
+    font-size: 16px;
+  }
+
+  .test-section__pagination {
+    padding: 20px 0 18px;
+    gap: 4px;
+  }
+
+  .test-section__pagination-link {
+    min-width: 32px;
+    height: 30px;
+    font-size: 12px;
+    padding: 0 6px;
+  }
+
+  .test-section__pagination-link--control {
+    min-width: 68px;
+  }
+
+  .test-section__logout {
+    left: 12px;
+    bottom: 12px;
+    font-size: 14px;
+    padding: 7px 11px;
+  }
+}
+
+
+/* ============================================================================
+   RESPONSIVE - CELULAR MUY PEQUEÑO
+   ============================================================================ */
+
+@media (max-width: 400px) {
+
+  .test-section {
+    padding: 6px;
+  }
+
+  .test-section__card {
+    min-height: calc(100vh - 12px);
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .test-section__head {
+    height: 52px;
+    font-size: 12px;
+    grid-template-columns: 1.05fr 1.25fr 0.8fr 0.75fr;
+  }
+
+  .test-section__row {
+    min-height: 74px;
+    grid-template-columns: 1.05fr 1.25fr 0.8fr 0.75fr;
+    padding: 7px 4px;
+  }
+
+  .test-section__name {
+    font-size: 12px;
+  }
+
+  .test-section__date {
+    font-size: 10px;
+  }
+
+  .test-section__run-button,
+  .test-section__action {
+    font-size: 10px;
+    padding: 4px 5px;
+  }
+
+  .test-section__run-button img,
+  .test-section__action img {
+    width: 14px;
+    height: 14px;
+  }
+
+  .test-section__menu-button,
+  .test-section__menu {
+    width: 25px;
+    height: 23px;
+  }
+
+  .test-section__logout {
+    left: 9px;
+    bottom: 9px;
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}

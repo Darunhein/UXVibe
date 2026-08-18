@@ -324,3 +324,399 @@
   width: 14px;
   height: 14px;
 }
+
+/* ============================================================================
+   RESPONSIVE - TABLET
+============================================================================ */
+
+@media (max-width: 900px) {
+
+  .questionnaire-container {
+    padding: 15px;
+
+    align-items: center;
+  }
+
+  .questionnaire-frame {
+    width: 100%;
+    max-width: 100%;
+
+    padding: 28px 30px;
+  }
+
+  .questionnaire-form {
+    width: 100%;
+    max-width: 860px;
+  }
+
+  .form-input-name {
+    width: 100%;
+    max-width: 520px;
+  }
+
+  .form-input-age {
+    width: 180px;
+    max-width: 100%;
+  }
+
+  .education-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+
+/* ============================================================================
+   RESPONSIVE - CELULAR
+============================================================================ */
+
+@media (max-width: 600px) {
+
+  .questionnaire-container {
+    width: 100%;
+    max-width: 100%;
+
+    min-height: 100vh;
+
+    padding: 8px;
+
+    align-items: flex-start;
+
+    overflow-x: hidden;
+  }
+
+  .questionnaire-frame {
+    width: 100%;
+    max-width: 100%;
+
+    min-height: 0;
+
+    padding: 20px 12px 65px;
+
+    border-radius: 10px;
+
+    gap: 16px;
+
+    overflow: hidden;
+  }
+
+
+  /* Título */
+
+  .form-title {
+    width: 100%;
+
+    font-size: 21px;
+
+    line-height: 1.25;
+
+    text-align: center;
+  }
+
+
+  /* Formulario */
+
+  .questionnaire-form {
+    width: 100%;
+    max-width: 100%;
+
+    gap: 14px;
+  }
+
+
+  /* Secciones */
+
+  .form-section,
+  .question-section,
+  .gender-section,
+  .education-section {
+
+    width: 100%;
+    max-width: 100%;
+
+    padding: 12px;
+
+    border-radius: 8px;
+  }
+
+
+  /* Filas */
+
+  .form-row {
+    width: 100%;
+    max-width: 100%;
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 14px;
+  }
+
+
+  /* Grupos */
+
+  .form-group {
+    width: 100%;
+    max-width: 100%;
+
+    gap: 8px;
+  }
+
+
+  /* Encabezados */
+
+  .input-label-group,
+  .section-header {
+
+    width: 100%;
+    max-width: 100%;
+
+    gap: 7px;
+  }
+
+  .input-icon,
+  .section-icon {
+
+    width: 27px;
+    height: 27px;
+
+    flex-shrink: 0;
+  }
+
+  .input-label,
+  .section-title {
+
+    font-size: 17px;
+
+    line-height: 1.25;
+  }
+
+
+  /* Inputs */
+
+  .form-input-name,
+  .form-input-age,
+  .form-select {
+
+    width: 100%;
+    max-width: 100%;
+
+    min-width: 0;
+
+    padding: 9px 11px;
+
+    font-size: 16px;
+  }
+
+  .form-input-age {
+    margin: 0;
+  }
+
+
+  /* Preguntas */
+
+  .question-section {
+    gap: 12px;
+  }
+
+  .question-title {
+
+    width: 100%;
+    max-width: 100%;
+
+    font-size: 16px;
+
+    line-height: 1.4;
+
+    overflow-wrap: break-word;
+  }
+
+
+  /* Radios */
+
+  .radio-group {
+
+    width: 100%;
+    max-width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+  .radio-group.vertical {
+    gap: 10px;
+  }
+
+  .radio-option {
+
+    width: 100%;
+    max-width: 100%;
+
+    gap: 9px;
+
+    align-items: flex-start;
+  }
+
+  .radio-option input[type="radio"] {
+
+    width: 17px;
+    height: 17px;
+
+    flex: 0 0 auto;
+
+    margin-top: 2px;
+  }
+
+  .radio-label {
+
+    font-size: 15px;
+
+    line-height: 1.35;
+
+    overflow-wrap: break-word;
+  }
+
+
+  /* Educación */
+
+  .education-grid {
+
+    width: 100%;
+    max-width: 100%;
+
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+
+    margin-top: 6px;
+  }
+
+
+  /* Botón siguiente */
+
+  .btn-next {
+
+    width: 100%;
+    max-width: 100%;
+
+    align-self: stretch;
+
+    padding: 11px 18px;
+
+    font-size: 16px;
+  }
+
+  .btn-next img {
+
+    width: 21px;
+    height: 21px;
+  }
+
+
+  /* Botón regresar */
+
+  .btn-back {
+
+    position: absolute;
+
+    bottom: 12px;
+    left: 12px;
+
+    margin: 0;
+
+    padding: 8px 12px;
+
+    font-size: 12px;
+  }
+
+  .btn-back img {
+
+    width: 13px;
+    height: 13px;
+  }
+}
+
+
+/* ============================================================================
+   RESPONSIVE - CELULAR MUY PEQUEÑO
+============================================================================ */
+
+@media (max-width: 400px) {
+
+  .questionnaire-container {
+    padding: 6px;
+  }
+
+  .questionnaire-frame {
+
+    padding: 18px 10px 62px;
+
+    gap: 14px;
+  }
+
+  .form-title {
+    font-size: 19px;
+  }
+
+  .questionnaire-form {
+    gap: 12px;
+  }
+
+  .form-section,
+  .question-section,
+  .gender-section,
+  .education-section {
+
+    padding: 10px;
+  }
+
+  .input-icon,
+  .section-icon {
+
+    width: 24px;
+    height: 24px;
+  }
+
+  .input-label,
+  .section-title {
+
+    font-size: 15px;
+  }
+
+  .form-input-name,
+  .form-input-age,
+  .form-select {
+
+    font-size: 15px;
+
+    padding: 8px 10px;
+  }
+
+  .question-title {
+    font-size: 14px;
+  }
+
+  .radio-label {
+    font-size: 14px;
+  }
+
+  .btn-next {
+
+    font-size: 15px;
+
+    padding: 10px 15px;
+  }
+
+  .btn-back {
+
+    left: 10px;
+    bottom: 10px;
+
+    font-size: 11px;
+
+    padding: 7px 10px;
+  }
+}

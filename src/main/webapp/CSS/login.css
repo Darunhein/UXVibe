@@ -404,6 +404,14 @@ body {
    RESPONSIVE
    ========================================= */
 
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+/* =========================================
+   TABLET
+   ========================================= */
+
 @media (max-width: 900px) {
 
   .login-del-evaluador {
@@ -412,10 +420,13 @@ body {
 
   .bienvenido {
     font-size: 38px;
+    margin-bottom: 28px;
   }
 
   .frame {
     width: 100%;
+    max-width: 846px;
+
     height: auto;
     min-height: 487px;
 
@@ -424,36 +435,285 @@ body {
 
   .frame2 {
     width: 100%;
+    max-width: 740px;
   }
 
+  .merged-image-wrapper {
+    width: 100%;
+  }
+
+  .form-message {
+    width: 100%;
+  }
 }
 
+
+/* =========================================
+   CELULAR
+   ========================================= */
 
 @media (max-width: 600px) {
 
-  .bienvenido {
-    font-size: 32px;
+  .login-del-evaluador {
+    width: 100%;
+    min-height: 100vh;
 
+    padding: 28px 12px;
+
+    box-sizing: border-box;
+  }
+
+
+  /* Título */
+
+  .bienvenido {
+    font-size: 30px;
+
+    margin: 0 0 22px;
+
+    line-height: 1.15;
+
+    text-align: center;
+  }
+
+
+  /* Tarjeta */
+
+  .frame {
+    width: 100%;
+    max-width: 100%;
+
+    height: auto;
+    min-height: 0;
+
+    padding: 28px 16px;
+
+    border-radius: 8px;
+  }
+
+
+  /* Contenido */
+
+  .frame2 {
+    width: 100%;
+    max-width: 100%;
+  }
+
+
+  /* Campos */
+
+  .merged-field-email {
+    margin-bottom: 20px;
+  }
+
+  .merged-field-password {
     margin-bottom: 25px;
   }
 
-  .frame {
-    padding: 30px 18px;
-  }
+
+  /* Labels */
 
   .email,
   .contrasea {
-    font-size: 18px;
-  }
+    margin: 0 0 6px 5px;
 
-  .email-field-group,
-  .password-field-group {
-    padding-left: 80px;
-  }
-
-  .ingresa-tu-email,
-  .ingresa-tu-contraseña {
     font-size: 17px;
   }
 
+
+  /* Campo */
+
+  .merged-image-wrapper {
+    width: 100%;
+    height: 58px;
+
+    border-radius: 7px;
+  }
+
+
+  /* Imagen del campo */
+
+  .merged-asset-1-icon,
+  .merged-asset-2-icon {
+    width: calc(100% + 20px);
+
+    height: 100%;
+
+    margin-left: -10px;
+
+    border-radius: 7px;
+  }
+
+
+  /* Input email */
+
+  .email-field-group {
+    padding-left: 72px;
+    padding-right: 12px;
+  }
+
+
+  /* Input contraseña */
+
+  .password-field-group {
+    padding-left: 72px;
+    padding-right: 52px;
+  }
+
+
+  .ingresa-tu-email,
+  .ingresa-tu-contraseña {
+    font-size: 15px;
+  }
+
+
+  /* Ojo */
+
+  .login-password-visibility {
+    right: 9px;
+
+    width: 32px;
+    height: 32px;
+  }
+
+  .login-password-visibility img {
+    width: 24px;
+    height: 24px;
+  }
+
+
+  /* Mensaje */
+
+  .form-message {
+    width: 100%;
+
+    margin: -8px 0 18px;
+
+    padding: 9px 11px;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+  }
+
+
+  /* Acciones */
+
+  .actions-group,
+  .actions-group2 {
+    width: 100%;
+  }
+
+
+  .actions-group2 {
+    gap: 10px;
+  }
+
+
+  /* Botón entrar */
+
+  .entrar {
+    width: 170px;
+    height: 42px;
+  }
+
+  .entrar-text {
+    font-size: 16px;
+  }
+
+
+  /* Links */
+
+  .crear-cuenta,
+  .olvid-mi-contrasea {
+    font-size: 15px;
+
+    text-align: center;
+  }
 }
+
+
+/* =========================================
+   CELULAR PEQUEÑO
+   ========================================= */
+
+@media (max-width: 400px) {
+
+  .login-del-evaluador {
+    padding: 22px 9px;
+  }
+
+
+  .bienvenido {
+    font-size: 27px;
+
+    margin-bottom: 18px;
+  }
+
+
+  .frame {
+    padding: 24px 13px;
+  }
+
+
+  .email,
+  .contrasea {
+    font-size: 16px;
+  }
+
+
+  .merged-image-wrapper {
+    height: 54px;
+  }
+
+
+  .email-field-group {
+    padding-left: 65px;
+    padding-right: 10px;
+  }
+
+
+  .password-field-group {
+    padding-left: 65px;
+    padding-right: 48px;
+  }
+
+
+  .ingresa-tu-email,
+  .ingresa-tu-contraseña {
+    font-size: 14px;
+  }
+
+
+  .login-password-visibility {
+    right: 7px;
+
+    width: 30px;
+    height: 30px;
+  }
+
+
+  .login-password-visibility img {
+    width: 22px;
+    height: 22px;
+  }
+
+
+  .entrar {
+    width: 160px;
+    height: 40px;
+  }
+
+
+  .entrar-text {
+    font-size: 15px;
+  }
+
+
+  .crear-cuenta,
+  .olvid-mi-contrasea {
+    font-size: 14px;
+  }
+}
+
+

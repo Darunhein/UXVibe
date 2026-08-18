@@ -250,41 +250,66 @@
 
 /* ===== Responsive Design ===== */
 
+/* =========================================
+   TABLET
+   ========================================= */
+
 @media (max-width: 1024px) {
-    .survey-frame {
-        padding: 40px;
-        gap: 30px;
+
+    .survey-container {
+        padding: 18px;
     }
 
+    .survey-frame {
+        width: 100%;
+        max-width: 1000px;
+
+        min-height: 0;
+
+        padding: 40px;
+        gap: 28px;
+    }
+
+    /* Header */
+
     .survey-header {
-        flex-direction: column;
+        grid-template-columns: 1fr;
         gap: 20px;
     }
+
+    .survey-title {
+        font-size: 30px;
+    }
+
+    .survey-instructions {
+        max-width: 100%;
+        font-size: 14px;
+    }
+
+    .scale-legend {
+        font-size: 12px;
+    }
+
+    /* Questions */
 
     .question-row {
         flex-direction: column;
         gap: 16px;
     }
 
-    .survey-title {
-        font-size: 28px;
-    }
-
-    .survey-instructions {
-        font-size: 13px;
-    }
-
-    .scale-legend {
-        font-size: 11px;
-    }
-
     .question-text {
-        font-size: 13px;
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .scale-options {
+        width: 100%;
+        justify-content: center;
     }
 
     .scale-option input[type="radio"] {
-        width: 35px;
-        height: 35px;
+        width: 36px;
+        height: 36px;
     }
 
     .scale-number {
@@ -292,128 +317,279 @@
     }
 }
 
-@media (max-width: 768px) {
+
+/* =========================================
+   CELULAR
+   ========================================= */
+
+@media (max-width: 600px) {
+
     .survey-container {
-        padding: 20px 10px;
+        width: 100%;
+        min-height: 100vh;
+
+        padding: 10px;
+
+        align-items: flex-start;
     }
 
     .survey-frame {
-        padding: 20px;
+        width: 100%;
+        max-width: 100%;
+
+        min-height: 0;
+
+        padding: 22px 14px;
+
+        border-radius: 10px;
+
         gap: 20px;
     }
 
+
+    /* Header */
+
     .survey-header {
-        border-bottom: none;
-        gap: 16px;
+        width: 100%;
+
+        display: flex;
+        flex-direction: column;
+
+        gap: 14px;
+
+        padding-bottom: 14px;
+
+        border-bottom: 1px solid #d9e2e8;
+    }
+
+    .header-left {
+        width: 100%;
+        gap: 9px;
     }
 
     .survey-title {
-        font-size: 24px;
+        width: 100%;
+
+        font-size: 23px;
+        line-height: 1.25;
+
+        text-align: center;
     }
 
     .survey-instructions {
-        font-size: 12px;
+        width: 100%;
+        max-width: 100%;
+
+        font-size: 13px;
+        line-height: 1.55;
+
+        text-align: center;
     }
 
     .scale-legend {
-        font-size: 10px;
+        width: 100%;
+
+        font-size: 11px;
+        line-height: 1.5;
+
+        gap: 6px;
+
+        text-align: center;
     }
 
+
+    /* Formulario */
+
+    .survey-form {
+        width: 100%;
+        gap: 20px;
+    }
+
+    .questions-container {
+        width: 100%;
+
+        gap: 16px;
+    }
+
+
+    /* Pregunta */
+
     .question-row {
-        padding: 16px;
-        gap: 12px;
+        width: 100%;
+
+        padding: 14px;
+
+        gap: 14px;
+
+        border-radius: 8px;
     }
 
     .question-text {
-        font-size: 12px;
+        width: 100%;
+
+        display: flex;
+
+        gap: 7px;
+
+        font-size: 14px;
+        line-height: 1.5;
     }
 
+    .question-number {
+        flex-shrink: 0;
+    }
+
+
+    /* Opciones */
+
     .scale-options {
-        gap: 12px;
+        width: 100%;
+
+        display: flex;
+        justify-content: space-between;
+
+        gap: 5px;
+    }
+
+    .scale-option {
+        gap: 6px;
+
+        flex: 1;
     }
 
     .scale-option input[type="radio"] {
-        width: 32px;
-        height: 32px;
+        width: 34px;
+        height: 34px;
+
         border-width: 1.5px;
     }
 
     .scale-number {
-        font-size: 10px;
-    }
-
-    .btn-next {
-        align-self: center;
-        width: 100%;
-        justify-content: center;
-        padding: 12px 20px;
-        font-size: 13px;
-    }
-}
-
-@media (max-width: 480px) {
-    .survey-container {
-        padding: 16px 8px;
-    }
-
-    .survey-frame {
-        padding: 16px;
-        gap: 16px;
-    }
-
-    .survey-title {
-        font-size: 20px;
-    }
-
-    .survey-instructions {
         font-size: 11px;
     }
 
-    .scale-legend {
-        font-size: 9px;
-        gap: 6px;
+
+    /* Navegación */
+
+    .survey-navigation {
+        width: 100%;
+
+        display: flex;
+        flex-direction: column;
+
+        gap: 10px;
+
+        margin-top: 4px;
     }
 
-    .scale-legend p {
-        margin: 0;
+    .btn-back,
+    .btn-next {
+        width: 100%;
+
+        justify-content: center;
+
+        padding: 12px 18px;
+
+        font-size: 14px;
+    }
+
+    .btn-back img,
+    .btn-next img {
+        width: 19px;
+        height: 19px;
+    }
+}
+
+
+/* =========================================
+   CELULARES PEQUEÑOS
+   ========================================= */
+
+@media (max-width: 400px) {
+
+    .survey-container {
+        padding: 8px;
+    }
+
+    .survey-frame {
+        padding: 18px 11px;
+
+        gap: 17px;
+    }
+
+
+    /* Header */
+
+    .survey-header {
+        gap: 12px;
+
+        padding-bottom: 12px;
+    }
+
+    .survey-title {
+        font-size: 21px;
+    }
+
+    .survey-instructions {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .scale-legend {
+        font-size: 10px;
+    }
+
+
+    /* Preguntas */
+
+    .questions-container {
+        gap: 13px;
     }
 
     .question-row {
         padding: 12px;
-        gap: 10px;
+
+        gap: 12px;
     }
 
     .question-text {
-        font-size: 11px;
-        gap: 6px;
+        font-size: 13px;
+        line-height: 1.45;
     }
 
+
+    /* Opciones */
+
     .scale-options {
-        gap: 10px;
+        gap: 3px;
+    }
+
+    .scale-option {
+        gap: 5px;
     }
 
     .scale-option input[type="radio"] {
-        width: 28px;
-        height: 28px;
-        border-width: 1px;
+        width: 30px;
+        height: 30px;
     }
 
     .scale-number {
-        font-size: 9px;
+        font-size: 10px;
     }
 
+
+    /* Botones */
+
+    .btn-back,
     .btn-next {
-        font-size: 12px;
-        padding: 10px 16px;
-        gap: 6px;
+        padding: 11px 14px;
+
+        font-size: 13px;
     }
 
+    .btn-back img,
     .btn-next img {
         width: 18px;
         height: 18px;
-    }
-
-    .questions-container {
-        gap: 16px;
     }
 }

@@ -268,3 +268,447 @@ body {
   width: 22px;
   height: 22px;
 }
+
+/* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 900px) {
+
+  .participantes-screen {
+    padding: 16px;
+  }
+
+  .participantes-card {
+    width: 100%;
+    min-height: 720px;
+    padding: 32px 20px;
+  }
+
+  .participantes-table {
+    width: 100%;
+  }
+
+  .participantes-head {
+    grid-template-columns: 1fr 1.3fr 1fr 1fr;
+
+    height: 65px;
+
+    padding: 0 18px;
+
+    font-size: 20px;
+  }
+
+  .participantes-row {
+    grid-template-columns: 1fr 1.3fr 1fr 1fr;
+
+    min-height: 100px;
+
+    gap: 10px;
+
+    padding: 12px 18px;
+  }
+
+  .participante-nombre {
+    font-size: 21px;
+  }
+
+  .participante-descripcion {
+    max-width: 230px;
+    font-size: 16px;
+  }
+
+  .participante-duracion {
+    font-size: 17px;
+    gap: 7px;
+  }
+
+  .participante-duracion img {
+    width: 23px;
+    height: 23px;
+  }
+
+  .participante-detalles {
+    width: 125px;
+    height: 44px;
+    font-size: 16px;
+  }
+
+  .participante-detalles img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .participantes-back {
+    left: 35px;
+    bottom: 18px;
+  }
+}
+
+
+/* =========================================
+   CELULAR
+   ========================================= */
+
+@media (max-width: 600px) {
+
+  .participantes-screen {
+    min-height: 100vh;
+
+    padding: 10px;
+
+    align-items: flex-start;
+  }
+
+
+  /* Contenedor principal */
+
+  .participantes-card {
+    width: 100%;
+
+    min-height: calc(100vh - 20px);
+
+    padding: 20px 12px 85px;
+
+    border-radius: 8px;
+
+    justify-content: flex-start;
+  }
+
+
+  /* Tabla */
+
+  .participantes-table {
+    width: 100%;
+  }
+
+
+  /* Encabezado */
+
+  .participantes-head {
+    height: auto;
+
+    min-height: 54px;
+
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+
+    padding: 8px 6px;
+
+    font-size: 12px;
+
+    border-radius: 7px;
+  }
+
+
+  .participantes-head-cell {
+    line-height: 1.15;
+  }
+
+
+  /* Cuerpo */
+
+  .participantes-body {
+    min-height: 0;
+
+    gap: 8px;
+
+    padding: 8px 0 15px;
+  }
+
+
+  /* Cada participante */
+
+  .participantes-row {
+    min-height: 0;
+
+    grid-template-columns: 1fr 1fr;
+
+    grid-template-rows: auto auto;
+
+    gap: 14px 8px;
+
+    padding: 18px 10px;
+
+    border-radius: 0;
+  }
+
+
+  /* Nombre */
+
+  .participante-nombre {
+    font-size: 18px;
+
+    line-height: 1.15;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+  /* Descripción */
+
+  .participante-descripcion {
+    width: 100%;
+
+    max-width: none;
+
+    font-size: 14px;
+
+    line-height: 1.25;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+  /* Duración */
+
+  .participante-duracion {
+    width: 100%;
+
+    font-size: 15px;
+
+    gap: 6px;
+
+    justify-content: center;
+  }
+
+  .participante-duracion img {
+    width: 21px;
+    height: 21px;
+  }
+
+
+  /* Botón detalles */
+
+  .participante-detalles {
+    width: 115px;
+
+    height: 40px;
+
+    font-size: 14px;
+
+    gap: 6px;
+  }
+
+  .participante-detalles img {
+    width: 20px;
+    height: 20px;
+  }
+
+
+  /* Paginación */
+
+  .participantes-pagination {
+    gap: 4px;
+
+    padding: 20px 0 15px;
+
+    flex-wrap: wrap;
+  }
+
+  .participantes-pagination-link {
+    min-width: 34px;
+
+    height: 32px;
+
+    padding: 0 8px;
+
+    font-size: 13px;
+  }
+
+  .participantes-pagination-link--control {
+    min-width: 70px;
+  }
+
+
+  /* Botón regresar */
+
+  .participantes-back {
+    position: absolute;
+
+    left: 50%;
+    bottom: 20px;
+
+    transform: translateX(-50%);
+
+    margin: 0;
+
+    padding: 8px 16px;
+
+    font-size: 16px;
+
+    white-space: nowrap;
+  }
+
+  .participantes-back img {
+    width: 19px;
+    height: 19px;
+  }
+
+
+  /* Cuando no hay participantes */
+
+  .participantes-empty {
+    min-height: 430px;
+  }
+
+  .participantes-empty-content {
+    width: 100%;
+
+    min-height: 0;
+
+    padding: 55px 18px 35px;
+  }
+
+  .participantes-empty-icon {
+    width: 110px;
+    height: 110px;
+  }
+
+  .participantes-empty-title {
+    margin: 14px 0 8px;
+
+    font-size: 23px;
+  }
+
+  .participantes-empty-text {
+    font-size: 16px;
+
+    line-height: 1.35;
+  }
+}
+
+
+/* =========================================
+   CELULAR PEQUEÑO
+   ========================================= */
+
+@media (max-width: 400px) {
+
+  .participantes-screen {
+    padding: 8px;
+  }
+
+  .participantes-card {
+    min-height: calc(100vh - 16px);
+
+    padding: 16px 9px 80px;
+  }
+
+
+  /* Encabezado */
+
+  .participantes-head {
+    min-height: 50px;
+
+    padding: 7px 4px;
+
+    font-size: 10px;
+  }
+
+
+  /* Filas */
+
+  .participantes-row {
+    padding: 15px 8px;
+
+    gap: 12px 6px;
+  }
+
+  .participante-nombre {
+    font-size: 16px;
+  }
+
+  .participante-descripcion {
+    font-size: 12px;
+  }
+
+  .participante-duracion {
+    font-size: 13px;
+  }
+
+  .participante-duracion img {
+    width: 18px;
+    height: 18px;
+  }
+
+
+  /* Detalles */
+
+  .participante-detalles {
+    width: 105px;
+
+    height: 37px;
+
+    font-size: 12px;
+  }
+
+  .participante-detalles img {
+    width: 18px;
+    height: 18px;
+  }
+
+
+  /* Paginación */
+
+  .participantes-pagination-link {
+    min-width: 30px;
+
+    height: 30px;
+
+    padding: 0 6px;
+
+    font-size: 12px;
+  }
+
+  .participantes-pagination-link--control {
+    min-width: 62px;
+  }
+
+
+  /* Regresar */
+
+  .participantes-back {
+    bottom: 16px;
+
+    padding: 7px 13px;
+
+    font-size: 14px;
+  }
+
+  .participantes-back img {
+    width: 17px;
+    height: 17px;
+  }
+
+
+  /* Sin participantes */
+
+  .participantes-empty {
+    min-height: 390px;
+  }
+
+  .participantes-empty-content {
+    padding: 45px 14px 30px;
+  }
+
+  .participantes-empty-icon {
+    width: 95px;
+    height: 95px;
+  }
+
+  .participantes-empty-title {
+    font-size: 20px;
+  }
+
+  .participantes-empty-text {
+    font-size: 14px;
+  }
+}

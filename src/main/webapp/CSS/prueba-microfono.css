@@ -425,51 +425,335 @@ ONDA DEL MICRÓFONO
 @media (max-width: 600px) {
 
   .microphone-test-container {
+    width: 100%;
+    min-height: 100vh;
+
     padding: 10px;
+
+    box-sizing: border-box;
+
+    align-items: center;
   }
+
+
+  /* Tarjeta principal */
 
   .microphone-test-frame {
     width: 100%;
+    max-width: 100%;
 
     height: auto;
 
     min-height: calc(100vh - 20px);
 
-    padding: 25px 18px 60px;
+    padding: 24px 16px 65px;
+
+    border-radius: 9px;
+
+    gap: 16px;
 
     overflow: visible;
   }
 
+
+  /* Encabezado */
+
+  .test-header {
+    padding-bottom: 15px;
+  }
+
+  .header-content {
+    gap: 6px;
+  }
+
+  .title-with-icon {
+    gap: 8px;
+  }
+
   .test-title {
-    font-size: 24px;
+    font-size: 23px;
+
+    line-height: 1.2;
+  }
+
+  .microphone-icon {
+    width: 25px;
+    height: 25px;
   }
 
   .test-subtitle {
-    font-size: 13px;
+    font-size: 12px;
+
+    line-height: 1.4;
+
+    padding: 0 5px;
   }
+
+
+  /* Estado del micrófono */
 
   .status-section {
     width: 100%;
+
+    gap: 10px;
   }
 
   .status-item {
-    padding: 12px;
+    width: 100%;
+
+    padding: 11px 12px;
+
+    gap: 11px;
+
+    border-radius: 7px;
   }
+
+  .status-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .status-text {
+    gap: 2px;
+
+    min-width: 0;
+  }
+
+  .status-label {
+    font-size: 13px;
+  }
+
+  .status-value {
+    font-size: 12px;
+
+    line-height: 1.3;
+  }
+
+
+  /* Onda del micrófono */
 
   .waveform-container {
     width: 100%;
 
-    height: 120px;
+    height: 105px;
+
+    padding: 10px;
+
+    border-width: 1.5px;
+
+    border-radius: 7px;
   }
 
+  .wave {
+    gap: 5px;
+  }
+
+  .wave span {
+    width: 6px;
+  }
+
+  .wave span:nth-child(1) {
+    height: 16px;
+  }
+
+  .wave span:nth-child(2) {
+    height: 32px;
+  }
+
+  .wave span:nth-child(3) {
+    height: 55px;
+  }
+
+  .wave span:nth-child(4) {
+    height: 78px;
+  }
+
+  .wave span:nth-child(5) {
+    height: 92px;
+  }
+
+  .wave span:nth-child(6) {
+    height: 78px;
+  }
+
+  .wave span:nth-child(7) {
+    height: 55px;
+  }
+
+  .wave span:nth-child(8) {
+    height: 32px;
+  }
+
+  .wave span:nth-child(9) {
+    height: 16px;
+  }
+
+
+  /* Botón regresar */
+
   .btn-back {
-    position: relative;
+    position: absolute;
 
-    left: auto;
-    bottom: auto;
+    left: 50%;
+    bottom: 18px;
 
-    align-self: center;
+    transform: translateX(-50%);
 
-    margin-top: 5px;
+    margin: 0;
+
+    padding: 8px 15px;
+
+    font-size: 12px;
+
+    white-space: nowrap;
+  }
+
+  .btn-back:active {
+    transform: translateX(-50%) translateY(1px);
+  }
+
+  .btn-back img {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+
+/* ============================================================================
+   CELULAR PEQUEÑO
+   ============================================================================ */
+
+@media (max-width: 400px) {
+
+  .microphone-test-container {
+    padding: 8px;
+  }
+
+
+  .microphone-test-frame {
+    min-height: calc(100vh - 16px);
+
+    padding: 20px 12px 62px;
+
+    gap: 13px;
+  }
+
+
+  /* Encabezado */
+
+  .test-header {
+    padding-bottom: 12px;
+  }
+
+  .title-with-icon {
+    gap: 6px;
+  }
+
+  .test-title {
+    font-size: 20px;
+  }
+
+  .microphone-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .test-subtitle {
+    font-size: 11px;
+  }
+
+
+  /* Estado */
+
+  .status-section {
+    gap: 8px;
+  }
+
+  .status-item {
+    padding: 9px 10px;
+
+    gap: 9px;
+  }
+
+  .status-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .status-label {
+    font-size: 12px;
+  }
+
+  .status-value {
+    font-size: 11px;
+  }
+
+
+  /* Onda */
+
+  .waveform-container {
+    height: 90px;
+
+    padding: 8px;
+  }
+
+  .wave {
+    gap: 4px;
+  }
+
+  .wave span {
+    width: 5px;
+  }
+
+  .wave span:nth-child(1) {
+    height: 14px;
+  }
+
+  .wave span:nth-child(2) {
+    height: 27px;
+  }
+
+  .wave span:nth-child(3) {
+    height: 47px;
+  }
+
+  .wave span:nth-child(4) {
+    height: 66px;
+  }
+
+  .wave span:nth-child(5) {
+    height: 78px;
+  }
+
+  .wave span:nth-child(6) {
+    height: 66px;
+  }
+
+  .wave span:nth-child(7) {
+    height: 47px;
+  }
+
+  .wave span:nth-child(8) {
+    height: 27px;
+  }
+
+  .wave span:nth-child(9) {
+    height: 14px;
+  }
+
+
+  /* Regresar */
+
+  .btn-back {
+    bottom: 15px;
+
+    padding: 7px 13px;
+
+    font-size: 11px;
+  }
+
+  .btn-back img {
+    width: 13px;
+    height: 13px;
   }
 }
