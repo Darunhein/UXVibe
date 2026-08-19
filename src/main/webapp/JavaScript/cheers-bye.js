@@ -4,15 +4,38 @@ document.addEventListener("DOMContentLoaded", function () {
   const btnCancelModal = document.getElementById("btnCancelModal");
   const evaluatorAudioPlayer = document.getElementById("evaluatorAudioPlayer");
   const noAudioWarning = document.getElementById("noAudioWarning");
+  const evaluatorDownloadLink = document.getElementById("evaluatorDownloadLink");
   const btnSaveAll = document.getElementById("btnSaveAll");
 
-  // If server didn't have audio url yet, check client-side sessionStorage
-  if (evaluatorAudioPlayer && (!evaluatorAudioPlayer.src || evaluatorAudioPlayer.src === window.location.href)) {
+  function configureAudioSource(src, filename) {
+    if (!evaluatorAudioPlayer) return;
+    evaluatorAudioPlayer.src = src;
+    evaluatorAudioPlayer.volume = 1.0;
+    evaluatorAudioPlayer.load();
+    if (noAudioWarning) noAudioWarning.style.display = "none";
+    if (evaluatorDownloadLink) {
+      evaluatorDownloadLink.href = src;
+      if (filename) evaluatorDownloadLink.download = filename;
+      evaluatorDownloadLink.style.display = "inline";
+    }
+  }
+
+  // Check if audio element already has a valid non-empty data / webm src from server
+  if (evaluatorAudioPlayer && evaluatorAudioPlayer.src && evaluatorAudioPlayer.src.length > 30 && evaluatorAudioPlayer.src !== window.location.href) {
+    evaluatorAudioPlayer.volume = 1.0;
+    if (evaluatorDownloadLink) {
+      evaluatorDownloadLink.href = evaluatorAudioPlayer.src;
+      evaluatorDownloadLink.style.display = "inline";
+    }
+  } else {
+    // Check client-side sessionStorage backup
     try {
       const localAudioBase64 = sessionStorage.getItem("uxvibe_audio_base64");
+      const localMime = sessionStorage.getItem("uxvibe_audio_mimetype") || "audio/webm";
+      const localFileName = sessionStorage.getItem("uxvibe_audio_filename") || "grabacion-sesion.webm";
       if (localAudioBase64) {
-        evaluatorAudioPlayer.src = "data:audio/webm;base64," + localAudioBase64;
-        if (noAudioWarning) noAudioWarning.style.display = "none";
+        const fullDataUri = "data:" + localMime + ";base64," + localAudioBase64;
+        configureAudioSource(fullDataUri, localFileName);
       }
     } catch (e) {}
   }
@@ -36,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
       try {
         sessionStorage.removeItem("uxvibe_audio_base64");
         sessionStorage.removeItem("uxvibe_audio_filename");
+        sessionStorage.removeItem("uxvibe_audio_mimetype");
         sessionStorage.removeItem("uxvibe-grabacion-tiempo");
       } catch (e) {}
     });

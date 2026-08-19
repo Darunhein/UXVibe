@@ -3,6 +3,17 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
 <%!
+  private String urlEncode(String value) {
+    if (value == null) {
+      return "";
+    }
+    try {
+      return java.net.URLEncoder.encode(value, "UTF-8");
+    } catch (Exception e) {
+      return value;
+    }
+  }
+
   private boolean isInvertedSurveyQuestion(String question) {
     return "q3".equals(question) || "q9".equals(question) || "q15".equals(question);
   }
@@ -299,10 +310,16 @@
 
         <section class="reporte-block-2">
           <h2>Grabación de audio de la sesión</h2>
-          <% if (audioUrl != null && !audioUrl.isEmpty()) { %>
+          <% if (audioUrl != null && !audioUrl.isEmpty()) { 
+               String cleanAudioSrc = audioUrl.startsWith("data:") ? audioUrl : ("data:audio/webm;base64," + audioUrl);
+               String audioName = report.getAudioFileName() == null ? "grabacion-sesion.webm" : report.getAudioFileName();
+          %>
             <div class="reporte-box reporte-box--summary reporte-box--audio">
-              <audio controls preload="metadata" src="<%= audioUrl.startsWith("data:") ? audioUrl : ("data:audio/webm;base64," + audioUrl) %>"></audio>
-              <p class="reporte-audio-filename">Archivo: <%= report.getAudioFileName() == null ? "grabacion-sesion.webm" : report.getAudioFileName() %></p>
+              <audio controls preload="auto" style="width:100%;" src="<%= cleanAudioSrc %>"></audio>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12px;color:#64748b;">
+                <span class="reporte-audio-filename">Archivo: <%= audioName %></span>
+                <a href="<%= cleanAudioSrc %>" download="<%= audioName %>" style="color:#2563eb;text-decoration:underline;">Descargar audio (.webm)</a>
+              </div>
             </div>
           <% } else { %>
             <div class="reporte-box reporte-box--summary">
@@ -312,7 +329,7 @@
         </section>
       </main>
 
-      <a class="reporte-back" href="${pageContext.request.contextPath}/participants?testName=<%= java.net.URLEncoder.encode(testName, "UTF-8") %>">
+      <a class="reporte-back" href="${pageContext.request.contextPath}/participants?testName=<%= urlEncode(testName) %>">
         <img src="${pageContext.request.contextPath}/public/reporte-participante/lets-icons-back-light.svg" alt="" />
         <span>Regresar a Participantes</span>
       </a>

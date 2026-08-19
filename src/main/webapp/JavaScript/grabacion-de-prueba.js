@@ -4,6 +4,9 @@
   const timerLabel = document.querySelector(".h2");
   const restartBtn = document.getElementById("restartBtn");
   const startSurveyLink = document.getElementById("startSurveyLink");
+  const liveRecBadge = document.getElementById("liveRecBadge");
+  const liveRecText = document.getElementById("liveRecText");
+  const waveSpans = document.querySelectorAll("#waveCardInner .wave-wave");
   const contextPath = document.body.dataset.contextPath || "";
   const storageKey = "uxvibe-grabacion-tiempo";
 
@@ -13,8 +16,36 @@
   let chunks = [];
   let stream = null;
   let isRecording = false;
+  let isPaused = false;
+  let recordedMimeType = "audio/webm";
+
+  // Web Audio API for live waveform reactivity
+  let audioContext = null;
+  let analyser = null;
+  let animFrameId = null;
+
+  function getBestSupportedMimeType() {
+    const candidateTypes = [
+      "audio/webm;codecs=opus",
+      "audio/webm",
+      "audio/ogg;codecs=opus",
+      "audio/ogg",
+      "audio/mp4",
+      "audio/aac",
+    ];
+    if (typeof MediaRecorder === "undefined") {
+      return "";
+    }
+    for (let i = 0; i < candidateTypes.length; i++) {
+      if (MediaRecorder.isTypeSupported(candidateTypes[i])) {
+        return candidateTypes[i];
+      }
+    }
+    return "";
+  }
 
   function formatTime(totalSeconds) {
+    if (isNaN(totalSeconds) || totalSeconds < 0) totalSeconds = 0;
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
     return String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
@@ -30,15 +61,73 @@
   function startTimer() {
     stopTimer();
     timerId = setInterval(function () {
-      timerSeconds += 1;
-      sessionStorage.setItem(storageKey, String(timerSeconds));
-      if (timerLabel) {
-        timerLabel.textContent = formatTime(timerSeconds);
+      if (!isPaused) {
+        timerSeconds += 1;
+        sessionStorage.setItem(storageKey, String(timerSeconds));
+        if (timerLabel) {
+          timerLabel.textContent = formatTime(timerSeconds);
+        }
       }
     }, 1000);
   }
 
+  function setupWaveAnalyser(micStream) {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        audioContext = new AudioCtx();
+        if (audioContext.state === "suspended") {
+          audioContext.resume().catch(function () {});
+        }
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 64;
+        analyser.smoothingTimeConstant = 0.75;
+        const source = audioContext.createMediaStreamSource(micStream);
+        source.connect(analyser);
+        animateLiveWaves();
+      }
+    } catch (e) {
+      console.warn("Wave visualizer init note:", e);
+    }
+  }
+
+  function animateLiveWaves() {
+    if (!analyser || waveSpans.length === 0) {
+      return;
+    }
+
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(dataArray);
+
+    let avg = 0;
+    for (let i = 0; i < dataArray.length; i++) {
+      avg += dataArray[i];
+    }
+    avg = avg / dataArray.length;
+    const norm = Math.max(0.05, Math.min(1, avg / 180));
+
+    const baseHeights = [18, 24, 13, 28, 20, 26, 14, 22];
+
+    waveSpans.forEach(function (span, i) {
+      const base = baseHeights[i % baseHeights.length];
+      const factor = 0.5 + Math.sin(i * 0.7 + Date.now() * 0.008) * 0.5;
+      const h = Math.max(8, Math.min(32, base * (0.6 + norm * 1.6 * factor)));
+      span.style.height = h + "px";
+    });
+
+    animFrameId = requestAnimationFrame(animateLiveWaves);
+  }
+
   function stopMediaTracks() {
+    if (animFrameId) {
+      cancelAnimationFrame(animFrameId);
+      animFrameId = null;
+    }
+    if (audioContext && audioContext.state !== "closed") {
+      audioContext.close().catch(function () {});
+      audioContext = null;
+      analyser = null;
+    }
     if (stream) {
       stream.getTracks().forEach(function (track) {
         track.stop();
@@ -55,6 +144,7 @@
       try {
         sessionStorage.setItem("uxvibe_audio_base64", base64);
         sessionStorage.setItem("uxvibe_audio_filename", fileName);
+        sessionStorage.setItem("uxvibe_audio_mimetype", blob.type || "audio/webm");
       } catch (e) {}
 
       fetch(contextPath + "/recording-upload", {
@@ -62,7 +152,11 @@
         headers: {
           "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
         },
-        body: "fileName=" + encodeURIComponent(fileName) + "&audioUrl=" + encodeURIComponent(base64),
+        body:
+          "fileName=" +
+          encodeURIComponent(fileName) +
+          "&audioUrl=" +
+          encodeURIComponent(base64),
       })
         .then(function () {
           if (typeof callback === "function") callback();
@@ -78,29 +172,64 @@
     if (isRecording) {
       return;
     }
+
+    const mimeType = getBestSupportedMimeType();
+    recordedMimeType = mimeType || "audio/webm";
+
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      const constraints = {
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
+      };
+
       navigator.mediaDevices
-        .getUserMedia({ audio: true })
+        .getUserMedia(constraints)
+        .catch(function () {
+          return navigator.mediaDevices.getUserMedia({ audio: true });
+        })
         .then(function (micStream) {
           stream = micStream;
           chunks = [];
-          mediaRecorder = new MediaRecorder(stream);
+
+          try {
+            mediaRecorder = mimeType
+              ? new MediaRecorder(stream, { mimeType: mimeType })
+              : new MediaRecorder(stream);
+          } catch (e) {
+            mediaRecorder = new MediaRecorder(stream);
+          }
+
           mediaRecorder.ondataavailable = function (event) {
             if (event.data && event.data.size > 0) {
               chunks.push(event.data);
             }
           };
+
           mediaRecorder.onstop = function () {
-            const blob = new Blob(chunks, { type: "audio/webm" });
+            const blob = new Blob(chunks, { type: mediaRecorder.mimeType || recordedMimeType });
             uploadRecording(blob);
             stopMediaTracks();
           };
-          mediaRecorder.start();
+
+          // Periodic 500ms chunk collection ensures constant data availability
+          mediaRecorder.start(500);
           isRecording = true;
+          isPaused = false;
           startTimer();
+          setupWaveAnalyser(micStream);
+          updateBadgeState(true);
         })
         .catch(function (err) {
-          console.warn("Micrófono no disponible en grabación de prueba:", err);
+          console.warn("Microphone not available or permission denied:", err);
+          if (liveRecBadge) {
+            liveRecBadge.classList.add("is-error");
+          }
+          if (liveRecText) {
+            liveRecText.textContent = "Micrófono no conectado (prueba sin audio)";
+          }
           startTimer();
         });
     } else {
@@ -108,10 +237,51 @@
     }
   }
 
+  function updateBadgeState(recording) {
+    if (!liveRecBadge) return;
+    if (recording && !isPaused) {
+      liveRecBadge.classList.remove("is-paused", "is-error");
+      liveRecBadge.classList.add("is-active");
+      if (liveRecText) liveRecText.textContent = "GRABANDO AUDIO EN VIVO";
+    } else if (isPaused) {
+      liveRecBadge.classList.remove("is-active");
+      liveRecBadge.classList.add("is-paused");
+      if (liveRecText) liveRecText.textContent = "GRABACIÓN EN PAUSA";
+    }
+  }
+
+  function pauseRecording() {
+    isPaused = true;
+    stopTimer();
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+      try {
+        mediaRecorder.pause();
+      } catch (e) {}
+    }
+    updateBadgeState(false);
+  }
+
+  function resumeRecording() {
+    isPaused = false;
+    startTimer();
+    if (mediaRecorder && mediaRecorder.state === "paused") {
+      try {
+        mediaRecorder.resume();
+      } catch (e) {}
+    }
+    updateBadgeState(true);
+  }
+
   function stopRecording(callback) {
     if (mediaRecorder && mediaRecorder.state !== "inactive") {
+      try {
+        if (typeof mediaRecorder.requestData === "function") {
+          mediaRecorder.requestData();
+        }
+      } catch (e) {}
+
       mediaRecorder.onstop = function () {
-        const blob = new Blob(chunks, { type: "audio/webm" });
+        const blob = new Blob(chunks, { type: mediaRecorder.mimeType || recordedMimeType });
         uploadRecording(blob, callback);
         stopMediaTracks();
       };
@@ -125,14 +295,16 @@
   if (timerLabel) {
     timerLabel.textContent = formatTime(timerSeconds);
   }
+
+  // Start recording immediately on page load
   beginRecording();
 
   if (pauseDetails) {
     pauseDetails.addEventListener("toggle", function () {
       if (pauseDetails.open) {
-        stopTimer();
+        pauseRecording();
       } else {
-        startTimer();
+        resumeRecording();
       }
     });
   }
@@ -150,6 +322,8 @@
   if (restartBtn) {
     restartBtn.addEventListener("click", function () {
       sessionStorage.removeItem(storageKey);
+      sessionStorage.removeItem("uxvibe_audio_base64");
+      sessionStorage.removeItem("uxvibe_audio_filename");
       timerSeconds = 0;
       if (timerLabel) {
         timerLabel.textContent = formatTime(timerSeconds);

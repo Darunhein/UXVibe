@@ -151,8 +151,11 @@
         </p>
 
         <div class="audio-preview-box">
-          <span style="font-size:13px;font-weight:600;color:#475569;">Grabación de la prueba:</span>
-          <audio id="evaluatorAudioPlayer" controls preload="metadata" src="<%= (audioUrl != null && !audioUrl.isEmpty()) ? (audioUrl.startsWith("data:") ? audioUrl : ("data:audio/webm;base64," + audioUrl)) : "" %>">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span style="font-size:13px;font-weight:600;color:#475569;">Grabación de la sesión:</span>
+            <a id="evaluatorDownloadLink" href="#" download="grabacion-sesion.webm" style="display:none;font-size:12px;color:#2563eb;text-decoration:underline;">Descargar audio</a>
+          </div>
+          <audio id="evaluatorAudioPlayer" controls preload="auto" style="width:100%;margin-top:4px;" src="<%= (audioUrl != null && !audioUrl.isEmpty()) ? (audioUrl.startsWith("data:") ? audioUrl : ("data:audio/webm;base64," + audioUrl)) : "" %>">
             Tu navegador no soporta el elemento de audio.
           </audio>
           <div id="noAudioWarning" style="<%= (audioUrl != null && !audioUrl.isEmpty()) ? "display:none;" : "" %>color:#e11d48;font-size:12px;margin-top:6px;">

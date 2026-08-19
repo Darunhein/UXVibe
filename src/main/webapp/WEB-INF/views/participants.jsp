@@ -3,6 +3,17 @@
 <%@ page import="java.util.List" %>
 <%@ page import="mx.edu.utez.uxvibe.model.ParticipantItem" %>
 <%!
+  private String urlEncode(String value) {
+    if (value == null) {
+      return "";
+    }
+    try {
+      return java.net.URLEncoder.encode(value, "UTF-8");
+    } catch (Exception e) {
+      return value;
+    }
+  }
+
   private String escapeHtml(String value) {
     if (value == null) {
       return "";
@@ -68,7 +79,7 @@
                   </div>
                   <a
                     class="participante-detalles"
-                    href="${pageContext.request.contextPath}/participant-report?testName=<%= java.net.URLEncoder.encode(selectedTestName == null ? "" : selectedTestName, "UTF-8") %>&participantName=<%= java.net.URLEncoder.encode(participant.getName(), "UTF-8") %>"
+                    href="${pageContext.request.contextPath}/participant-report?testName=<%= urlEncode(selectedTestName) %>&participantName=<%= urlEncode(participant.getName()) %>"
                     aria-label="Ver estadísticas de <%= escapeHtml(participant.getName()) %>">
                     <span>Detalles</span>
                     <img src="${pageContext.request.contextPath}/public/participantes/ant-design-ellipsis-outlined.svg" alt="" />
