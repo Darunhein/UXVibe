@@ -4,28 +4,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
-    <title>Prueba de Micrófono</title>
-    <link
-      rel="stylesheet"
-      href="${pageContext.request.contextPath}/CSS/global.css"
-    />
-    <link
-      rel="stylesheet"
-      href="${pageContext.request.contextPath}/CSS/prueba-microfono.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Actor:wght@400&display=swap"
-    />
+    <title>Prueba de Micrófono - UX Vibe</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/prueba-microfono.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
   </head>
   <body data-context-path="${pageContext.request.contextPath}">
     <div class="microphone-test-container">
       <main class="microphone-test-frame">
-        <!-- Header Section -->
         <section class="test-header">
           <div class="header-content">
             <div class="title-with-icon">
@@ -36,11 +22,10 @@
                 alt="Microphone icon"
               />
             </div>
-            <h2 class="test-subtitle">Habla al micrófono</h2>
+            <h2 class="test-subtitle">Habla al micrófono para verificar tu volumen y claridad</h2>
           </div>
         </section>
 
-        <!-- Status Information -->
         <div class="status-section">
           <div class="status-item">
             <img
@@ -50,7 +35,7 @@
             />
             <div class="status-text">
               <h3 class="status-label">Estado</h3>
-              <p class="status-value">Micrófono sin iniciar</p>
+              <p class="status-value">Iniciando micrófono...</p>
             </div>
           </div>
 
@@ -61,7 +46,7 @@
               alt="Duration icon"
             />
             <div class="status-text">
-              <h3 class="status-label">Duración de la prueba</h3>
+              <h3 class="status-label">Duración</h3>
               <p class="status-value" id="test-duration">00:00</p>
             </div>
           </div>
@@ -74,35 +59,25 @@
             />
             <div class="status-text">
               <h3 class="status-label">Dispositivo</h3>
-              <p class="status-value" id="device-name">No detectado</p>
+              <p class="status-value" id="device-name">Detectando...</p>
             </div>
           </div>
         </div>
 
         <div class="waveform-container" aria-live="polite">
-          <!-- waveform bars inserted by JS -->
+          <!-- Waveform animated bars generated via JS -->
         </div>
 
         <div class="microphone-controls">
-          <!-- Simplified controls: single record toggle and play -->
-          <button id="btn-record" class="btn-primary">Grabar</button>
-          <button id="btn-play" class="btn-secondary" disabled>Reproducir</button>
-          <span id="record-status" class="record-status">Sin grabación</span>
+          <button id="btn-record" class="btn-primary" type="button">Grabar prueba</button>
+          <button id="btn-play" class="btn-secondary" type="button" disabled>Escuchar prueba</button>
+          <span id="record-status" class="record-status">Micrófono listo</span>
         </div>
 
-        <!-- Hidden audio element for playback -->
-        <audio id="preview-audio" controls style="display:none"></audio>
+        <audio id="preview-audio" style="display:none"></audio>
 
-        <!-- Back Button -->
-        <a
-          class="btn-back"
-          href="${pageContext.request.contextPath}/html/03%20Execution%20Line/terminos-y-condiciones.jsp"
-          aria-label="Regresar a la página anterior"
-        >
-          <img
-            src="${pageContext.request.contextPath}/public/Prueba de Microfono/lets-icons-back-light.svg"
-            alt="Back icon"
-          />
+        <a class="btn-back" href="${pageContext.request.contextPath}/terms" aria-label="Regresar a términos y condiciones">
+          <img src="${pageContext.request.contextPath}/public/Prueba de Microfono/lets-icons-back-light.svg" alt="Back" />
           <span>Regresar</span>
         </a>
       </main>

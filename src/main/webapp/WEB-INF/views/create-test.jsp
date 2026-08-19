@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="es">
   <head>
-    <title>Crear prueba</title>
+    <title>Crear Prueba - UX Vibe</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
@@ -18,13 +18,13 @@
           <img class="crear-prueba__hero" src="${pageContext.request.contextPath}/public/crear-prueba/merged-asset-1@2x.png" alt="Crear prueba" />
 
           <h1 id="crear-prueba-title" class="crear-prueba__title">Crear prueba nueva</h1>
-          <p class="crear-prueba__subtitle">Ingresa el nombre de la prueba que deseas crear</p>
+          <p class="crear-prueba__subtitle">Ingresa los datos de la prueba que deseas crear</p>
 
           <% if (request.getAttribute("errorMessage") != null) { %>
             <p class="form-message form-message--error"><%= request.getAttribute("errorMessage") %></p>
           <% } %>
 
-          <form class="crear-prueba__form" action="${pageContext.request.contextPath}/create-test" method="post">
+          <form class="crear-prueba__form" id="createTestForm" action="${pageContext.request.contextPath}/create-test" method="post">
             <label class="visually-hidden" for="nombre-prueba">Nombre de la prueba</label>
             <div class="crear-prueba__input-shell">
               <img class="crear-prueba__input-icon" src="${pageContext.request.contextPath}/public/crear-prueba/merged-asset-2@2x.png" alt="" />
@@ -40,7 +40,7 @@
             <label class="visually-hidden" for="sistema-prueba">Sistema a evaluar</label>
             <div class="crear-prueba__input-shell">
               <img class="crear-prueba__input-icon" src="${pageContext.request.contextPath}/public/crear-prueba/merged-asset-2@2x.png" alt="" />
-              <input id="sistema-prueba" class="form-input crear-prueba__input" type="text" name="systemLink" placeholder="Enlace del sistema que se probará" autocomplete="off" value="<%= request.getAttribute("systemLink") != null ? request.getAttribute("systemLink") : "" %>" />
+              <input id="sistema-prueba" class="form-input crear-prueba__input" type="text" name="systemLink" placeholder="Enlace o nombre del sistema a probar" autocomplete="off" value="<%= request.getAttribute("systemLink") != null ? request.getAttribute("systemLink") : "" %>" />
             </div>
 
             <div class="crear-prueba__actions">
@@ -60,6 +60,6 @@
         </section>
       </main>
     </div>
-    <script src="${pageContext.request.contextPath}/JavaScript/text-only-validation.js"></script>
+    <script src="${pageContext.request.contextPath}/JavaScript/crear-prueba.js"></script>
   </body>
 </html>

@@ -34,7 +34,7 @@
 <!doctype html>
 <html lang="es">
   <head>
-    <title>Participantes UX Vibe</title>
+    <title>Participantes - UX Vibe</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
@@ -73,7 +73,7 @@
                     <span>Detalles</span>
                     <img src="${pageContext.request.contextPath}/public/participantes/ant-design-ellipsis-outlined.svg" alt="" />
                   </a>
-                  <form class="participante-delete" action="${pageContext.request.contextPath}/delete-participant" method="post" onsubmit="return confirm('¿Borrar participante &quot;' + '<%= escapeHtml(participant.getName()) %>' + '&quot; de la prueba?');">
+                  <form class="participante-delete" action="${pageContext.request.contextPath}/delete-participant" method="post">
                     <input type="hidden" name="testName" value="<%= selectedTestName == null ? "" : selectedTestName %>" />
                     <input type="hidden" name="participantName" value="<%= participant.getName() %>" />
                     <button class="participante-delete-button" type="submit">Borrar</button>
@@ -128,5 +128,6 @@
         </a>
       </main>
     </div>
+    <script src="${pageContext.request.contextPath}/JavaScript/participantes.js"></script>
   </body>
 </html>

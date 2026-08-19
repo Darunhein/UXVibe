@@ -32,7 +32,7 @@
 <!doctype html>
 <html lang="es">
   <head>
-    <title>Seleccionar Prueba UX Vibe</title>
+    <title>Seleccionar Prueba - UX Vibe</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
@@ -62,7 +62,7 @@
                 <article class="test-section__row <%= rowClasses[i % rowClasses.length] %>">
                   <h2 class="test-section__name"><%= escapedTestName %></h2>
                   <p class="test-section__date">
-                    La prueba se realizo el <%= test.getCreatedOnFormatted() %>
+                    La prueba se realizó el <%= test.getCreatedOnFormatted() %>
                   </p>
                   <form class="test-section__action-form test-section__action-form--run" action="${pageContext.request.contextPath}/start-test" method="get">
                     <input type="hidden" name="testName" value="<%= escapedTestName %>" />
@@ -77,7 +77,7 @@
                       <img src="${pageContext.request.contextPath}/public/test-section/Group-7.svg" alt="" />
                     </button>
                   </form>
-                  <form class="test-section__action-form test-section__action-form--delete" action="${pageContext.request.contextPath}/delete-test" method="post" onsubmit="return confirm('¿Borrar la prueba &quot;'+ document.getElementsByName('testName' )[0].value + '&quot;? Esta acción eliminará participantes y respuestas.')">
+                  <form class="test-section__action-form test-section__action-form--delete" action="${pageContext.request.contextPath}/delete-test" method="post">
                     <input type="hidden" name="testName" value="<%= escapedTestName %>" />
                     <button class="test-section__delete-button" type="submit" aria-label="Borrar prueba <%= escapedTestName %>">Borrar</button>
                   </form>
@@ -126,5 +126,6 @@
         </a>
       </main>
     </div>
+    <script src="${pageContext.request.contextPath}/JavaScript/test-section.js"></script>
   </body>
 </html>

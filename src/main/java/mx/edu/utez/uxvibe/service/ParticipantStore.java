@@ -5,14 +5,17 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import mx.edu.utez.uxvibe.bean.ParticipantReportBean;
 import mx.edu.utez.uxvibe.dao.ParticipantDao;
+import mx.edu.utez.uxvibe.dao.RecordingDao;
 import mx.edu.utez.uxvibe.model.ParticipantItem;
 
-public class ParticipantStore implements ParticipantDao {
+public class ParticipantStore implements ParticipantDao, RecordingDao {
 
   private static final ParticipantStore INSTANCE = new ParticipantStore();
-  private final ParticipantDao dao = new ParticipantDao() {};
+  private final ParticipantDao participantDao = new ParticipantDao() {};
+  private final RecordingDao recordingDao = new RecordingDao() {};
   private final Map<String, List<ParticipantItem>> participantsByUserAndTest =
     new LinkedHashMap<>();
   private final Map<String, ParticipantReportBean> reportsByParticipant =
@@ -20,9 +23,13 @@ public class ParticipantStore implements ParticipantDao {
   private final Map<String, String> participantNameByUserAndTest =
     new LinkedHashMap<>();
 
-  private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(ParticipantStore.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(ParticipantStore.class.getName());
 
-  private ParticipantStore() {}
+  private ParticipantStore() {
+    try {
+      recordingDao.ensureTableExists();
+    } catch (Throwable ignored) {}
+  }
 
   public static ParticipantStore getInstance() {
     return INSTANCE;
@@ -35,7 +42,7 @@ public class ParticipantStore implements ParticipantDao {
     LocalDateTime startedAt,
     String participantName
   ) {
-    ParticipantItem participant = dao.registerCompletion(
+    ParticipantItem participant = participantDao.registerCompletion(
       email,
       testName,
       startedAt,
@@ -83,7 +90,7 @@ public class ParticipantStore implements ParticipantDao {
       return new ArrayList<>();
     }
 
-    List<ParticipantItem> participants = dao.listByUserAndTest(email, testName);
+    List<ParticipantItem> participants = participantDao.listByUserAndTest(email, testName);
     if (!participants.isEmpty()) {
       participantsByUserAndTest.put(
         normalizedEmail + "|" + normalizedTestName,
@@ -108,7 +115,7 @@ public class ParticipantStore implements ParticipantDao {
     String question,
     Object answer
   ) {
-    LOGGER.info("saveSurveyResponse called: email=" + email + ", test=" + testName + ", participant=" + participantName + ", question=" + question + ", answer=" + String.valueOf(answer));
+    LOGGER.info("saveSurveyResponse: email=" + email + ", test=" + testName + ", participant=" + participantName + ", question=" + question + ", answer=" + String.valueOf(answer));
     String normalizedEmail = normalize(email);
     String normalizedTestName = normalize(testName);
     String rememberedParticipantName = resolveParticipantName(
@@ -126,32 +133,34 @@ public class ParticipantStore implements ParticipantDao {
     );
     report.addSurveyResponse(question, answer);
 
-    // compute numeric (already stored in report) and persist to DB via dao
     Integer numeric = null;
     try {
-      java.util.Map<String, Object> last = report.getSurveyResponses().get(report.getSurveyResponses().size() - 1);
-      Object numObj = last.get("numeric");
-      if (numObj != null) {
-        numeric = Integer.parseInt(String.valueOf(numObj));
+      List<Map<String, Object>> responses = report.getSurveyResponses();
+      if (!responses.isEmpty()) {
+        Map<String, Object> last = responses.get(responses.size() - 1);
+        Object numObj = last.get("numeric");
+        if (numObj != null) {
+          numeric = Integer.parseInt(String.valueOf(numObj));
+        }
       }
     } catch (Exception ignore) {}
-    // persist via DAO
+
     try {
-      dao.saveSurveyResponseToDb(email, testName, rememberedParticipantName, question, answer, numeric);
+      participantDao.saveSurveyResponseToDb(email, testName, rememberedParticipantName, question, answer, numeric);
     } catch (Throwable t) {
-      // avoid failing the request if DB not available
       t.printStackTrace();
     }
   }
 
   public synchronized boolean deleteByTest(String email, String testName) {
-    boolean ok = dao.deleteByTest(email, testName);
-    // remove cached participants and reports
+    boolean ok = participantDao.deleteByTest(email, testName);
+    recordingDao.deleteByTest(email, testName);
+
     String key = normalize(email) + "|" + normalize(testName);
     participantsByUserAndTest.remove(key);
     participantNameByUserAndTest.remove(key);
-    java.util.List<String> toRemove = new java.util.ArrayList<>();
-    for (String k : new java.util.ArrayList<>(reportsByParticipant.keySet())) {
+    List<String> toRemove = new ArrayList<>();
+    for (String k : new ArrayList<>(reportsByParticipant.keySet())) {
       if (k.startsWith(key + "|")) {
         toRemove.add(k);
       }
@@ -163,14 +172,14 @@ public class ParticipantStore implements ParticipantDao {
   }
 
   public synchronized boolean deleteParticipant(String email, String testName, String participantName) {
-    boolean ok = dao.deleteParticipant(email, testName, participantName);
-    // remove cached participant
+    boolean ok = participantDao.deleteParticipant(email, testName, participantName);
+    recordingDao.deleteByParticipant(email, testName, participantName);
+
     String key = normalize(email) + "|" + normalize(testName);
-    java.util.List<ParticipantItem> list = participantsByUserAndTest.get(key);
+    List<ParticipantItem> list = participantsByUserAndTest.get(key);
     if (list != null) {
       list.removeIf(p -> participantName.equals(p.getName()));
     }
-    // remove report
     reportsByParticipant.remove(normalize(email) + "|" + normalize(testName) + "|" + normalize(participantName));
     return ok;
   }
@@ -182,7 +191,7 @@ public class ParticipantStore implements ParticipantDao {
     String fileName,
     String audioUrl
   ) {
-    LOGGER.info("saveAudioAsset called: email=" + email + ", test=" + testName + ", participant=" + participantName + ", fileName=" + fileName + ", audioUrlLength=" + (audioUrl==null?0:audioUrl.length()));
+    LOGGER.info("saveAudioAsset: email=" + email + ", test=" + testName + ", participant=" + participantName + ", fileName=" + fileName);
     String normalizedEmail = normalize(email);
     String normalizedTestName = normalize(testName);
     String rememberedParticipantName = resolveParticipantName(
@@ -200,13 +209,24 @@ public class ParticipantStore implements ParticipantDao {
     );
     report.setAudioFileName(fileName);
     report.setAudioUrl(audioUrl);
-    // persist audio link as a special response so it survives restarts
+
     try {
-      dao.saveSurveyResponseToDb(email, testName, rememberedParticipantName, "audio", audioUrl, null);
-    } catch (Throwable ignore) {
-      // don't break on DB errors
-      ignore.printStackTrace();
+      recordingDao.saveRecording(
+        email,
+        testName,
+        rememberedParticipantName,
+        "TEST_SESSION",
+        fileName,
+        audioUrl,
+        report.getDurationMinutes() != null ? report.getDurationMinutes() * 60 : null
+      );
+    } catch (Throwable t) {
+      t.printStackTrace();
     }
+
+    try {
+      participantDao.saveSurveyResponseToDb(email, testName, rememberedParticipantName, "audio", audioUrl, null);
+    } catch (Throwable ignore) {}
   }
 
   public synchronized ParticipantReportBean getReport(
@@ -217,47 +237,56 @@ public class ParticipantStore implements ParticipantDao {
     String key = normalize(email) + "|" + normalize(testName) + "|" + normalize(participantName);
     ParticipantReportBean report = reportsByParticipant.get(key);
     if (report != null) {
+      if (report.getAudioUrl() == null || report.getAudioUrl().isEmpty()) {
+        Map<String, Object> rec = recordingDao.getRecording(email, testName, participantName, "TEST_SESSION");
+        if (rec != null && rec.get("audioData") != null) {
+          report.setAudioUrl(String.valueOf(rec.get("audioData")));
+          if (rec.get("fileName") != null) {
+            report.setAudioFileName(String.valueOf(rec.get("fileName")));
+          }
+        }
+      }
       return report;
     }
 
-    // Try to load persisted responses from DB for this participant
-    java.util.List<java.util.Map<String,Object>> persisted = dao.listResponses(email, testName, participantName == null ? "" : participantName);
+    List<Map<String, Object>> persisted = participantDao.listResponses(email, testName, participantName == null ? "" : participantName);
     if (persisted != null && !persisted.isEmpty()) {
       report = new ParticipantReportBean();
       report.setParticipantName(participantName == null || participantName.trim().isEmpty() ? "Participante" : participantName);
       report.setTestName(safeTestName(testName));
       report.setDescription("Reporte cargado desde la base de datos.");
-      // populate responses
-      for (java.util.Map<String,Object> row : persisted) {
+      for (Map<String, Object> row : persisted) {
         String q = row.get("question") == null ? null : String.valueOf(row.get("question"));
         Object ans = row.get("answer");
         Object numericObj = row.get("numeric");
         if (q != null && ("audio".equalsIgnoreCase(q) || "audio_url".equalsIgnoreCase(q))) {
-          // legacy: audio saved as special response
-          String audioUrl = ans == null ? null : String.valueOf(ans);
-          report.setAudioUrl(audioUrl);
-          // attempt to set filename if present in question map (not standard)
+          report.setAudioUrl(ans == null ? null : String.valueOf(ans));
         } else {
-          // add response preserving numeric if available
-          java.util.Map<String,Object> r = new java.util.LinkedHashMap<>();
+          Map<String, Object> r = new LinkedHashMap<>();
           r.put("question", q);
           r.put("answer", ans);
           if (numericObj != null) {
             r.put("numeric", numericObj);
           } else {
-            // recompute numeric if possible
-            // use report bean helper by calling addSurveyResponse (it will compute numeric)
             report.addSurveyResponse(q, ans);
             continue;
           }
           report.getSurveyResponses().add(r);
         }
       }
+
+      Map<String, Object> rec = recordingDao.getRecording(email, testName, participantName, "TEST_SESSION");
+      if (rec != null && rec.get("audioData") != null) {
+        report.setAudioUrl(String.valueOf(rec.get("audioData")));
+        if (rec.get("fileName") != null) {
+          report.setAudioFileName(String.valueOf(rec.get("fileName")));
+        }
+      }
+
       reportsByParticipant.put(key, report);
       return report;
     }
 
-    // Fallback: if participantName is null or not found, try to find any report for this user/test
     if (participantName == null || participantName.trim().isEmpty()) {
       String prefix = normalize(email) + "|" + normalize(testName) + "|";
       for (Map.Entry<String, ParticipantReportBean> entry : reportsByParticipant.entrySet()) {
@@ -288,11 +317,7 @@ public class ParticipantStore implements ParticipantDao {
       report.setParticipantName(
         resolveParticipantName(
           participantName,
-          participantNameByUserAndTest.containsKey(
-            normalizedEmail + "|" + normalizedTestName
-          )
-            ? 1
-            : 1
+          1
         )
       );
       report.setTestName("Prueba sin nombre");

@@ -143,7 +143,7 @@ public class LoginServlet extends HttpServlet {
 
   private String resolveHomePath(UserAccount account) {
     if (account != null && UserRole.PARTICIPANT.equals(account.getRole())) {
-      return "/html/03%20Execution%20Line/terminos-y-condiciones.jsp";
+      return "/terms";
     }
     return "/tests";
   }

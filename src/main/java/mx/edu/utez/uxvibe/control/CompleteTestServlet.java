@@ -1,5 +1,6 @@
 package mx.edu.utez.uxvibe.control;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,15 +20,21 @@ public class CompleteTestServlet extends HttpServlet {
 
   private static final String CURRENT_USER_ATTR = "currentUser";
   private static final String CURRENT_TEST_NAME_ATTR = "currentTestName";
-  private static final String CURRENT_TEST_STARTED_AT_ATTR =
-    "currentTestStartedAt";
-  private static final String CURRENT_TEST_COMPLETION_RECORDED_ATTR =
-    "currentTestCompletionRecorded";
-  private static final String CURRENT_PARTICIPANT_NAME_ATTR =
-    "currentParticipantName";
+  private static final String CURRENT_TEST_STARTED_AT_ATTR = "currentTestStartedAt";
+  private static final String CURRENT_TEST_COMPLETION_RECORDED_ATTR = "currentTestCompletionRecorded";
+  private static final String CURRENT_PARTICIPANT_NAME_ATTR = "currentParticipantName";
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    processCompletion(req, resp);
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    processCompletion(req, resp);
+  }
+
+  private void processCompletion(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute(CURRENT_USER_ATTR) == null) {
       redirectTo(req, resp, "/login");
@@ -36,7 +43,11 @@ public class CompleteTestServlet extends HttpServlet {
 
     UserAccount account = (UserAccount) session.getAttribute(CURRENT_USER_ATTR);
     boolean participantSession = UserRole.PARTICIPANT.equals(account.getRole());
-    String testName = (String) session.getAttribute(CURRENT_TEST_NAME_ATTR);
+
+    String paramTestName = req.getParameter("testName");
+    String sessionTestName = (String) session.getAttribute(CURRENT_TEST_NAME_ATTR);
+    String testName = (paramTestName != null && !paramTestName.trim().isEmpty()) ? paramTestName.trim() : sessionTestName;
+
     if (testName == null || testName.trim().isEmpty()) {
       if (participantSession) {
         testName = "Participación general";
@@ -47,22 +58,19 @@ public class CompleteTestServlet extends HttpServlet {
       }
     }
 
-    if (
-      !Boolean.TRUE.equals(
-        session.getAttribute(CURRENT_TEST_COMPLETION_RECORDED_ATTR)
-      )
-    ) {
-      LocalDateTime startedAt = (LocalDateTime) session.getAttribute(
-        CURRENT_TEST_STARTED_AT_ATTR
-      );
-      ParticipantStore.getInstance().registerCompletion(
-        account.getEmail(),
-        testName,
-        startedAt,
-        resolveParticipantName(session)
-      );
-      session.setAttribute(CURRENT_TEST_COMPLETION_RECORDED_ATTR, Boolean.TRUE);
-    }
+    String paramParticipantName = req.getParameter("participantName");
+    String participantName = (paramParticipantName != null && !paramParticipantName.trim().isEmpty())
+      ? paramParticipantName.trim()
+      : resolveParticipantName(session);
+
+    LocalDateTime startedAt = (LocalDateTime) session.getAttribute(CURRENT_TEST_STARTED_AT_ATTR);
+    ParticipantStore.getInstance().registerCompletion(
+      account.getEmail(),
+      testName,
+      startedAt,
+      participantName
+    );
+    session.setAttribute(CURRENT_TEST_COMPLETION_RECORDED_ATTR, Boolean.TRUE);
 
     if (participantSession) {
       session.removeAttribute(CURRENT_TEST_NAME_ATTR);
@@ -73,10 +81,12 @@ public class CompleteTestServlet extends HttpServlet {
       return;
     }
 
+    // Redirect to participant report so the evaluator can immediately assess the completed test
     redirectTo(
       req,
       resp,
-      "/participants?testName=" + encodeQueryValue(testName.trim())
+      "/participant-report?testName=" + encodeQueryValue(testName.trim()) +
+      "&participantName=" + encodeQueryValue(participantName.trim())
     );
   }
 
@@ -92,14 +102,9 @@ public class CompleteTestServlet extends HttpServlet {
   }
 
   private String resolveParticipantName(HttpSession session) {
-    Object participantName = session.getAttribute(
-      CURRENT_PARTICIPANT_NAME_ATTR
-    );
-    if (
-      participantName instanceof String &&
-      !((String) participantName).trim().isEmpty()
-    ) {
-      return (String) participantName;
+    Object participantName = session.getAttribute(CURRENT_PARTICIPANT_NAME_ATTR);
+    if (participantName instanceof String && !((String) participantName).trim().isEmpty()) {
+      return ((String) participantName).trim();
     }
     String fallbackName = "Participante " + (System.currentTimeMillis() % 1000);
     session.setAttribute(CURRENT_PARTICIPANT_NAME_ATTR, fallbackName);
@@ -110,18 +115,7 @@ public class CompleteTestServlet extends HttpServlet {
     HttpServletRequest req,
     HttpServletResponse resp,
     String path
-  ) {
-    try {
-      resp.sendRedirect(req.getContextPath() + path);
-    } catch (IOException e) {
-      try {
-        resp.sendError(
-          HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-          "No se pudo redirigir a la ruta solicitada."
-        );
-      } catch (IOException ignored) {
-        // Fall through since the response is already in a failed state.
-      }
-    }
+  ) throws IOException {
+    resp.sendRedirect(req.getContextPath() + path);
   }
 }

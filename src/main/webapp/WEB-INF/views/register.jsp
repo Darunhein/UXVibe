@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="es">
   <head>
-    <title>Crear Cuenta UX Vibe</title>
+    <title>Crear Cuenta - UX Vibe</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
@@ -17,7 +17,7 @@
         <p class="form-message form-message--error"><%= request.getAttribute("errorMessage") %></p>
       <% } %>
       <main class="frame">
-        <form class="registro-form" action="${pageContext.request.contextPath}/register" method="post">
+        <form class="registro-form" id="registroForm" action="${pageContext.request.contextPath}/register" method="post">
           <div class="registro-field">
             <label class="registro-label-name" for="nombre-completo">Nombre completo</label>
             <div class="registro-input-shell">
@@ -38,7 +38,7 @@
             <label class="registro-label" for="contrasena">Contraseña</label>
             <div class="registro-input-shell registro-input-shell--password">
               <img class="registro-icon-panel" alt="" src="${pageContext.request.contextPath}/public/registro/merged-asset-2@2x.png" />
-              <input id="contrasena" class="form-input registro-input" type="password" name="password" placeholder="Crea una contraseña" autocomplete="new-password" minlength="8" required />
+              <input id="contrasena" class="form-input registro-input" type="password" name="password" placeholder="Crea una contraseña (mínimo 8 caracteres)" autocomplete="new-password" minlength="8" required />
               <button
                 class="registro-visibility"
                 type="button"
@@ -77,23 +77,6 @@
         </form>
       </main>
     </div>
-    <script>
-      document.querySelectorAll("[data-password-toggle]").forEach(function (toggleButton) {
-        var inputSelector = toggleButton.getAttribute("data-target");
-        var fieldLabel = toggleButton.getAttribute("data-field-label") || "contraseña";
-        var input = inputSelector ? document.querySelector(inputSelector) : null;
-        if (!input) {
-          return;
-        }
-
-        toggleButton.addEventListener("click", function () {
-          var isHidden = input.type === "password";
-          input.type = isHidden ? "text" : "password";
-          toggleButton.setAttribute("aria-pressed", String(isHidden));
-          toggleButton.setAttribute("aria-label", (isHidden ? "Ocultar " : "Mostrar ") + fieldLabel);
-        });
-      });
-    </script>
-    <script src="${pageContext.request.contextPath}/JavaScript/text-only-validation.js"></script>
+    <script src="${pageContext.request.contextPath}/JavaScript/registro.js"></script>
   </body>
 </html>

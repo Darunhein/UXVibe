@@ -22,16 +22,16 @@ public class StartTestServlet extends HttpServlet {
     "currentParticipantName";
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute(CURRENT_USER_ATTR) == null) {
-      redirectTo(req, resp, "/login");
+      resp.sendRedirect(req.getContextPath() + "/login");
       return;
     }
 
     String testName = req.getParameter("testName");
     if (testName == null || testName.trim().isEmpty()) {
-      redirectTo(req, resp, "/tests");
+      resp.sendRedirect(req.getContextPath() + "/tests");
       return;
     }
 
@@ -45,29 +45,7 @@ public class StartTestServlet extends HttpServlet {
       CURRENT_PARTICIPANT_NAME_ATTR,
       "Participante " + (System.currentTimeMillis() % 1000)
     );
-    redirectTo(
-      req,
-      resp,
-      "/html/03%20Execution%20Line/terminos-y-condiciones.jsp"
-    );
-  }
 
-  private void redirectTo(
-    HttpServletRequest req,
-    HttpServletResponse resp,
-    String path
-  ) {
-    try {
-      resp.sendRedirect(req.getContextPath() + path);
-    } catch (IOException e) {
-      try {
-        resp.sendError(
-          HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-          "No se pudo redirigir a la ruta solicitada."
-        );
-      } catch (IOException ignored) {
-        // Fall through since the response is already in a failed state.
-      }
-    }
+    resp.sendRedirect(req.getContextPath() + "/terms");
   }
 }

@@ -9,21 +9,37 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
 import mx.edu.utez.uxvibe.model.UserAccount;
 import mx.edu.utez.uxvibe.model.UserRole;
 
-import java.io.IOException;
-
 @WebFilter(urlPatterns = {
-        "/tests",
-        "/participants",
-        "/create-test",
-        "/start-test",
-        "/complete-test",
-        "/cancel-test",
-        "/restart-recording",
-        "/html/03 Execution Line/*",
-        "/html/04 SAM Line/*"
+    "/tests",
+    "/participants",
+    "/create-test",
+    "/start-test",
+    "/terms",
+    "/terminos-y-condiciones",
+    "/mic-test",
+    "/prueba-microfono",
+    "/test-recording",
+    "/grabacion-de-prueba",
+    "/cuestionario-sb-1",
+    "/cuestionario-sb-2",
+    "/sam-1",
+    "/sam-2",
+    "/sam-3",
+    "/encuesta-1",
+    "/encuesta-2",
+    "/encuesta-3",
+    "/cheers-bye",
+    "/complete-test",
+    "/cancel-test",
+    "/restart-recording",
+    "/participant-report",
+    "/delete-test",
+    "/delete-participant",
+    "/recording-upload"
 })
 public class AuthenticationFilter implements Filter {
     @Override

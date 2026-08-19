@@ -1,27 +1,23 @@
 (function () {
-  var pauseButton = document.querySelector(".material-symbolspause-icon");
-  var pauseMenu = document.getElementById("pauseMenu");
-  var timerLabel = document.querySelector(".h2");
-  var restartButton = document.querySelector(".pause-menu__item--button");
-  var contextPath = document.body.dataset.contextPath || "";
-  var storageKey = "uxvibe-grabacion-tiempo";
-  var timerSeconds = Number.parseInt(
-    sessionStorage.getItem(storageKey) || "0",
-    10,
-  );
-  var timerId = null;
-  var mediaRecorder = null;
-  var chunks = [];
-  var stream = null;
-  var isRecording = false;
-  var recordingStartedAt = null;
+  const pauseDetails = document.getElementById("pauseDetails");
+  const pauseBtn = document.getElementById("pauseBtn");
+  const timerLabel = document.querySelector(".h2");
+  const restartBtn = document.getElementById("restartBtn");
+  const startSurveyLink = document.getElementById("startSurveyLink");
+  const contextPath = document.body.dataset.contextPath || "";
+  const storageKey = "uxvibe-grabacion-tiempo";
+
+  let timerSeconds = Number.parseInt(sessionStorage.getItem(storageKey) || "0", 10);
+  let timerId = null;
+  let mediaRecorder = null;
+  let chunks = [];
+  let stream = null;
+  let isRecording = false;
 
   function formatTime(totalSeconds) {
-    var minutes = Math.floor(totalSeconds / 60);
-    var seconds = totalSeconds % 60;
-    return (
-      String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0")
-    );
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
   }
 
   function stopTimer() {
@@ -42,27 +38,6 @@
     }, 1000);
   }
 
-  function closeMenu() {
-    if (pauseMenu) {
-      pauseMenu.hidden = true;
-    }
-    if (pauseButton) {
-      pauseButton.classList.remove("is-paused");
-      pauseButton.setAttribute("aria-expanded", "false");
-    }
-  }
-
-  function openMenu() {
-    if (pauseMenu) {
-      pauseMenu.hidden = false;
-    }
-    if (pauseButton) {
-      pauseButton.classList.add("is-paused");
-      pauseButton.setAttribute("aria-expanded", "true");
-    }
-    stopTimer();
-  }
-
   function stopMediaTracks() {
     if (stream) {
       stream.getTracks().forEach(function (track) {
@@ -72,28 +47,29 @@
     }
   }
 
-  function uploadRecording(blob) {
-    var fileName = "recording-" + Date.now() + ".webm";
-    var reader = new FileReader();
+  function uploadRecording(blob, callback) {
+    const fileName = "test-session-" + Date.now() + ".webm";
+    const reader = new FileReader();
     reader.onloadend = function () {
-      var base64 = reader.result.split(",")[1];
-      var payload = {
-        fileName: fileName,
-        audioUrl: base64,
-      };
+      const base64 = reader.result.split(",")[1];
+      try {
+        sessionStorage.setItem("uxvibe_audio_base64", base64);
+        sessionStorage.setItem("uxvibe_audio_filename", fileName);
+      } catch (e) {}
+
       fetch(contextPath + "/recording-upload", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
         },
-        body:
-          "fileName=" +
-          encodeURIComponent(fileName) +
-          "&audioUrl=" +
-          encodeURIComponent(base64),
-      }).catch(function () {
-        console.warn("No se pudo enviar el audio al servidor.");
-      });
+        body: "fileName=" + encodeURIComponent(fileName) + "&audioUrl=" + encodeURIComponent(base64),
+      })
+        .then(function () {
+          if (typeof callback === "function") callback();
+        })
+        .catch(function () {
+          if (typeof callback === "function") callback();
+        });
     };
     reader.readAsDataURL(blob);
   }
@@ -102,7 +78,7 @@
     if (isRecording) {
       return;
     }
-    if (navigator.mediaDevices?.getUserMedia) {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices
         .getUserMedia({ audio: true })
         .then(function (micStream) {
@@ -110,32 +86,39 @@
           chunks = [];
           mediaRecorder = new MediaRecorder(stream);
           mediaRecorder.ondataavailable = function (event) {
-            if (event.data.size > 0) {
+            if (event.data && event.data.size > 0) {
               chunks.push(event.data);
             }
           };
           mediaRecorder.onstop = function () {
-            var blob = new Blob(chunks, { type: "audio/webm" });
+            const blob = new Blob(chunks, { type: "audio/webm" });
             uploadRecording(blob);
             stopMediaTracks();
           };
           mediaRecorder.start();
           isRecording = true;
-          recordingStartedAt = Date.now();
           startTimer();
         })
-        .catch(function () {
-          if (timerLabel) {
-            timerLabel.textContent = "Mic no disponible";
-          }
+        .catch(function (err) {
+          console.warn("Micrófono no disponible en grabación de prueba:", err);
+          startTimer();
         });
+    } else {
+      startTimer();
     }
   }
 
-  function stopRecording() {
-    if (mediaRecorder && isRecording) {
+  function stopRecording(callback) {
+    if (mediaRecorder && mediaRecorder.state !== "inactive") {
+      mediaRecorder.onstop = function () {
+        const blob = new Blob(chunks, { type: "audio/webm" });
+        uploadRecording(blob, callback);
+        stopMediaTracks();
+      };
       mediaRecorder.stop();
       isRecording = false;
+    } else {
+      if (typeof callback === "function") callback();
     }
   }
 
@@ -144,28 +127,39 @@
   }
   beginRecording();
 
-  if (pauseButton) {
-    pauseButton.addEventListener("click", function () {
-      if (pauseMenu?.hidden) {
-        openMenu();
-        stopRecording();
-        return;
+  if (pauseDetails) {
+    pauseDetails.addEventListener("toggle", function () {
+      if (pauseDetails.open) {
+        stopTimer();
+      } else {
+        startTimer();
       }
-      closeMenu();
-      beginRecording();
     });
   }
 
-  if (restartButton) {
-    restartButton.addEventListener("click", function () {
+  if (startSurveyLink) {
+    startSurveyLink.addEventListener("click", function (event) {
+      event.preventDefault();
+      stopTimer();
+      stopRecording(function () {
+        window.location.href = contextPath + "/cuestionario-sb-1";
+      });
+    });
+  }
+
+  if (restartBtn) {
+    restartBtn.addEventListener("click", function () {
       sessionStorage.removeItem(storageKey);
       timerSeconds = 0;
       if (timerLabel) {
         timerLabel.textContent = formatTime(timerSeconds);
       }
-      stopRecording();
-      closeMenu();
-      beginRecording();
+      stopRecording(function () {
+        if (pauseDetails) {
+          pauseDetails.open = false;
+        }
+        beginRecording();
+      });
     });
   }
 

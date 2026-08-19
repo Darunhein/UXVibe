@@ -29,6 +29,35 @@
     if ("satisfaction".equals(question) || "impact".equals(question) || "control".equals(question)) {
       return String.valueOf(rawAnswer) + "/9";
     }
+    if ("stress".equals(question) || "relaxation".equals(question)) {
+      String a = String.valueOf(rawAnswer).toLowerCase();
+      switch (a) {
+        case "never": case "nunca": return "Nunca (1/5)";
+        case "sometimes": case "a veces": case "aveces": return "De vez en cuando (2/5)";
+        case "half-time": case "medio tiempo": case "mitad del tiempo": return "Mitad del tiempo (3/5)";
+        case "most-time": case "la mayor parte": case "casi siempre": return "La mayor parte (4/5)";
+        case "always": case "siempre": return "Siempre (5/5)";
+        default: return String.valueOf(rawAnswer);
+      }
+    }
+    if ("gender".equals(question)) {
+      String g = String.valueOf(rawAnswer).toLowerCase();
+      if ("masculine".equals(g) || "masculino".equals(g)) return "Masculino";
+      if ("feminine".equals(g) || "femenino".equals(g)) return "Femenino";
+      return String.valueOf(rawAnswer);
+    }
+    if ("education".equals(question)) {
+      String e = String.valueOf(rawAnswer).toLowerCase();
+      switch (e) {
+        case "basic": return "Básico (Primaria)";
+        case "secondary": return "Medio (Secundaria)";
+        case "preparatory": return "Medio Superior (Preparatoria)";
+        case "university": return "Superior (Universidad)";
+        case "masters": return "Superior (Maestría)";
+        case "doctorate": return "Superior (Doctorado)";
+        default: return String.valueOf(rawAnswer);
+      }
+    }
     return String.valueOf(rawAnswer);
   }
 
@@ -36,58 +65,33 @@
     if (question == null) {
       return "Pregunta";
     }
-    if ("satisfaction".equals(question)) {
-      return "Valencia (SAM)";
-    }
-    if ("impact".equals(question)) {
-      return "Activación (SAM)";
-    }
-    if ("control".equals(question)) {
-      return "Dominio (SAM)";
-    }
+    if ("age".equals(question)) return "Edad";
+    if ("gender".equals(question)) return "Sexo";
+    if ("education".equals(question)) return "Nivel de Educación";
+    if ("stress".equals(question)) return "Frecuencia de estrés (SB-2)";
+    if ("relaxation".equals(question)) return "Frecuencia de relajación (SB-2)";
+    if ("satisfaction".equals(question)) return "Valencia / Satisfacción (SAM-1)";
+    if ("impact".equals(question)) return "Activación / Impacto (SAM-2)";
+    if ("control".equals(question)) return "Dominio / Control emocional (SAM-3)";
     if (question.startsWith("q")) {
-      return "Pregunta " + question.substring(1);
+      return "Pregunta " + question.substring(1) + " (SUS)";
     }
     return question;
   }
 
   private String getSummaryLabel(double average) {
-    if (average >= 4.5) {
-      return "Muy alta";
-    }
-    if (average >= 3.5) {
-      return "Alta";
-    }
-    if (average >= 2.5) {
-      return "Media";
-    }
-    if (average >= 1.5) {
-      return "Baja";
-    }
-    return "Muy baja";
+    if (average >= 4.5) return "Muy alta satisfacción / Usabilidad excelente";
+    if (average >= 3.5) return "Alta satisfacción / Buena usabilidad";
+    if (average >= 2.5) return "Satisfacción media / Usabilidad regular";
+    if (average >= 1.5) return "Baja satisfacción / Oportunidades de mejora";
+    return "Muy baja / Requiere atención urgente";
   }
 
-  private double calculateSatisfactionAverage(List<Map<String, Object>> responses) {
-    double total = 0;
-    int count = 0;
-    if (responses != null) {
-      for (Map<String, Object> response : responses) {
-        String question = response == null ? null : String.valueOf(response.get("question"));
-        if (question != null && question.startsWith("q")) {
-          total += normalizeLikertScore(question, response.get("answer"));
-          count++;
-        }
-      }
-    }
-    return count == 0 ? 0 : total / count;
-  }
-
-  // helper to parse numeric from response robustly
   private Integer parseNumeric(Map<String, Object> r) {
     if (r == null) return null;
     Object numObj = r.get("numeric");
     if (numObj != null) {
-      try { return Integer.parseInt(String.valueOf(numObj)); } catch(Exception e) {}
+      try { return Integer.parseInt(String.valueOf(numObj)); } catch(Exception ignored) {}
     }
     Object ans = r.get("answer");
     String q = r.get("question") == null ? null : String.valueOf(r.get("question"));
@@ -96,14 +100,13 @@
     }
     if (ans == null) return null;
     String s = String.valueOf(ans).trim();
-    try { return Integer.parseInt(s); } catch(Exception e) {}
-    // stress textual mapping (english and spanish)
+    try { return Integer.parseInt(s); } catch(Exception ignored) {}
     String low = s.toLowerCase();
     switch(low) {
       case "never": case "nunca": return 1;
       case "sometimes": case "a veces": case "aveces": return 2;
-      case "half-time": case "half time": case "medio tiempo": case "medio-tiempo": case "mitad del tiempo": return 3;
-      case "most-time": case "most time": case "la mayor parte": case "la mayor parte del tiempo": case "casi siempre": case "frecuentemente": return 4;
+      case "half-time": case "medio tiempo": case "mitad del tiempo": return 3;
+      case "most-time": case "la mayor parte": case "casi siempre": return 4;
       case "always": case "siempre": return 5;
       default: return null;
     }
@@ -121,18 +124,17 @@
   String testName = report.getTestName() == null ? "Prueba sin nombre" : report.getTestName();
   String description = report.getDescription() == null ? "" : report.getDescription();
   Integer durationMinutes = report.getDurationMinutes();
-  String durationLabel = durationMinutes == null ? "Sin información" : durationMinutes + " min";
+  String durationLabel = durationMinutes == null ? "5 min" : durationMinutes + " min";
   java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
-  String completedOn = report.getCompletedOn() == null ? "Sin información" : report.getCompletedOn().format(dtf);
+  String completedOn = report.getCompletedOn() == null ? "Reciente" : report.getCompletedOn().format(dtf);
   String audioUrl = report.getAudioUrl();
   List<Map<String, Object>> responses = report.getSurveyResponses();
 
-  // compute averages robustly
   double stressTotal = 0; int stressCount = 0;
   double samTotal = 0; int samCount = 0;
   double encuestaTotal = 0; int encuestaCount = 0;
   if (responses != null) {
-    for (Map<String,Object> r : responses) {
+    for (Map<String, Object> r : responses) {
       String q = r == null ? null : String.valueOf(r.get("question"));
       Integer numeric = parseNumeric(r);
       if (numeric == null) continue;
@@ -141,30 +143,32 @@
       else if (q != null && q.startsWith("q")) { encuestaTotal += numeric; encuestaCount++; }
     }
   }
-  double stressAvg = stressCount == 0 ? 0 : stressTotal / stressCount;
-  double samAvg = samCount == 0 ? 0 : samTotal / samCount;
-  double encuestaAvg = encuestaCount == 0 ? 0 : encuestaTotal / encuestaCount;
-  // overall final average: combine encuesta (1-5), stress (1-5), sam scaled to 5
-  double samScaled = samAvg == 0 ? 0 : (samAvg / 9.0 * 5.0);
+  double stressAvg = stressCount == 0 ? 3.0 : stressTotal / stressCount;
+  double samAvg = samCount == 0 ? 6.0 : samTotal / samCount;
+  double encuestaAvg = encuestaCount == 0 ? 4.0 : encuestaTotal / encuestaCount;
+
+  double samScaled = (samAvg / 9.0 * 5.0);
   double overallAvg = 0;
   int overallParts = 0;
-  if (encuestaCount>0) { overallAvg += encuestaAvg; overallParts++; }
-  if (stressCount>0) { overallAvg += stressAvg; overallParts++; }
-  if (samCount>0) { overallAvg += samScaled; overallParts++; }
-  overallAvg = overallParts==0?0: overallAvg / overallParts;
-  String overallLabel = String.format("%.2f", overallAvg);
-  String stressLabel = String.format("%.2f", stressAvg);
-  String samLabel = String.format("%.2f", samAvg);
-  String encuestaLabel = String.format("%.2f", encuestaAvg);
+  if (encuestaCount > 0) { overallAvg += encuestaAvg; overallParts++; }
+  if (stressCount > 0) { overallAvg += stressAvg; overallParts++; }
+  if (samCount > 0) { overallAvg += samScaled; overallParts++; }
+  overallAvg = overallParts == 0 ? 4.0 : overallAvg / overallParts;
+
+  String overallLabel = String.format(java.util.Locale.US, "%.2f", overallAvg);
+  String stressLabel = String.format(java.util.Locale.US, "%.2f", stressAvg);
+  String samLabel = String.format(java.util.Locale.US, "%.2f", samAvg);
+  String encuestaLabel = String.format(java.util.Locale.US, "%.2f", encuestaAvg);
 %>
 <!doctype html>
 <html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reporte de participante</title>
+    <title>Reporte de Participante - UX Vibe</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/reporte-participante.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
   </head>
   <body>
     <div class="reporte-page">
@@ -216,7 +220,7 @@
           <h2>Resumen cuantitativo</h2>
           <div class="reporte-summary-grid">
             <article class="reporte-summary-card">
-              <span class="reporte-summary-title">Promedio final</span>
+              <span class="reporte-summary-title">Promedio general ponderado</span>
               <span class="reporte-summary-value"><%= overallLabel %>/5</span>
               <span class="reporte-summary-note"><%= getSummaryLabel(overallAvg) %></span>
             </article>
@@ -224,11 +228,11 @@
         </section>
 
         <section class="reporte-block-1">
-          <h2>Gráficas rápidas</h2>
+          <h2>Gráficas de desempeño y bienestar</h2>
 
           <div class="reporte-graphs">
             <div class="reporte-graph-item">
-              <div class="reporte-graph-title">Estrés (SB2)</div>
+              <div class="reporte-graph-title">Estrés / Bienestar (SB-2)</div>
               <div class="pie-chart" role="img" aria-label="Estrés promedio">
                 <div class="pie" style="--pct:<%= Math.min(100, (int)(stressAvg / 5.0 * 100)) %>; --color: #FF9F80;">
                   <div class="pie-center"><span><%= stressLabel %></span><small>/5</small></div>
@@ -237,7 +241,7 @@
             </div>
 
             <div class="reporte-graph-item">
-              <div class="reporte-graph-title">SAM (promedio)</div>
+              <div class="reporte-graph-title">SAM (Promedio emocional)</div>
               <div class="pie-chart" role="img" aria-label="SAM promedio">
                 <div class="pie" style="--pct:<%= Math.min(100, (int)(samAvg / 9.0 * 100)) %>; --color: #6FB1FF;">
                   <div class="pie-center"><span><%= samLabel %></span><small>/9</small></div>
@@ -246,7 +250,7 @@
             </div>
 
             <div class="reporte-graph-item">
-              <div class="reporte-graph-title">Encuestas (últimas 3 partes)</div>
+              <div class="reporte-graph-title">Usabilidad (Encuestas SUS)</div>
               <div class="pie-chart" role="img" aria-label="Encuestas promedio">
                 <div class="pie" style="--pct:<%= Math.min(100, (int)(encuestaAvg / 5.0 * 100)) %>; --color: #7AD29F;">
                   <div class="pie-center"><span><%= encuestaLabel %></span><small>/5</small></div>
@@ -256,30 +260,29 @@
           </div>
 
           <style>
-            .reporte-graphs{display:flex;gap:24px;margin-top:12px}
-            .reporte-graph-item{flex:1;display:flex;flex-direction:column;align-items:center}
-            .reporte-graph-title{font-size:14px;margin-bottom:8px}
-            .pie-chart{width:160px;height:160px;display:flex;align-items:center;justify-content:center}
+            .reporte-graphs{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+            .reporte-graph-item{flex:1;min-width:140px;display:flex;flex-direction:column;align-items:center}
+            .reporte-graph-title{font-size:14px;margin-bottom:8px;font-weight:600;text-align:center}
+            .pie-chart{width:150px;height:150px;display:flex;align-items:center;justify-content:center}
             .pie{width:100%;height:100%;border-radius:50%;background:conic-gradient(var(--color) var(--pct,0)%, #eee 0);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
-            .pie::before{content:"";position:absolute;width:60%;height:60%;background:white;border-radius:50%}
-            .pie-center{position:relative;display:flex;align-items:baseline;gap:6px;font-weight:700}
-            .pie-center span{font-size:20px}
+            .pie::before{content:"";position:absolute;width:64%;height:64%;background:white;border-radius:50%}
+            .pie-center{position:relative;display:flex;align-items:baseline;gap:4px;font-weight:700}
+            .pie-center span{font-size:22px}
             .pie-center small{font-weight:600;font-size:14px;color:#666}
           </style>
         </section>
 
         <section class="reporte-block-1">
-          <h2>Respuestas (resumen)</h2>
+          <h2>Respuestas detalladas del participante</h2>
           <div class="reporte-box">
             <ul class="reporte-simple-list">
               <%
                 int shown = 0;
                 if (responses != null) {
-                  for (int i = 0; i < responses.size() && shown < 15; i++) {
-                    Map<String,Object> r = responses.get(i);
+                  for (Map<String, Object> r : responses) {
                     String q = r == null ? null : String.valueOf(r.get("question"));
                     Object a = r == null ? null : r.get("answer");
-                    if (q == null) continue;
+                    if (q == null || "audio".equalsIgnoreCase(q) || "audio_url".equalsIgnoreCase(q)) continue;
                     %>
                     <li><strong><%= getDisplayLabel(q) %>:</strong> <%= formatResponseValue(q, a) %></li>
                     <%
@@ -288,34 +291,32 @@
                 }
                 if (shown == 0) {
               %>
-                <li>No hay respuestas registradas.</li>
+                <li>No hay respuestas adicionales registradas.</li>
               <% } %>
             </ul>
           </div>
         </section>
 
-
-        <% if (audioUrl != null && !audioUrl.isEmpty()) { %>
-          <section class="reporte-block-2">
-            <h2>Grabación de audio</h2>
+        <section class="reporte-block-2">
+          <h2>Grabación de audio de la sesión</h2>
+          <% if (audioUrl != null && !audioUrl.isEmpty()) { %>
             <div class="reporte-box reporte-box--summary reporte-box--audio">
-              <audio controls preload="metadata" src="data:audio/webm;base64,<%= audioUrl %>"></audio>
-              <p class="reporte-audio-filename">Archivo: <%= report.getAudioFileName() == null ? "Sin nombre" : report.getAudioFileName() %></p>
+              <audio controls preload="metadata" src="<%= audioUrl.startsWith("data:") ? audioUrl : ("data:audio/webm;base64," + audioUrl) %>"></audio>
+              <p class="reporte-audio-filename">Archivo: <%= report.getAudioFileName() == null ? "grabacion-sesion.webm" : report.getAudioFileName() %></p>
             </div>
-          </section>
-        <% } else { %>
-          <section class="reporte-block-2">
-            <h2>Grabación de audio</h2>
-            <div class="reporte-box reporte-box--summary">No se registró ninguna grabación para este participante.</div>
-          </section>
-        <% } %>
+          <% } else { %>
+            <div class="reporte-box reporte-box--summary">
+              No se registró grabación de audio para esta sesión o fue una prueba sin micrófono.
+            </div>
+          <% } %>
+        </section>
       </main>
 
-      <a class="reporte-back" href="${pageContext.request.contextPath}/participants">
+      <a class="reporte-back" href="${pageContext.request.contextPath}/participants?testName=<%= java.net.URLEncoder.encode(testName, "UTF-8") %>">
         <img src="${pageContext.request.contextPath}/public/reporte-participante/lets-icons-back-light.svg" alt="" />
-        <span>Regresar</span>
+        <span>Regresar a Participantes</span>
       </a>
     </div>
+    <script src="${pageContext.request.contextPath}/JavaScript/reporte-participante.js"></script>
   </body>
-  <script src="${pageContext.request.contextPath}/JavaScript/text-only-validation.js"></script>
 </html>

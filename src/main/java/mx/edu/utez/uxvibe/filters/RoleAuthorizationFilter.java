@@ -9,19 +9,19 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
 import mx.edu.utez.uxvibe.model.UserAccount;
 import mx.edu.utez.uxvibe.model.UserRole;
 
-import java.io.IOException;
-
 @WebFilter(urlPatterns = {
-        "/tests",
-        "/participants",
-        "/create-test",
-        "/start-test",
-        "/complete-test",
-        "/cancel-test",
-        "/restart-recording"
+    "/tests",
+    "/participants",
+    "/create-test",
+    "/start-test",
+    "/complete-test",
+    "/cancel-test",
+    "/restart-recording",
+    "/participant-report"
 })
 public class RoleAuthorizationFilter implements Filter {
     @Override
@@ -52,7 +52,7 @@ public class RoleAuthorizationFilter implements Filter {
 
         String servletPath = req.getServletPath();
         if (UserRole.PARTICIPANT.equals(role) && isParticipantBlockedRoute(servletPath)) {
-            resp.sendRedirect(req.getContextPath() + "/html/03%20Execution%20Line/terminos-y-condiciones.jsp");
+            resp.sendRedirect(req.getContextPath() + "/terms");
             return;
         }
 
@@ -63,6 +63,7 @@ public class RoleAuthorizationFilter implements Filter {
         return "/tests".equals(servletPath)
                 || "/participants".equals(servletPath)
                 || "/create-test".equals(servletPath)
-                || "/start-test".equals(servletPath);
+                || "/start-test".equals(servletPath)
+                || "/participant-report".equals(servletPath);
     }
 }

@@ -8,22 +8,22 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.SecureRandom;
+import mx.edu.utez.uxvibe.service.EmailService;
 import mx.edu.utez.uxvibe.service.UserStore;
 
 @WebServlet(value = "/recover")
 public class RecoverServlet extends HttpServlet {
 
-  private static final String RECOVER_VIEW = "/WEB-INF/views/recover.jsp";
+  private static final String RECOVER_VIEW = "/WEB-INF/views/recuperar-contrasena.jsp";
   private static final String ERROR_MESSAGE_ATTR = "errorMessage";
+  private static final String SUCCESS_MESSAGE_ATTR = "successMessage";
   private static final String FLASH_SUCCESS_ATTR = "flashSuccess";
   private static final String EMAIL_PARAM = "email";
-  private static final String RECOVER_ERROR_MESSAGE =
-    "No se pudo volver a mostrar la página de recuperación.";
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
-    forwardToRecover(req, resp, null);
+    forwardToRecover(req, resp, null, null);
   }
 
   @Override
@@ -34,13 +34,15 @@ public class RecoverServlet extends HttpServlet {
       forwardToRecover(
         req,
         resp,
-        "Ingresa tu email para recuperar tu contraseña."
+        "Ingresa tu email para recuperar tu contraseña.",
+        null
       );
       return;
     }
 
+    email = email.trim();
     if (!email.contains("@") || !email.contains(".")) {
-      forwardToRecover(req, resp, "Ingresa un email válido.");
+      forwardToRecover(req, resp, "Ingresa un email válido.", email);
       return;
     }
 
@@ -48,30 +50,39 @@ public class RecoverServlet extends HttpServlet {
       forwardToRecover(
         req,
         resp,
-        "No encontramos una cuenta asociada a ese email."
+        "No encontramos una cuenta asociada a ese email.",
+        email
       );
       return;
     }
 
-    // Generate a temporary password
-    String newPassword = generateRandomPassword(10);
+    // Generate a new temporary password (e.g. 8 characters)
+    String newPassword = generateRandomPassword(8);
     boolean updated = UserStore.getInstance().resetPassword(email, newPassword);
 
-    boolean emailSent = false;
-    if (updated) {
-      // try to send email (depends on SMTP env vars)
-      emailSent = mx.edu.utez.uxvibe.service.EmailService.sendPasswordResetEmail(email, newPassword);
+    if (!updated) {
+      forwardToRecover(
+        req,
+        resp,
+        "No fue posible restablecer la contraseña. Intenta de nuevo más tarde.",
+        email
+      );
+      return;
     }
 
+    boolean emailSent = EmailService.sendPasswordResetEmail(email, newPassword);
+
     HttpSession session = req.getSession();
-    if (updated && emailSent) {
-      session.setAttribute(FLASH_SUCCESS_ATTR, "Te enviamos la nueva contraseña a " + email);
-    } else if (updated) {
-      session.setAttribute(FLASH_SUCCESS_ATTR, "Se restableció la contraseña. No fue posible enviar el correo (configuración SMTP faltante). La nueva contraseña es: " + newPassword);
+    if (emailSent) {
+      session.setAttribute(
+        FLASH_SUCCESS_ATTR,
+        "Te hemos enviado tu nueva contraseña a " + email + ". Inicia sesión con ella."
+      );
     } else {
-      // fallback
-      forwardToRecover(req, resp, "No fue posible restablecer la contraseña. Intenta de nuevo más tarde.");
-      return;
+      session.setAttribute(
+        FLASH_SUCCESS_ATTR,
+        "Se generó tu nueva contraseña: " + newPassword + " (Copia y pégala para iniciar sesión)."
+      );
     }
 
     redirectToLogin(req, resp);
@@ -80,36 +91,23 @@ public class RecoverServlet extends HttpServlet {
   private void forwardToRecover(
     HttpServletRequest req,
     HttpServletResponse resp,
-    String message
-  ) {
-    if (message != null) {
-      req.setAttribute(ERROR_MESSAGE_ATTR, message);
+    String errorMessage,
+    String email
+  ) throws ServletException, IOException {
+    if (errorMessage != null) {
+      req.setAttribute(ERROR_MESSAGE_ATTR, errorMessage);
     }
-
-    try {
-      req.getRequestDispatcher(RECOVER_VIEW).forward(req, resp);
-    } catch (ServletException | IOException e) {
-      writeError(resp, RECOVER_ERROR_MESSAGE);
+    if (email != null) {
+      req.setAttribute("email", email);
     }
+    req.getRequestDispatcher(RECOVER_VIEW).forward(req, resp);
   }
 
   private void redirectToLogin(
     HttpServletRequest req,
     HttpServletResponse resp
-  ) {
-    try {
-      resp.sendRedirect(req.getContextPath() + "/login");
-    } catch (IOException e) {
-      writeError(resp, "No se pudo redirigir al inicio de sesión.");
-    }
-  }
-
-  private void writeError(HttpServletResponse resp, String message) {
-    try {
-      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
-    } catch (IOException ignored) {
-      // Fall through since the response is already in a failed state.
-    }
+  ) throws IOException {
+    resp.sendRedirect(req.getContextPath() + "/login");
   }
 
   private boolean isBlank(String value) {

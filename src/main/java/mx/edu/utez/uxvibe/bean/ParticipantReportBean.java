@@ -2,6 +2,7 @@ package mx.edu.utez.uxvibe.bean;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,9 @@ public class ParticipantReportBean {
   private LocalDateTime completedOn;
   private String audioFileName;
   private String audioUrl;
+  private Integer age;
+  private String gender;
+  private String education;
   private final List<Map<String, Object>> surveyResponses = new ArrayList<>();
 
   public String getParticipantName() {
@@ -72,15 +76,46 @@ public class ParticipantReportBean {
     this.audioUrl = audioUrl;
   }
 
+  public Integer getAge() {
+    return age;
+  }
+
+  public void setAge(Integer age) {
+    this.age = age;
+  }
+
+  public String getGender() {
+    return gender;
+  }
+
+  public void setGender(String gender) {
+    this.gender = gender;
+  }
+
+  public String getEducation() {
+    return education;
+  }
+
+  public void setEducation(String education) {
+    this.education = education;
+  }
+
   public List<Map<String, Object>> getSurveyResponses() {
     return surveyResponses;
   }
 
   public void addSurveyResponse(String question, Object answer) {
-    Map<String, Object> response = new java.util.LinkedHashMap<>();
+    if ("age".equals(question) && answer != null) {
+      try { this.age = Integer.parseInt(String.valueOf(answer).trim()); } catch (Exception ignored) {}
+    } else if ("gender".equals(question) && answer != null) {
+      this.gender = String.valueOf(answer).trim();
+    } else if ("education".equals(question) && answer != null) {
+      this.education = String.valueOf(answer).trim();
+    }
+
+    Map<String, Object> response = new LinkedHashMap<>();
     response.put("question", question);
     response.put("answer", answer);
-    // compute numeric equivalent
     Integer numeric = computeNumericEquivalent(question, answer);
     response.put("numeric", numeric);
     surveyResponses.add(response);
@@ -92,62 +127,50 @@ public class ParticipantReportBean {
     }
     String answer = String.valueOf(rawAnswer).trim();
     try {
-      // Likert questions q1..qN (1-5)
       if (question != null && question.startsWith("q")) {
         int v = Integer.parseInt(answer);
-        // inverted questions q3, q9, q15 -> invert 1..5 => 6 - value
         if ("q3".equals(question) || "q9".equals(question) || "q15".equals(question)) {
           return 6 - v;
         }
         return v;
       }
-      // SAM questions (satisfaction, impact, control) range 1-9
       if ("satisfaction".equals(question) || "impact".equals(question) || "control".equals(question)) {
         return Integer.parseInt(answer);
       }
-      // Stress questions use textual options: support English and Spanish labels -> map 1..5
       if ("stress".equals(question) || "relaxation".equals(question)) {
         String a = answer.toLowerCase();
         switch (a) {
-          // English
           case "never":
-            return 1;
-          case "sometimes":
-            return 2;
-          case "half-time":
-          case "half time":
-          case "half_time":
-            return 3;
-          case "most-time":
-          case "most time":
-          case "most_time":
-            return 4;
-          case "always":
-            return 5;
-          // Spanish variants
           case "nunca":
             return 1;
+          case "sometimes":
           case "a veces":
           case "aveces":
           case "a_veces":
             return 2;
+          case "half-time":
+          case "half time":
+          case "half_time":
           case "medio tiempo":
           case "medio-tiempo":
           case "medio_tiempo":
           case "mitad del tiempo":
             return 3;
+          case "most-time":
+          case "most time":
+          case "most_time":
           case "la mayor parte":
           case "la mayor parte del tiempo":
           case "casi siempre":
           case "frecuentemente":
             return 4;
+          case "always":
           case "siempre":
             return 5;
           default:
             return null;
         }
       }
-      // Age stored as numeric
       if ("age".equals(question)) {
         return Integer.parseInt(answer);
       }

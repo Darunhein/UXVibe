@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @WebServlet(value = "/restart-recording")
 public class RestartRecordingServlet extends HttpServlet {
@@ -15,15 +17,12 @@ public class RestartRecordingServlet extends HttpServlet {
     throws IOException {
     HttpSession session = req.getSession(false);
     if (session != null) {
-      session.removeAttribute("currentTestStartedAt");
-      session.removeAttribute("currentTestCompletionRecorded");
+      session.setAttribute("currentTestStartedAt", LocalDateTime.now(ZoneId.of("America/Mexico_City")));
+      session.setAttribute("currentTestCompletionRecorded", Boolean.FALSE);
     }
 
     try {
-      resp.sendRedirect(
-        req.getContextPath() +
-          "/html/03%20Execution%20Line/grabacion-de-prueba.jsp"
-      );
+      resp.sendRedirect(req.getContextPath() + "/test-recording");
     } catch (IOException e) {
       resp.sendError(
         HttpServletResponse.SC_INTERNAL_SERVER_ERROR,

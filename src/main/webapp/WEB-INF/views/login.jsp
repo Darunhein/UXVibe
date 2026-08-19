@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="es">
   <head>
-    <title>Login UX Vibe</title>
+    <title>Iniciar Sesión - UX Vibe</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css" />
@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
   </head>
   <body>
-    <form class="login-del-evaluador" action="${pageContext.request.contextPath}/login" method="post">
+    <form class="login-del-evaluador" id="loginForm" action="${pageContext.request.contextPath}/login" method="post">
       <h1 class="bienvenido">Bienvenido</h1>
       <% if (request.getAttribute("errorMessage") != null) { %>
         <p class="form-message form-message--error"><%= request.getAttribute("errorMessage") %></p>
@@ -22,18 +22,18 @@
         <div class="frame2">
           <div class="merged-field merged-field-email">
             <div class="field-label-group">
-              <h2 class="email">Email</h2>
+              <label class="email" for="login-email">Email</label>
             </div>
             <div class="merged-image-wrapper">
               <img class="merged-asset-1-icon" alt="" src="${pageContext.request.contextPath}/public/login/merged-asset-1@2x.png" />
               <div class="email-field-group">
-                <input class="form-input ingresa-tu-email" type="email" name="email" placeholder="Ingresa tu email" autocomplete="email" value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>" required />
+                <input id="login-email" class="form-input ingresa-tu-email" type="email" name="email" placeholder="Ingresa tu email" autocomplete="email" value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>" required />
               </div>
             </div>
           </div>
           <div class="merged-field merged-field-password">
             <div class="field-label-group">
-              <h2 class="contrasea">Contraseña</h2>
+              <label class="contrasea" for="login-password">Contraseña</label>
             </div>
             <div class="merged-image-wrapper">
               <img class="merged-asset-2-icon" alt="" src="${pageContext.request.contextPath}/public/login/merged-asset-2@2x.png" />
@@ -54,33 +54,15 @@
           <section class="actions-group">
             <div class="actions-group2">
               <button class="entrar" type="submit">
-                <div class="entrar-text">Entrar</div>
+                <span class="entrar-text">Entrar</span>
               </button>
-              <button class="crear-cuenta" type="button" onclick="window.location.href='${pageContext.request.contextPath}/register'">Crear cuenta</button>
-              <button class="olvid-mi-contrasea" type="button" onclick="window.location.href='${pageContext.request.contextPath}/recover'">Olvidé mi contraseña</button>
+              <a class="crear-cuenta" href="${pageContext.request.contextPath}/register">Crear cuenta</a>
+              <a class="olvid-mi-contrasea" href="${pageContext.request.contextPath}/recover">Olvidé mi contraseña</a>
             </div>
           </section>
         </div>
       </main>
     </form>
-    <script>
-      (function () {
-        var input = document.getElementById("login-password");
-        var toggleButton = document.getElementById("login-password-toggle");
-        if (!input || !toggleButton) {
-          return;
-        }
-
-        toggleButton.addEventListener("click", function (event) {
-          event.preventDefault();
-          var isHidden = input.type === "password";
-          input.type = isHidden ? "text" : "password";
-          toggleButton.setAttribute("aria-pressed", String(isHidden));
-          toggleButton.setAttribute("aria-label", (isHidden ? "Ocultar" : "Mostrar") + " contraseña");
-          input.focus();
-        });
-      })();
-    </script>
-    <script src="${pageContext.request.contextPath}/JavaScript/text-only-validation.js"></script>
+    <script src="${pageContext.request.contextPath}/JavaScript/login.js"></script>
   </body>
 </html>

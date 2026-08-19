@@ -29,12 +29,13 @@ public class SurveySubmissionServlet extends HttpServlet {
     );
     if (participantName == null || participantName.trim().isEmpty()) {
       participantName = "Participante " + (System.currentTimeMillis() % 1000);
+      session.setAttribute("currentParticipantName", participantName);
     }
 
     Enumeration<String> parameterNames = req.getParameterNames();
     while (parameterNames.hasMoreElements()) {
       String name = parameterNames.nextElement();
-      if ("submit".equals(name)) {
+      if ("submit".equalsIgnoreCase(name)) {
         continue;
       }
       String[] values = req.getParameterValues(name);
@@ -49,9 +50,6 @@ public class SurveySubmissionServlet extends HttpServlet {
       }
     }
 
-    resp.sendRedirect(
-      req.getContextPath() +
-        "/html/03%20Execution%20Line/grabacion-de-prueba.jsp"
-    );
+    resp.sendRedirect(req.getContextPath() + "/cheers-bye");
   }
 }
