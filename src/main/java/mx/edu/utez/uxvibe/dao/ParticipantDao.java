@@ -68,18 +68,19 @@ public interface ParticipantDao {
      );
    }
 
-   String resolvedParticipantName = resolveParticipantName(participantName);
-   String description =
-     "Participación completada para la prueba " + safeTestName(testName) + ".";
-   ParticipantItem participant = new ParticipantItem(
-     resolvedParticipantName,
-     description,
-     durationMinutes,
-     completedOn
-   );
+    String cacheKey = normalizedEmail + "|" + normalizedTestName;
+    List<ParticipantItem> existingList = IN_MEMORY_PARTICIPANTS.computeIfAbsent(cacheKey, key -> new ArrayList<>());
+    String resolvedParticipantName = resolveParticipantName(participantName, existingList.size());
+    String description =
+      "Participación completada para la prueba " + safeTestName(testName) + ".";
+    ParticipantItem participant = new ParticipantItem(
+      resolvedParticipantName,
+      description,
+      durationMinutes,
+      completedOn
+    );
 
-   String cacheKey = normalizedEmail + "|" + normalizedTestName;
-   IN_MEMORY_PARTICIPANTS.computeIfAbsent(cacheKey, key -> new ArrayList<>()).add(participant);
+    existingList.add(participant);
 
    try (
      Connection conn = ConexionBD.getInstancia().getConnection();
@@ -279,12 +280,12 @@ public interface ParticipantDao {
     return true;
   }
 
-  private static String resolveParticipantName(String participantName) {
+  private static String resolveParticipantName(String participantName, int currentCount) {
    if (participantName == null) {
-     return "Participante 1";
+     return "Participante " + (currentCount + 1);
    }
    String trimmed = participantName.trim();
-   return trimmed.isEmpty() ? "Participante 1" : trimmed;
+   return trimmed.isEmpty() ? "Participante " + (currentCount + 1) : trimmed;
   }
 
   private static String safeTestName(String testName) {

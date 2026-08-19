@@ -5,10 +5,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.security.SecureRandom;
 import mx.edu.utez.uxvibe.service.EmailService;
+import mx.edu.utez.uxvibe.service.PasswordResetStore;
 import mx.edu.utez.uxvibe.service.UserStore;
 
 @WebServlet(value = "/recover")
@@ -17,13 +16,12 @@ public class RecoverServlet extends HttpServlet {
   private static final String RECOVER_VIEW = "/WEB-INF/views/recuperar-contrasena.jsp";
   private static final String ERROR_MESSAGE_ATTR = "errorMessage";
   private static final String SUCCESS_MESSAGE_ATTR = "successMessage";
-  private static final String FLASH_SUCCESS_ATTR = "flashSuccess";
   private static final String EMAIL_PARAM = "email";
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
-    forwardToRecover(req, resp, null, null);
+    forwardToRecover(req, resp, null, null, null);
   }
 
   @Override
@@ -35,6 +33,7 @@ public class RecoverServlet extends HttpServlet {
         req,
         resp,
         "Ingresa tu email para recuperar tu contraseña.",
+        null,
         null
       );
       return;
@@ -42,60 +41,54 @@ public class RecoverServlet extends HttpServlet {
 
     email = email.trim();
     if (!email.contains("@") || !email.contains(".")) {
-      forwardToRecover(req, resp, "Ingresa un email válido.", email);
+      forwardToRecover(req, resp, "Ingresa un email válido.", null, email);
       return;
     }
 
-    if (!UserStore.getInstance().exists(email)) {
-      forwardToRecover(
-        req,
-        resp,
-        "No encontramos una cuenta asociada a ese email.",
-        email
-      );
-      return;
+    // Process recovery token if account exists
+    if (UserStore.getInstance().exists(email)) {
+      String token = PasswordResetStore.getInstance().createToken(email);
+      if (token != null) {
+        String resetUrl = buildResetUrl(req, token);
+        EmailService.sendPasswordResetLink(email, resetUrl);
+      }
     }
 
-    // Generate a new temporary password (e.g. 8 characters)
-    String newPassword = generateRandomPassword(8);
-    boolean updated = UserStore.getInstance().resetPassword(email, newPassword);
+    // Generic confirmation message for security
+    String successMsg = "Si la dirección " + email + " está registrada en nuestra plataforma, recibirás un correo con el enlace para restablecer tu contraseña. Revisa tu bandeja de entrada y spam.";
+    forwardToRecover(req, resp, null, successMsg, email);
+  }
 
-    if (!updated) {
-      forwardToRecover(
-        req,
-        resp,
-        "No fue posible restablecer la contraseña. Intenta de nuevo más tarde.",
-        email
-      );
-      return;
+  private String buildResetUrl(HttpServletRequest req, String token) {
+    String scheme = req.getScheme();
+    String serverName = req.getServerName();
+    int serverPort = req.getServerPort();
+    String contextPath = req.getContextPath();
+
+    StringBuilder url = new StringBuilder();
+    url.append(scheme).append("://").append(serverName);
+
+    if (("http".equalsIgnoreCase(scheme) && serverPort != 80) ||
+        ("https".equalsIgnoreCase(scheme) && serverPort != 443)) {
+      url.append(":").append(serverPort);
     }
 
-    boolean emailSent = EmailService.sendPasswordResetEmail(email, newPassword);
-
-    HttpSession session = req.getSession();
-    if (emailSent) {
-      session.setAttribute(
-        FLASH_SUCCESS_ATTR,
-        "Te hemos enviado tu nueva contraseña a " + email + ". Inicia sesión con ella."
-      );
-    } else {
-      session.setAttribute(
-        FLASH_SUCCESS_ATTR,
-        "Se generó tu nueva contraseña: " + newPassword + " (Copia y pégala para iniciar sesión)."
-      );
-    }
-
-    redirectToLogin(req, resp);
+    url.append(contextPath).append("/reset-password?token=").append(token);
+    return url.toString();
   }
 
   private void forwardToRecover(
     HttpServletRequest req,
     HttpServletResponse resp,
     String errorMessage,
+    String successMessage,
     String email
   ) throws ServletException, IOException {
     if (errorMessage != null) {
       req.setAttribute(ERROR_MESSAGE_ATTR, errorMessage);
+    }
+    if (successMessage != null) {
+      req.setAttribute(SUCCESS_MESSAGE_ATTR, successMessage);
     }
     if (email != null) {
       req.setAttribute("email", email);
@@ -103,24 +96,7 @@ public class RecoverServlet extends HttpServlet {
     req.getRequestDispatcher(RECOVER_VIEW).forward(req, resp);
   }
 
-  private void redirectToLogin(
-    HttpServletRequest req,
-    HttpServletResponse resp
-  ) throws IOException {
-    resp.sendRedirect(req.getContextPath() + "/login");
-  }
-
   private boolean isBlank(String value) {
     return value == null || value.trim().isEmpty();
-  }
-
-  private String generateRandomPassword(int length) {
-    final String chars = "ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
-    SecureRandom rnd = new SecureRandom();
-    StringBuilder sb = new StringBuilder(length);
-    for (int i = 0; i < length; i++) {
-      sb.append(chars.charAt(rnd.nextInt(chars.length())));
-    }
-    return sb.toString();
   }
 }

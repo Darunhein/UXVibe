@@ -42,6 +42,13 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
     LocalDateTime startedAt,
     String participantName
   ) {
+    String normalizedEmail = normalize(email);
+    String normalizedTestName = normalize(testName);
+    String key = normalizedEmail + "|" + normalizedTestName;
+    if (participantName == null || participantName.trim().isEmpty()) {
+      participantName = participantNameByUserAndTest.get(key);
+    }
+
     ParticipantItem participant = participantDao.registerCompletion(
       email,
       testName,
@@ -54,17 +61,14 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
 
     LOGGER.info("registerCompletion: created participant name='" + participant.getName() + "' for user=" + email + ", test=" + testName);
 
-    String normalizedEmail = normalize(email);
-    String normalizedTestName = normalize(testName);
     if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty()) {
       return participant;
     }
 
-    String participantKey = normalizedEmail + "|" + normalizedTestName;
     List<ParticipantItem> participants =
-      participantsByUserAndTest.computeIfAbsent(participantKey, key -> new ArrayList<>());
+      participantsByUserAndTest.computeIfAbsent(key, k -> new ArrayList<>());
     participants.add(participant);
-    participantNameByUserAndTest.put(participantKey, participant.getName());
+    participantNameByUserAndTest.remove(key);
 
     ParticipantReportBean report = ensureReport(
       normalizedEmail,

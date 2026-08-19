@@ -19,11 +19,15 @@
           </div>
 
           <div class="recuperar-contrasena-copy">
-            <p>Ingresa tu email y te enviaremos una nueva contraseña para que puedas acceder a tu cuenta.</p>
+            <p>Ingresa tu email y te enviaremos un enlace seguro para restablecer tu contraseña.</p>
           </div>
 
           <% if (request.getAttribute("errorMessage") != null) { %>
             <p class="form-message form-message--error"><%= request.getAttribute("errorMessage") %></p>
+          <% } %>
+
+          <% if (request.getAttribute("successMessage") != null) { %>
+            <p class="form-message form-message--success"><%= request.getAttribute("successMessage") %></p>
           <% } %>
 
           <form id="recoverForm" action="${pageContext.request.contextPath}/recover" method="post">
@@ -37,7 +41,7 @@
 
             <button class="submit-btn" type="submit">
               <img class="submit-btn-icon" src="${pageContext.request.contextPath}/public/recuperar-contrasena/material-symbols-light-link.svg" alt="" />
-              <span>Enviar nueva contraseña</span>
+              <span>Enviar enlace de recuperación</span>
             </button>
           </form>
 

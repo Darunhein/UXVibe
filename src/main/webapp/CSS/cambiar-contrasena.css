@@ -1,0 +1,119 @@
+/* ============================================================================
+   CAMBIAR CONSTRASEÑA - STYLES
+   ============================================================================ */
+
+.reset-field-group {
+  width: 100%;
+  max-width: 620px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.field-label {
+  width: 100%;
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #658393;
+  text-align: left;
+}
+
+.input-container {
+  width: 100%;
+  max-width: 620px;
+  height: 60px;
+  border-radius: 7px;
+  border: 1px solid #d8dadb;
+  background: #f8f2ec;
+  box-shadow: 0 4px 9px rgba(67, 73, 88, 0.12);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 0 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-container:focus-within {
+  border-color: #6c8597;
+  box-shadow: 0 4px 12px rgba(108, 133, 151, 0.25);
+}
+
+.text-field-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0 12px 0 0;
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #3f5669;
+}
+
+.text-field-input::placeholder {
+  color: #aeb8c1;
+  opacity: 1;
+}
+
+.password-visibility-btn {
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.65;
+  transition: opacity 0.2s ease;
+}
+
+.password-visibility-btn:hover {
+  opacity: 1;
+}
+
+.password-visibility-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.password-feedback-error {
+  width: 100%;
+  max-width: 620px;
+  margin: -12px auto 20px;
+  color: #b42318;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.action-buttons-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.request-new-btn {
+  text-decoration: none;
+  width: auto;
+  min-width: 240px;
+  padding: 0 24px;
+}
+
+#resetPasswordForm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#resetPasswordForm .submit-btn {
+  width: auto;
+  min-width: 260px;
+  padding: 0 28px;
+  margin-top: 10px;
+  margin-bottom: 28px;
+}

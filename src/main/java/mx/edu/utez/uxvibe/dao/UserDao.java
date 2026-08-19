@@ -150,8 +150,7 @@ public interface UserDao {
         return true;
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      return false;
+      // Fallback to in-memory
     }
 
     // If DB update did not run, fall back to in-memory update if exists
