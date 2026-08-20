@@ -106,7 +106,10 @@ public class ParticipantReportBean {
 
   public void addSurveyResponse(String question, Object answer) {
     if ("age".equals(question) && answer != null) {
-      try { this.age = Integer.parseInt(String.valueOf(answer).trim()); } catch (Exception ignored) {}
+      try {
+        this.age = Integer.parseInt(String.valueOf(answer).trim());
+      } catch (Exception ignored) {
+      }
     } else if ("gender".equals(question) && answer != null) {
       this.gender = String.valueOf(answer).trim();
     } else if ("education".equals(question) && answer != null) {

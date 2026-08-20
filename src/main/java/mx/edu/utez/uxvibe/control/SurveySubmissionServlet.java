@@ -15,7 +15,7 @@ public class SurveySubmissionServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-    throws IOException {
+      throws IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute("currentUser") == null) {
       resp.sendRedirect(req.getContextPath() + "/login");
@@ -25,8 +25,7 @@ public class SurveySubmissionServlet extends HttpServlet {
     UserAccount account = (UserAccount) session.getAttribute("currentUser");
     String testName = (String) session.getAttribute("currentTestName");
     String participantName = (String) session.getAttribute(
-      "currentParticipantName"
-    );
+        "currentParticipantName");
     if (participantName == null || participantName.trim().isEmpty()) {
       participantName = "Participante " + (System.currentTimeMillis() % 1000);
       session.setAttribute("currentParticipantName", participantName);
@@ -41,12 +40,11 @@ public class SurveySubmissionServlet extends HttpServlet {
       String[] values = req.getParameterValues(name);
       if (values != null && values.length > 0) {
         ParticipantStore.getInstance().saveSurveyResponse(
-          account.getEmail(),
-          testName,
-          participantName,
-          name,
-          values[0]
-        );
+            account.getEmail(),
+            testName,
+            participantName,
+            name,
+            values[0]);
       }
     }
 

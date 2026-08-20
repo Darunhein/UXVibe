@@ -37,11 +37,9 @@ body {
   gap: 18px;
   padding: 22px 24px;
   border-radius: 20px;
-  background: linear-gradient(
-    135deg,
-    var(--report-primary) 0%,
-    var(--report-primary-dark) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--report-primary) 0%,
+      var(--report-primary-dark) 100%);
   box-shadow: var(--report-shadow);
   color: #ffffff;
   flex-wrap: wrap;
@@ -729,6 +727,7 @@ body {
     padding: 8px 14px;
   }
 }
+
 .reporte-chart-card:first-child {
   display: flex;
   flex-direction: column;

@@ -46,7 +46,8 @@ public class CompleteTestServlet extends HttpServlet {
 
     String paramTestName = req.getParameter("testName");
     String sessionTestName = (String) session.getAttribute(CURRENT_TEST_NAME_ATTR);
-    String testName = (paramTestName != null && !paramTestName.trim().isEmpty()) ? paramTestName.trim() : sessionTestName;
+    String testName = (paramTestName != null && !paramTestName.trim().isEmpty()) ? paramTestName.trim()
+        : sessionTestName;
 
     if (testName == null || testName.trim().isEmpty()) {
       if (participantSession) {
@@ -60,16 +61,15 @@ public class CompleteTestServlet extends HttpServlet {
 
     String paramParticipantName = req.getParameter("participantName");
     String participantName = (paramParticipantName != null && !paramParticipantName.trim().isEmpty())
-      ? paramParticipantName.trim()
-      : resolveParticipantName(session);
+        ? paramParticipantName.trim()
+        : resolveParticipantName(session);
 
     LocalDateTime startedAt = (LocalDateTime) session.getAttribute(CURRENT_TEST_STARTED_AT_ATTR);
     ParticipantStore.getInstance().registerCompletion(
-      account.getEmail(),
-      testName,
-      startedAt,
-      participantName
-    );
+        account.getEmail(),
+        testName,
+        startedAt,
+        participantName);
     session.setAttribute(CURRENT_TEST_COMPLETION_RECORDED_ATTR, Boolean.TRUE);
 
     if (participantSession) {
@@ -81,13 +81,13 @@ public class CompleteTestServlet extends HttpServlet {
       return;
     }
 
-    // Redirect to participant report so the evaluator can immediately assess the completed test
+    // Redirect to participant report so the evaluator can immediately assess the
+    // completed test
     redirectTo(
-      req,
-      resp,
-      "/participant-report?testName=" + encodeQueryValue(testName.trim()) +
-      "&participantName=" + encodeQueryValue(participantName.trim())
-    );
+        req,
+        resp,
+        "/participant-report?testName=" + encodeQueryValue(testName.trim()) +
+            "&participantName=" + encodeQueryValue(participantName.trim()));
   }
 
   private String encodeQueryValue(String value) {
@@ -112,10 +112,9 @@ public class CompleteTestServlet extends HttpServlet {
   }
 
   private void redirectTo(
-    HttpServletRequest req,
-    HttpServletResponse resp,
-    String path
-  ) throws IOException {
+      HttpServletRequest req,
+      HttpServletResponse resp,
+      String path) throws IOException {
     resp.sendRedirect(req.getContextPath() + path);
   }
 }

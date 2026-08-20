@@ -349,8 +349,10 @@ body {
   box-shadow: 0 3px 10px rgba(67, 73, 88, 0.18);
   cursor: pointer;
   position: absolute;
-  bottom: 25px; /* ↓ baja un poquito el botón */
-  left: 30px;   /* ← se queda exactamente igual */
+  bottom: 25px;
+  /* ↓ baja un poquito el botón */
+  left: 30px;
+  /* ← se queda exactamente igual */
 }
 
 /* ============================================================================

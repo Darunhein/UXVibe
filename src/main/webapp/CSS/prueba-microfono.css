@@ -315,9 +315,11 @@ ONDA DEL MICRÓFONO
   0% {
     box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.6);
   }
+
   70% {
     box-shadow: 0 0 0 10px rgba(225, 29, 72, 0);
   }
+
   100% {
     box-shadow: 0 0 0 0 rgba(225, 29, 72, 0);
   }
@@ -337,8 +339,15 @@ ONDA DEL MICRÓFONO
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.2;
+  }
 }
 
 .btn-secondary {
@@ -383,8 +392,15 @@ ONDA DEL MICRÓFONO
 }
 
 @keyframes fadeInWidget {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .playback-widget-row {

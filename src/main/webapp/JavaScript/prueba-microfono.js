@@ -73,7 +73,7 @@
       }
     }
     if (audioContext && audioContext.state === "suspended") {
-      audioContext.resume().catch(function () {});
+      audioContext.resume().catch(function () { });
     }
     return audioContext;
   }
@@ -272,7 +272,7 @@
               console.warn("Audio buffer decoding note:", decodeErr);
             }
           );
-        }).catch(function () {});
+        }).catch(function () { });
       }
 
       if (btnPlay) {
@@ -312,7 +312,7 @@
             encodeURIComponent(fileName) +
             "&audioUrl=" +
             encodeURIComponent(base64),
-        }).catch(function () {});
+        }).catch(function () { });
       };
       reader.readAsDataURL(recordedBlob);
     };
@@ -346,7 +346,7 @@
         if (typeof mediaRecorder.requestData === "function") {
           mediaRecorder.requestData();
         }
-      } catch (e) {}
+      } catch (e) { }
       mediaRecorder.stop();
     }
     stopTimer();
@@ -482,7 +482,7 @@
         audioContext.decodeAudioData(ab, function (buf) {
           decodedAudioBuffer = buf;
           executeBufferPlay();
-        }).catch(function () {});
+        }).catch(function () { });
       });
       return;
     }
@@ -573,7 +573,7 @@
     if (bufferSourceNode) {
       try {
         bufferSourceNode.stop();
-      } catch (e) {}
+      } catch (e) { }
       bufferSourceNode.disconnect();
       bufferSourceNode = null;
     }
@@ -592,7 +592,7 @@
       stream = null;
     }
     if (audioContext && audioContext.state !== "closed") {
-      audioContext.close().catch(function () {});
+      audioContext.close().catch(function () { });
       audioContext = null;
       analyser = null;
     }

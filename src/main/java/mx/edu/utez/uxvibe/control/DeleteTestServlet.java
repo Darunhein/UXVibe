@@ -11,7 +11,7 @@ import mx.edu.utez.uxvibe.model.UserAccount;
 import mx.edu.utez.uxvibe.service.TestStore;
 import mx.edu.utez.uxvibe.service.ParticipantStore;
 
-@WebServlet(name = "DeleteTestServlet", urlPatterns = {"/delete-test"})
+@WebServlet(name = "DeleteTestServlet", urlPatterns = { "/delete-test" })
 public class DeleteTestServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)

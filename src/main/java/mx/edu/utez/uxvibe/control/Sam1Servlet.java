@@ -17,7 +17,7 @@ public class Sam1Servlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute("currentUser") == null) {
       resp.sendRedirect(req.getContextPath() + "/login");
@@ -29,7 +29,7 @@ public class Sam1Servlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute("currentUser") == null) {
       resp.sendRedirect(req.getContextPath() + "/login");
@@ -46,7 +46,8 @@ public class Sam1Servlet extends HttpServlet {
 
     String satisfaction = req.getParameter("satisfaction");
     if (satisfaction != null && !satisfaction.trim().isEmpty()) {
-      ParticipantStore.getInstance().saveSurveyResponse(account.getEmail(), testName, participantName, "satisfaction", satisfaction.trim());
+      ParticipantStore.getInstance().saveSurveyResponse(account.getEmail(), testName, participantName, "satisfaction",
+          satisfaction.trim());
     }
 
     resp.sendRedirect(req.getContextPath() + "/sam-2");

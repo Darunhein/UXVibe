@@ -17,19 +17,16 @@ class ParticipantStoreTest {
     String testName = "Prueba de usabilidad";
 
     ParticipantItem firstParticipant = store.registerCompletion(
-      email,
-      testName,
-      LocalDateTime.now().minusMinutes(5)
-    );
+        email,
+        testName,
+        LocalDateTime.now().minusMinutes(5));
     ParticipantItem secondParticipant = store.registerCompletion(
-      email,
-      testName,
-      LocalDateTime.now().minusMinutes(3)
-    );
+        email,
+        testName,
+        LocalDateTime.now().minusMinutes(3));
     List<ParticipantItem> participants = store.listByUserAndTest(
-      email,
-      testName
-    );
+        email,
+        testName);
 
     assertNotNull(firstParticipant);
     assertNotNull(secondParticipant);
@@ -45,18 +42,16 @@ class ParticipantStoreTest {
     String testName = "Prueba de usabilidad";
 
     store.saveSurveyResponse(
-      email,
-      testName,
-      "Participante provisional",
-      "q1",
-      "5"
-    );
+        email,
+        testName,
+        "Participante provisional",
+        "q1",
+        "5");
 
     ParticipantItem participant = store.registerCompletion(
-      email,
-      testName,
-      LocalDateTime.now().minusMinutes(4)
-    );
+        email,
+        testName,
+        LocalDateTime.now().minusMinutes(4));
 
     assertNotNull(participant);
     assertEquals("Participante provisional", participant.getName());

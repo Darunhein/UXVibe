@@ -14,21 +14,21 @@ import mx.edu.utez.uxvibe.model.ParticipantItem;
 public class ParticipantStore implements ParticipantDao, RecordingDao {
 
   private static final ParticipantStore INSTANCE = new ParticipantStore();
-  private final ParticipantDao participantDao = new ParticipantDao() {};
-  private final RecordingDao recordingDao = new RecordingDao() {};
-  private final Map<String, List<ParticipantItem>> participantsByUserAndTest =
-    new LinkedHashMap<>();
-  private final Map<String, ParticipantReportBean> reportsByParticipant =
-    new LinkedHashMap<>();
-  private final Map<String, String> participantNameByUserAndTest =
-    new LinkedHashMap<>();
+  private final ParticipantDao participantDao = new ParticipantDao() {
+  };
+  private final RecordingDao recordingDao = new RecordingDao() {
+  };
+  private final Map<String, List<ParticipantItem>> participantsByUserAndTest = new LinkedHashMap<>();
+  private final Map<String, ParticipantReportBean> reportsByParticipant = new LinkedHashMap<>();
+  private final Map<String, String> participantNameByUserAndTest = new LinkedHashMap<>();
 
   private static final Logger LOGGER = Logger.getLogger(ParticipantStore.class.getName());
 
   private ParticipantStore() {
     try {
       recordingDao.ensureTableExists();
-    } catch (Throwable ignored) {}
+    } catch (Throwable ignored) {
+    }
   }
 
   public static ParticipantStore getInstance() {
@@ -37,11 +37,10 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
 
   @Override
   public synchronized ParticipantItem registerCompletion(
-    String email,
-    String testName,
-    LocalDateTime startedAt,
-    String participantName
-  ) {
+      String email,
+      String testName,
+      LocalDateTime startedAt,
+      String participantName) {
     String normalizedEmail = normalize(email);
     String normalizedTestName = normalize(testName);
     String key = normalizedEmail + "|" + normalizedTestName;
@@ -50,31 +49,29 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
     }
 
     ParticipantItem participant = participantDao.registerCompletion(
-      email,
-      testName,
-      startedAt,
-      participantName
-    );
+        email,
+        testName,
+        startedAt,
+        participantName);
     if (participant == null) {
       return null;
     }
 
-    LOGGER.info("registerCompletion: created participant name='" + participant.getName() + "' for user=" + email + ", test=" + testName);
+    LOGGER.info("registerCompletion: created participant name='" + participant.getName() + "' for user=" + email
+        + ", test=" + testName);
 
     if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty()) {
       return participant;
     }
 
-    List<ParticipantItem> participants =
-      participantsByUserAndTest.computeIfAbsent(key, k -> new ArrayList<>());
+    List<ParticipantItem> participants = participantsByUserAndTest.computeIfAbsent(key, k -> new ArrayList<>());
     participants.add(participant);
     participantNameByUserAndTest.remove(key);
 
     ParticipantReportBean report = ensureReport(
-      normalizedEmail,
-      normalizedTestName,
-      participant.getName()
-    );
+        normalizedEmail,
+        normalizedTestName,
+        participant.getName());
     report.setParticipantName(participant.getName());
     report.setTestName(safeTestName(testName));
     report.setDescription(participant.getDescription());
@@ -85,9 +82,8 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
 
   @Override
   public synchronized List<ParticipantItem> listByUserAndTest(
-    String email,
-    String testName
-  ) {
+      String email,
+      String testName) {
     String normalizedEmail = normalize(email);
     String normalizedTestName = normalize(testName);
     if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty()) {
@@ -97,15 +93,13 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
     List<ParticipantItem> participants = participantDao.listByUserAndTest(email, testName);
     if (!participants.isEmpty()) {
       participantsByUserAndTest.put(
-        normalizedEmail + "|" + normalizedTestName,
-        new ArrayList<>(participants)
-      );
+          normalizedEmail + "|" + normalizedTestName,
+          new ArrayList<>(participants));
       return new ArrayList<>(participants);
     }
 
     List<ParticipantItem> cachedParticipants = participantsByUserAndTest.get(
-      normalizedEmail + "|" + normalizedTestName
-    );
+        normalizedEmail + "|" + normalizedTestName);
     if (cachedParticipants == null) {
       return new ArrayList<>();
     }
@@ -113,28 +107,25 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
   }
 
   public synchronized void saveSurveyResponse(
-    String email,
-    String testName,
-    String participantName,
-    String question,
-    Object answer
-  ) {
-    LOGGER.info("saveSurveyResponse: email=" + email + ", test=" + testName + ", participant=" + participantName + ", question=" + question + ", answer=" + String.valueOf(answer));
+      String email,
+      String testName,
+      String participantName,
+      String question,
+      Object answer) {
+    LOGGER.info("saveSurveyResponse: email=" + email + ", test=" + testName + ", participant=" + participantName
+        + ", question=" + question + ", answer=" + String.valueOf(answer));
     String normalizedEmail = normalize(email);
     String normalizedTestName = normalize(testName);
     String rememberedParticipantName = resolveParticipantName(
-      participantName,
-      1
-    );
+        participantName,
+        1);
     participantNameByUserAndTest.put(
-      normalizedEmail + "|" + normalizedTestName,
-      rememberedParticipantName
-    );
+        normalizedEmail + "|" + normalizedTestName,
+        rememberedParticipantName);
     ParticipantReportBean report = ensureReport(
-      normalizedEmail,
-      normalizedTestName,
-      rememberedParticipantName
-    );
+        normalizedEmail,
+        normalizedTestName,
+        rememberedParticipantName);
     report.addSurveyResponse(question, answer);
 
     Integer numeric = null;
@@ -147,7 +138,8 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
           numeric = Integer.parseInt(String.valueOf(numObj));
         }
       }
-    } catch (Exception ignore) {}
+    } catch (Exception ignore) {
+    }
 
     try {
       participantDao.saveSurveyResponseToDb(email, testName, rememberedParticipantName, question, answer, numeric);
@@ -189,55 +181,51 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
   }
 
   public synchronized void saveAudioAsset(
-    String email,
-    String testName,
-    String participantName,
-    String fileName,
-    String audioUrl
-  ) {
-    LOGGER.info("saveAudioAsset: email=" + email + ", test=" + testName + ", participant=" + participantName + ", fileName=" + fileName);
+      String email,
+      String testName,
+      String participantName,
+      String fileName,
+      String audioUrl) {
+    LOGGER.info("saveAudioAsset: email=" + email + ", test=" + testName + ", participant=" + participantName
+        + ", fileName=" + fileName);
     String normalizedEmail = normalize(email);
     String normalizedTestName = normalize(testName);
     String rememberedParticipantName = resolveParticipantName(
-      participantName,
-      1
-    );
+        participantName,
+        1);
     participantNameByUserAndTest.put(
-      normalizedEmail + "|" + normalizedTestName,
-      rememberedParticipantName
-    );
+        normalizedEmail + "|" + normalizedTestName,
+        rememberedParticipantName);
     ParticipantReportBean report = ensureReport(
-      normalizedEmail,
-      normalizedTestName,
-      rememberedParticipantName
-    );
+        normalizedEmail,
+        normalizedTestName,
+        rememberedParticipantName);
     report.setAudioFileName(fileName);
     report.setAudioUrl(audioUrl);
 
     try {
       recordingDao.saveRecording(
-        email,
-        testName,
-        rememberedParticipantName,
-        "TEST_SESSION",
-        fileName,
-        audioUrl,
-        report.getDurationMinutes() != null ? report.getDurationMinutes() * 60 : null
-      );
+          email,
+          testName,
+          rememberedParticipantName,
+          "TEST_SESSION",
+          fileName,
+          audioUrl,
+          report.getDurationMinutes() != null ? report.getDurationMinutes() * 60 : null);
     } catch (Throwable t) {
       t.printStackTrace();
     }
 
     try {
       participantDao.saveSurveyResponseToDb(email, testName, rememberedParticipantName, "audio", audioUrl, null);
-    } catch (Throwable ignore) {}
+    } catch (Throwable ignore) {
+    }
   }
 
   public synchronized ParticipantReportBean getReport(
-    String email,
-    String testName,
-    String participantName
-  ) {
+      String email,
+      String testName,
+      String participantName) {
     String key = normalize(email) + "|" + normalize(testName) + "|" + normalize(participantName);
     ParticipantReportBean report = reportsByParticipant.get(key);
     if (report != null) {
@@ -253,10 +241,12 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
       return report;
     }
 
-    List<Map<String, Object>> persisted = participantDao.listResponses(email, testName, participantName == null ? "" : participantName);
+    List<Map<String, Object>> persisted = participantDao.listResponses(email, testName,
+        participantName == null ? "" : participantName);
     if (persisted != null && !persisted.isEmpty()) {
       report = new ParticipantReportBean();
-      report.setParticipantName(participantName == null || participantName.trim().isEmpty() ? "Participante" : participantName);
+      report.setParticipantName(
+          participantName == null || participantName.trim().isEmpty() ? "Participante" : participantName);
       report.setTestName(safeTestName(testName));
       report.setDescription("Reporte cargado desde la base de datos.");
       for (Map<String, Object> row : persisted) {
@@ -304,26 +294,22 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
   }
 
   private ParticipantReportBean ensureReport(
-    String normalizedEmail,
-    String normalizedTestName,
-    String participantName
-  ) {
+      String normalizedEmail,
+      String normalizedTestName,
+      String participantName) {
     String normalizedParticipantName = normalize(participantName);
-    String cacheKey =
-      normalizedEmail +
-      "|" +
-      normalizedTestName +
-      "|" +
-      normalizedParticipantName;
+    String cacheKey = normalizedEmail +
+        "|" +
+        normalizedTestName +
+        "|" +
+        normalizedParticipantName;
     ParticipantReportBean report = reportsByParticipant.get(cacheKey);
     if (report == null) {
       report = new ParticipantReportBean();
       report.setParticipantName(
-        resolveParticipantName(
-          participantName,
-          1
-        )
-      );
+          resolveParticipantName(
+              participantName,
+              1));
       report.setTestName("Prueba sin nombre");
       report.setDescription("Participación iniciada para la prueba.");
       reportsByParticipant.put(cacheKey, report);
@@ -332,9 +318,8 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
   }
 
   private String resolveParticipantName(
-    String participantName,
-    int fallbackIndex
-  ) {
+      String participantName,
+      int fallbackIndex) {
     String trimmed = participantName == null ? "" : participantName.trim();
     if (!trimmed.isEmpty()) {
       return trimmed;

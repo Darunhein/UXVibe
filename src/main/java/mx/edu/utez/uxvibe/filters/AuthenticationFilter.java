@@ -14,36 +14,37 @@ import mx.edu.utez.uxvibe.model.UserAccount;
 import mx.edu.utez.uxvibe.model.UserRole;
 
 @WebFilter(urlPatterns = {
-    "/tests",
-    "/participants",
-    "/create-test",
-    "/start-test",
-    "/terms",
-    "/terminos-y-condiciones",
-    "/mic-test",
-    "/prueba-microfono",
-    "/test-recording",
-    "/grabacion-de-prueba",
-    "/cuestionario-sb-1",
-    "/cuestionario-sb-2",
-    "/sam-1",
-    "/sam-2",
-    "/sam-3",
-    "/encuesta-1",
-    "/encuesta-2",
-    "/encuesta-3",
-    "/cheers-bye",
-    "/complete-test",
-    "/cancel-test",
-    "/restart-recording",
-    "/participant-report",
-    "/delete-test",
-    "/delete-participant",
-    "/recording-upload"
+        "/tests",
+        "/participants",
+        "/create-test",
+        "/start-test",
+        "/terms",
+        "/terminos-y-condiciones",
+        "/mic-test",
+        "/prueba-microfono",
+        "/test-recording",
+        "/grabacion-de-prueba",
+        "/cuestionario-sb-1",
+        "/cuestionario-sb-2",
+        "/sam-1",
+        "/sam-2",
+        "/sam-3",
+        "/encuesta-1",
+        "/encuesta-2",
+        "/encuesta-3",
+        "/cheers-bye",
+        "/complete-test",
+        "/cancel-test",
+        "/restart-recording",
+        "/participant-report",
+        "/delete-test",
+        "/delete-participant",
+        "/recording-upload"
 })
 public class AuthenticationFilter implements Filter {
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 

@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const fullDataUri = "data:" + localMime + ";base64," + localAudioBase64;
         configureAudioSource(fullDataUri, localFileName);
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   if (btnExitTrigger && evaluatorModal) {
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
         sessionStorage.removeItem("uxvibe_audio_filename");
         sessionStorage.removeItem("uxvibe_audio_mimetype");
         sessionStorage.removeItem("uxvibe-grabacion-tiempo");
-      } catch (e) {}
+      } catch (e) { }
     });
   }
 });

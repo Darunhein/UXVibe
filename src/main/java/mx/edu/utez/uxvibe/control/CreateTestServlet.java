@@ -13,8 +13,7 @@ import mx.edu.utez.uxvibe.service.TestStore;
 @WebServlet(value = "/create-test")
 public class CreateTestServlet extends HttpServlet {
 
-  private static final String CREATE_TEST_VIEW =
-    "/WEB-INF/views/create-test.jsp";
+  private static final String CREATE_TEST_VIEW = "/WEB-INF/views/create-test.jsp";
   private static final String CURRENT_USER_ATTR = "currentUser";
   private static final String ERROR_MESSAGE_ATTR = "errorMessage";
   private static final String TEST_NAME_PARAM = "testName";
@@ -23,7 +22,7 @@ public class CreateTestServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     if (!isLoggedIn(req)) {
       redirectToLogin(req, resp);
       return;
@@ -33,7 +32,7 @@ public class CreateTestServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute(CURRENT_USER_ATTR) == null) {
       redirectToLogin(req, resp);
@@ -54,18 +53,16 @@ public class CreateTestServlet extends HttpServlet {
 
     UserAccount account = (UserAccount) session.getAttribute(CURRENT_USER_ATTR);
     TestStore.getInstance().createTest(
-      account.getEmail(),
-      testName,
-      description,
-      systemLink
-    );
+        account.getEmail(),
+        testName,
+        description,
+        systemLink);
     redirectToTests(req, resp);
   }
 
   private void redirectToLogin(
-    HttpServletRequest req,
-    HttpServletResponse resp
-  ) {
+      HttpServletRequest req,
+      HttpServletResponse resp) {
     try {
       resp.sendRedirect(req.getContextPath() + "/login");
     } catch (IOException e) {
@@ -74,9 +71,8 @@ public class CreateTestServlet extends HttpServlet {
   }
 
   private void forwardToCreateTest(
-    HttpServletRequest req,
-    HttpServletResponse resp
-  ) {
+      HttpServletRequest req,
+      HttpServletResponse resp) {
     try {
       req.getRequestDispatcher(CREATE_TEST_VIEW).forward(req, resp);
     } catch (ServletException | IOException e) {
@@ -85,9 +81,8 @@ public class CreateTestServlet extends HttpServlet {
   }
 
   private void redirectToTests(
-    HttpServletRequest req,
-    HttpServletResponse resp
-  ) {
+      HttpServletRequest req,
+      HttpServletResponse resp) {
     try {
       resp.sendRedirect(req.getContextPath() + "/tests");
     } catch (IOException e) {

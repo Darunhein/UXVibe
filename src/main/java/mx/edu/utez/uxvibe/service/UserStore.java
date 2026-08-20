@@ -7,9 +7,11 @@ import mx.edu.utez.uxvibe.model.UserAccount;
 public class UserStore implements UserDao {
 
   private static final UserStore INSTANCE = new UserStore();
-  private final UserDao dao = new UserDao() {};
+  private final UserDao dao = new UserDao() {
+  };
 
-  private UserStore() {}
+  private UserStore() {
+  }
 
   public static UserStore getInstance() {
     return INSTANCE;

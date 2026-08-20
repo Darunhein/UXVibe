@@ -8,14 +8,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = {"/mic-test", "/prueba-microfono"})
+@WebServlet(urlPatterns = { "/mic-test", "/prueba-microfono" })
 public class MicTestServlet extends HttpServlet {
 
   private static final String MIC_TEST_VIEW = "/WEB-INF/views/prueba-microfono.jsp";
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute("currentUser") == null) {
       resp.sendRedirect(req.getContextPath() + "/login");

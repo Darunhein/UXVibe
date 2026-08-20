@@ -10,9 +10,11 @@ public class PasswordResetStore implements PasswordResetDao {
 
   private static final PasswordResetStore INSTANCE = new PasswordResetStore();
   private static final Duration TOKEN_EXPIRATION = Duration.ofMinutes(30);
-  private final PasswordResetDao dao = new PasswordResetDao() {};
+  private final PasswordResetDao dao = new PasswordResetDao() {
+  };
 
-  private PasswordResetStore() {}
+  private PasswordResetStore() {
+  }
 
   public static PasswordResetStore getInstance() {
     return INSTANCE;
@@ -30,7 +32,7 @@ public class PasswordResetStore implements PasswordResetDao {
 
     // Generate a secure random token (UUID without hyphens + additional randomness)
     String token = UUID.randomUUID().toString().replace("-", "") +
-                   UUID.randomUUID().toString().substring(0, 8);
+        UUID.randomUUID().toString().substring(0, 8);
 
     Instant expiresAt = Instant.now().plus(TOKEN_EXPIRATION);
     PasswordResetToken resetToken = new PasswordResetToken(token, cleanEmail, expiresAt);

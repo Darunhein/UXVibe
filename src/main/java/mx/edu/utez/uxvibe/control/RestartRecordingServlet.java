@@ -14,7 +14,7 @@ public class RestartRecordingServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-    throws IOException {
+      throws IOException {
     HttpSession session = req.getSession(false);
     if (session != null) {
       session.setAttribute("currentTestStartedAt", LocalDateTime.now(ZoneId.of("America/Mexico_City")));
@@ -25,9 +25,8 @@ public class RestartRecordingServlet extends HttpServlet {
       resp.sendRedirect(req.getContextPath() + "/test-recording");
     } catch (IOException e) {
       resp.sendError(
-        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-        "No se pudo redirigir a la grabación."
-      );
+          HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+          "No se pudo redirigir a la grabación.");
     }
   }
 }

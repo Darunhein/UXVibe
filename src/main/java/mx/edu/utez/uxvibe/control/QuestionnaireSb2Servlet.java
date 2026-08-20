@@ -17,7 +17,7 @@ public class QuestionnaireSb2Servlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute("currentUser") == null) {
       resp.sendRedirect(req.getContextPath() + "/login");
@@ -29,7 +29,7 @@ public class QuestionnaireSb2Servlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute("currentUser") == null) {
       resp.sendRedirect(req.getContextPath() + "/login");
@@ -48,11 +48,13 @@ public class QuestionnaireSb2Servlet extends HttpServlet {
     String relaxation = req.getParameter("relaxation");
 
     if (stress != null && !stress.trim().isEmpty()) {
-      ParticipantStore.getInstance().saveSurveyResponse(account.getEmail(), testName, participantName, "stress", stress.trim());
+      ParticipantStore.getInstance().saveSurveyResponse(account.getEmail(), testName, participantName, "stress",
+          stress.trim());
     }
 
     if (relaxation != null && !relaxation.trim().isEmpty()) {
-      ParticipantStore.getInstance().saveSurveyResponse(account.getEmail(), testName, participantName, "relaxation", relaxation.trim());
+      ParticipantStore.getInstance().saveSurveyResponse(account.getEmail(), testName, participantName, "relaxation",
+          relaxation.trim());
     }
 
     resp.sendRedirect(req.getContextPath() + "/sam-1");

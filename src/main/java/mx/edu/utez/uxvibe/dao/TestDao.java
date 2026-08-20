@@ -17,112 +17,104 @@ import mx.edu.utez.uxvibe.ConexionBD;
 import mx.edu.utez.uxvibe.model.TestItem;
 
 public interface TestDao {
-  String INSERT_SQL =
-   "INSERT INTO PRUEBAS (EMAIL_USUARIO, NOMBRE, DESCRIPCION, SYSTEM_LINK, CREATED_ON) VALUES (?, ?, ?, ?, ?)";
-  String LIST_BY_USER_SQL =
-   "SELECT NOMBRE, DESCRIPCION, SYSTEM_LINK, CREATED_ON FROM PRUEBAS WHERE LOWER(EMAIL_USUARIO)=LOWER(?) ORDER BY CREATED_ON, ID_PRUEBA";
+  String INSERT_SQL = "INSERT INTO PRUEBAS (EMAIL_USUARIO, NOMBRE, DESCRIPCION, SYSTEM_LINK, CREATED_ON) VALUES (?, ?, ?, ?, ?)";
+  String LIST_BY_USER_SQL = "SELECT NOMBRE, DESCRIPCION, SYSTEM_LINK, CREATED_ON FROM PRUEBAS WHERE LOWER(EMAIL_USUARIO)=LOWER(?) ORDER BY CREATED_ON, ID_PRUEBA";
   Map<String, List<TestItem>> IN_MEMORY_TESTS_BY_USER = new LinkedHashMap<>();
   String DELETE_TEST_SQL = "DELETE FROM PRUEBAS WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE)=LOWER(?)";
 
   default void createTest(
-   String email,
-   String name,
-   String description,
-   String systemLink
-  ) {
-   String normalizedEmail = normalizeEmail(email);
-   if (normalizedEmail.isEmpty() || name == null || name.trim().isEmpty()) {
-     return;
-   }
+      String email,
+      String name,
+      String description,
+      String systemLink) {
+    String normalizedEmail = normalizeEmail(email);
+    if (normalizedEmail.isEmpty() || name == null || name.trim().isEmpty()) {
+      return;
+    }
 
-   TestItem test = new TestItem(
-     name.trim(),
-     description,
-     systemLink,
-     LocalDate.now(ZoneId.of("America/Mexico_City"))
-   );
-   IN_MEMORY_TESTS_BY_USER.computeIfAbsent(normalizedEmail, key -> new ArrayList<>()).add(test);
+    TestItem test = new TestItem(
+        name.trim(),
+        description,
+        systemLink,
+        LocalDate.now(ZoneId.of("America/Mexico_City")));
+    IN_MEMORY_TESTS_BY_USER.computeIfAbsent(normalizedEmail, key -> new ArrayList<>()).add(test);
 
-   try (
-     Connection conn = ConexionBD.getInstancia().getConnection();
-     PreparedStatement ps = conn.prepareStatement(INSERT_SQL)
-   ) {
-     ps.setString(1, normalizedEmail);
-     ps.setString(2, test.getName());
-     ps.setString(3, test.getDescription());
-     ps.setString(4, test.getSystemLink());
-     ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("America/Mexico_City"))));
-     ps.executeUpdate();
-   } catch (SQLException e) {
-     e.printStackTrace();
-   }
+    try (
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
+      ps.setString(1, normalizedEmail);
+      ps.setString(2, test.getName());
+      ps.setString(3, test.getDescription());
+      ps.setString(4, test.getSystemLink());
+      ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("America/Mexico_City"))));
+      ps.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
   default List<TestItem> listByUser(String email) {
-   String normalizedEmail = normalizeEmail(email);
-   if (normalizedEmail.isEmpty()) {
-     return new ArrayList<>();
-   }
+    String normalizedEmail = normalizeEmail(email);
+    if (normalizedEmail.isEmpty()) {
+      return new ArrayList<>();
+    }
 
-   try (
-     Connection conn = ConexionBD.getInstancia().getConnection();
-     PreparedStatement ps = conn.prepareStatement(LIST_BY_USER_SQL)
-   ) {
-     ps.setString(1, normalizedEmail);
-     List<TestItem> tests = new ArrayList<>();
-     try (ResultSet rs = ps.executeQuery()) {
-       while (rs.next()) {
-         TestItem test = new TestItem();
-         test.setName(rs.getString("NOMBRE"));
-         test.setDescription(rs.getString("DESCRIPCION"));
-         test.setSystemLink(rs.getString("SYSTEM_LINK"));
-         Timestamp createdOn = rs.getTimestamp("CREATED_ON");
-         if (createdOn != null) {
-           test.setCreatedOn(createdOn.toLocalDateTime().toLocalDate());
-         }
-         tests.add(test);
-       }
-     }
-     if (!tests.isEmpty()) {
-       IN_MEMORY_TESTS_BY_USER.put(normalizedEmail, new ArrayList<>(tests));
-       return tests;
-     }
-   } catch (SQLException e) {
-     e.printStackTrace();
-   }
+    try (
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(LIST_BY_USER_SQL)) {
+      ps.setString(1, normalizedEmail);
+      List<TestItem> tests = new ArrayList<>();
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          TestItem test = new TestItem();
+          test.setName(rs.getString("NOMBRE"));
+          test.setDescription(rs.getString("DESCRIPCION"));
+          test.setSystemLink(rs.getString("SYSTEM_LINK"));
+          Timestamp createdOn = rs.getTimestamp("CREATED_ON");
+          if (createdOn != null) {
+            test.setCreatedOn(createdOn.toLocalDateTime().toLocalDate());
+          }
+          tests.add(test);
+        }
+      }
+      if (!tests.isEmpty()) {
+        IN_MEMORY_TESTS_BY_USER.put(normalizedEmail, new ArrayList<>(tests));
+        return tests;
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
 
-   List<TestItem> cachedTests = IN_MEMORY_TESTS_BY_USER.get(normalizedEmail);
-   if (cachedTests == null) {
-     return new ArrayList<>();
-   }
-   return new ArrayList<>(cachedTests);
+    List<TestItem> cachedTests = IN_MEMORY_TESTS_BY_USER.get(normalizedEmail);
+    if (cachedTests == null) {
+      return new ArrayList<>();
+    }
+    return new ArrayList<>(cachedTests);
   }
 
   private static String normalizeEmail(String email) {
-   return email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
+    return email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
   }
 
- default boolean deleteTest(String email, String testName) {
-   String normalizedEmail = normalizeEmail(email);
-   String normalizedTestName = testName == null ? "" : testName.trim();
-   if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty()) {
-     return false;
-   }
-   try (
-     Connection conn = ConexionBD.getInstancia().getConnection();
-     PreparedStatement ps = conn.prepareStatement(DELETE_TEST_SQL)
-   ) {
-     ps.setString(1, normalizedEmail);
-     ps.setString(2, normalizedTestName);
-     ps.executeUpdate();
-   } catch (SQLException ex) {
-     ex.printStackTrace();
-   }
-   List<TestItem> list = IN_MEMORY_TESTS_BY_USER.get(normalizedEmail);
-   if (list != null) {
-     list.removeIf(t -> normalizedTestName.equals(t.getName()));
-   }
-   return true;
- }
+  default boolean deleteTest(String email, String testName) {
+    String normalizedEmail = normalizeEmail(email);
+    String normalizedTestName = testName == null ? "" : testName.trim();
+    if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty()) {
+      return false;
+    }
+    try (
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(DELETE_TEST_SQL)) {
+      ps.setString(1, normalizedEmail);
+      ps.setString(2, normalizedTestName);
+      ps.executeUpdate();
+    } catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    List<TestItem> list = IN_MEMORY_TESTS_BY_USER.get(normalizedEmail);
+    if (list != null) {
+      list.removeIf(t -> normalizedTestName.equals(t.getName()));
+    }
+    return true;
+  }
 }
-

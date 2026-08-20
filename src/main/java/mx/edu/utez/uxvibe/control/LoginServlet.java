@@ -23,47 +23,40 @@ public class LoginServlet extends HttpServlet {
   private static final String EMAIL_ATTR = "email";
   private static final String EMAIL_PARAM = "email";
   private static final String PASSWORD_PARAM = "password";
-  private static final String LOGIN_ERROR_MESSAGE =
-    "No se pudo mostrar la página de inicio de sesión.";
-  private static final String REDIRECT_ERROR_MESSAGE =
-    "No se pudo redirigir al inicio correcto.";
+  private static final String LOGIN_ERROR_MESSAGE = "No se pudo mostrar la página de inicio de sesión.";
+  private static final String REDIRECT_ERROR_MESSAGE = "No se pudo redirigir al inicio correcto.";
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = req.getSession(false);
-    if (
-      session != null &&
-      session.getAttribute(CURRENT_USER_ATTR) instanceof UserAccount
-    ) {
+    if (session != null &&
+        session.getAttribute(CURRENT_USER_ATTR) instanceof UserAccount) {
       UserAccount currentUser = (UserAccount) session.getAttribute(
-        CURRENT_USER_ATTR
-      );
+          CURRENT_USER_ATTR);
       redirectToHome(req, resp, currentUser);
       return;
     }
 
     req.setAttribute(
-      SUCCESS_MESSAGE_ATTR,
-      consumeFlash(req, FLASH_SUCCESS_ATTR)
-    );
+        SUCCESS_MESSAGE_ATTR,
+        consumeFlash(req, FLASH_SUCCESS_ATTR));
     req.setAttribute(ERROR_MESSAGE_ATTR, consumeFlash(req, FLASH_ERROR_ATTR));
     forwardToLogin(req, resp);
   }
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     String email = req.getParameter(EMAIL_PARAM);
     String password = req.getParameter(PASSWORD_PARAM);
 
     if (isBlank(email) || isBlank(password)) {
       forwardToLogin(
-        req,
-        resp,
-        "Ingresa tu email y contraseña para continuar.",
-        email
-      );
+          req,
+          resp,
+          "Ingresa tu email y contraseña para continuar.",
+          email);
       return;
     }
 
@@ -79,18 +72,16 @@ public class LoginServlet extends HttpServlet {
   }
 
   private void forwardToLogin(
-    HttpServletRequest req,
-    HttpServletResponse resp
-  ) {
+      HttpServletRequest req,
+      HttpServletResponse resp) {
     forwardToLogin(req, resp, null, null);
   }
 
   private void forwardToLogin(
-    HttpServletRequest req,
-    HttpServletResponse resp,
-    String errorMessage,
-    String email
-  ) {
+      HttpServletRequest req,
+      HttpServletResponse resp,
+      String errorMessage,
+      String email) {
     if (errorMessage != null) {
       req.setAttribute(ERROR_MESSAGE_ATTR, errorMessage);
     }
@@ -106,10 +97,9 @@ public class LoginServlet extends HttpServlet {
   }
 
   private void redirectToHome(
-    HttpServletRequest req,
-    HttpServletResponse resp,
-    UserAccount account
-  ) {
+      HttpServletRequest req,
+      HttpServletResponse resp,
+      UserAccount account) {
     try {
       resp.sendRedirect(req.getContextPath() + resolveHomePath(account));
     } catch (IOException e) {

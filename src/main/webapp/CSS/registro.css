@@ -59,6 +59,7 @@ body {
   gap: 5px;
   box-sizing: border-box;
 }
+
 .registro-field {
   display: flex;
   flex-direction: column;

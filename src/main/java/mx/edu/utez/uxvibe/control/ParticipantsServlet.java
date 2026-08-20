@@ -18,14 +18,13 @@ import mx.edu.utez.uxvibe.service.ParticipantStore;
 @WebServlet(value = "/participants")
 public class ParticipantsServlet extends HttpServlet {
 
-  private static final String PARTICIPANTS_VIEW =
-    "/WEB-INF/views/participants.jsp";
+  private static final String PARTICIPANTS_VIEW = "/WEB-INF/views/participants.jsp";
   private static final String CURRENT_USER_ATTR = "currentUser";
   private static final String CURRENT_TEST_NAME_ATTR = "currentTestName";
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute(CURRENT_USER_ATTR) == null) {
       try {
@@ -33,9 +32,8 @@ public class ParticipantsServlet extends HttpServlet {
       } catch (IOException e) {
         try {
           resp.sendError(
-            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-            "No se pudo redirigir al inicio de sesión."
-          );
+              HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+              "No se pudo redirigir al inicio de sesión.");
         } catch (IOException ignored) {
           // Fall through since the response is already in a failed state.
         }
@@ -45,51 +43,42 @@ public class ParticipantsServlet extends HttpServlet {
 
     UserAccount account = (UserAccount) session.getAttribute(CURRENT_USER_ATTR);
     String selectedTestName = resolveTestName(
-      req.getParameter("testName"),
-      (String) session.getAttribute(CURRENT_TEST_NAME_ATTR)
-    );
+        req.getParameter("testName"),
+        (String) session.getAttribute(CURRENT_TEST_NAME_ATTR));
     if (!selectedTestName.isEmpty()) {
       session.setAttribute(CURRENT_TEST_NAME_ATTR, selectedTestName);
     }
 
-    List<ParticipantItem> allParticipants =
-      ParticipantStore.getInstance().listByUserAndTest(
+    List<ParticipantItem> allParticipants = ParticipantStore.getInstance().listByUserAndTest(
         account.getEmail(),
-        selectedTestName
-      );
+        selectedTestName);
     int totalParticipants = allParticipants.size();
     int totalPages = PaginationSupport.countPages(
-      totalParticipants,
-      PaginationSupport.PAGE_SIZE
-    );
+        totalParticipants,
+        PaginationSupport.PAGE_SIZE);
     int currentPage = PaginationSupport.resolvePage(
-      req.getParameter("page"),
-      totalPages
-    );
+        req.getParameter("page"),
+        totalPages);
 
     req.setAttribute(
-      "participants",
-      PaginationSupport.paginate(
-        allParticipants,
-        currentPage,
-        PaginationSupport.PAGE_SIZE
-      )
-    );
+        "participants",
+        PaginationSupport.paginate(
+            allParticipants,
+            currentPage,
+            PaginationSupport.PAGE_SIZE));
     req.setAttribute("selectedTestName", selectedTestName);
     req.setAttribute("currentPage", currentPage);
     req.setAttribute("totalPages", totalPages);
     req.setAttribute(
-      "pageHrefPrefix",
-      buildPageHrefPrefix(req, selectedTestName)
-    );
+        "pageHrefPrefix",
+        buildPageHrefPrefix(req, selectedTestName));
     try {
       req.getRequestDispatcher(PARTICIPANTS_VIEW).forward(req, resp);
     } catch (ServletException | IOException e) {
       try {
         resp.sendError(
-          HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-          "No se pudo mostrar la página de participantes."
-        );
+            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+            "No se pudo mostrar la página de participantes.");
       } catch (IOException ignored) {
         // Fall through since the response is already in a failed state.
       }
@@ -120,16 +109,15 @@ public class ParticipantsServlet extends HttpServlet {
   }
 
   private String buildPageHrefPrefix(
-    HttpServletRequest req,
-    String selectedTestName
-  ) throws IOException {
+      HttpServletRequest req,
+      String selectedTestName) throws IOException {
     StringBuilder builder = new StringBuilder();
     builder.append(req.getContextPath()).append("/participants?");
     if (!selectedTestName.isEmpty()) {
       builder
-        .append("testName=")
-        .append(encodeQueryValue(selectedTestName))
-        .append("&");
+          .append("testName=")
+          .append(encodeQueryValue(selectedTestName))
+          .append("&");
     }
     builder.append("page=");
     return builder.toString();
