@@ -125,10 +125,6 @@ body {
    AVISO DE EMAIL
    ============================================================================ */
 
-/*
-   El aviso está oculto inicialmente.
-   Se muestra únicamente cuando se agrega la clase "show".
-*/
 
 .notice {
   display: none;
@@ -224,15 +220,11 @@ body {
   display: block;
   width: 100%;
   max-width: 620px;
-
   margin: 0 auto 7px;
-
   font-size: 18px;
   font-weight: 600;
-
   color: #658393;
-
-  text-align: center;
+  text-align: left;
 }
 
 .email-row {
@@ -614,7 +606,7 @@ body {
 
     margin-bottom: 7px;
 
-    text-align: center;
+    text-align: left;
   }
 
   .email-row {
