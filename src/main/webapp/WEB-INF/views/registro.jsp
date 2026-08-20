@@ -15,12 +15,16 @@
     <div class="registro-del-evaluador">
       <h1 class="registro-title">Crear Cuenta</h1>
       <p class="registro-subtitle">Completa los datos para crear tu cuenta</p>
-      <% if (request.getAttribute("errorMessage") !=null) { %>
+      <% if (request.getAttribute("errorMessage") != null) { %>
         <p class="form-message form-message--error">
           <%= request.getAttribute("errorMessage") %>
         </p>
-        <% } %>
-          <main class="frame">
+      <% } %>
+      <%
+        String fullNameVal = request.getAttribute("fullName") != null ? (String) request.getAttribute("fullName") : "";
+        String emailVal    = request.getAttribute("email") != null ? (String) request.getAttribute("email") : "";
+      %>
+      <main class="frame">
             <form class="registro-form" id="registroForm" action="${pageContext.request.contextPath}/register"
               method="post">
               <div class="registro-field">
@@ -29,8 +33,8 @@
                   <img class="registro-icon-panel" alt=""
                     src="${pageContext.request.contextPath}/public/registro/merged-asset-4@2x.png" />
                   <input id="nombre-completo" class="form-input registro-input" type="text" name="fullName"
-                    placeholder="Ingresa tu nombre completo" autocomplete="name" value="<%= request.getAttribute("
-                    fullName") !=null ? request.getAttribute("fullName") : "" %>" required />
+                    placeholder="Ingresa tu nombre completo" autocomplete="name"
+                    value="<%= fullNameVal %>" required />
                 </div>
               </div>
 
@@ -40,8 +44,8 @@
                   <img class="registro-icon-panel" alt=""
                     src="${pageContext.request.contextPath}/public/registro/merged-asset-1@2x.png" />
                   <input id="email" class="form-input registro-input" type="email" name="email"
-                    placeholder="Ingresa tu email" autocomplete="email" value="<%= request.getAttribute(" email") !=null
-                    ? request.getAttribute("email") : "" %>" required />
+                    placeholder="Ingresa tu email" autocomplete="email"
+                    value="<%= emailVal %>" required />
                 </div>
               </div>
 

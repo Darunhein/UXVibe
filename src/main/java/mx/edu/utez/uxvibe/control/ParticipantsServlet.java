@@ -18,7 +18,7 @@ import mx.edu.utez.uxvibe.service.ParticipantStore;
 @WebServlet(value = "/participants")
 public class ParticipantsServlet extends HttpServlet {
 
-  private static final String PARTICIPANTS_VIEW = "/WEB-INF/views/participants.jsp";
+  private static final String PARTICIPANTS_VIEW = "/WEB-INF/views/participantes.jsp";
   private static final String CURRENT_USER_ATTR = "currentUser";
   private static final String CURRENT_TEST_NAME_ATTR = "currentTestName";
 

@@ -13,7 +13,7 @@ import mx.edu.utez.uxvibe.service.TestStore;
 @WebServlet(value = "/create-test")
 public class CreateTestServlet extends HttpServlet {
 
-  private static final String CREATE_TEST_VIEW = "/WEB-INF/views/create-test.jsp";
+  private static final String CREATE_TEST_VIEW = "/WEB-INF/views/crear-prueba.jsp";
   private static final String CURRENT_USER_ATTR = "currentUser";
   private static final String ERROR_MESSAGE_ATTR = "errorMessage";
   private static final String TEST_NAME_PARAM = "testName";

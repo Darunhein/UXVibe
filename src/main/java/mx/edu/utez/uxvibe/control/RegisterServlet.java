@@ -14,7 +14,7 @@ import mx.edu.utez.uxvibe.service.UserStore;
 @WebServlet(value = "/register")
 public class RegisterServlet extends HttpServlet {
 
-  private static final String REGISTER_VIEW = "/WEB-INF/views/register.jsp";
+  private static final String REGISTER_VIEW = "/WEB-INF/views/registro.jsp";
   private static final String ERROR_MESSAGE_ATTR = "errorMessage";
 
   @Override
