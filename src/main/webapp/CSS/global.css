@@ -21,9 +21,12 @@ input:not([type]) {
   pointer-events: auto;
 }
 
-input::placeholder {
-  color: #a3a9b0;
+.email-input::placeholder {
+  color: #97a6b3;
   opacity: 1;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
 }
 
 input.form-input {

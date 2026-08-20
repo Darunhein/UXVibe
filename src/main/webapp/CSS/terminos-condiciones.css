@@ -76,17 +76,11 @@ body {
 
 .terminos-title {
   font-family: "Inter", sans-serif;
-
   font-size: 38px;
-  font-weight: 400;
-
+  font-weight: 800;
   color: #5a7a8c;
-
-  margin: 0;
-
+  margin: 0 0 30px 0;
   line-height: 1.1;
-
-  letter-spacing: -0.5px;
 }
 
 
