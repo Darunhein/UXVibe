@@ -297,24 +297,15 @@
       setStatus("Grabación completada", true);
 
       // Send backup to server
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        const base64 = reader.result.split(",")[1];
-        const ctx = document.body.dataset.contextPath || "";
-        const fileName = "mic-test-" + Date.now() + ".webm";
-        fetch(ctx + "/recording-upload", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-          },
-          body:
-            "fileName=" +
-            encodeURIComponent(fileName) +
-            "&audioUrl=" +
-            encodeURIComponent(base64),
-        }).catch(function () { });
-      };
-      reader.readAsDataURL(recordedBlob);
+      const ctx = document.body.dataset.contextPath || "";
+      const fileName = "mic-test-" + Date.now() + ".webm";
+      const formData = new FormData();
+      formData.append("file", recordedBlob, fileName);
+      
+      fetch(ctx + "/recording-upload", {
+        method: "POST",
+        body: formData
+      }).catch(function () { });
     };
 
     // Use 250ms periodic chunk flushing so data is always accumulated reliably

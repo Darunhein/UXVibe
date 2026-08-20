@@ -15,7 +15,7 @@ import mx.edu.utez.uxvibe.service.TestStore;
 @WebServlet(value = "/tests")
 public class TestsServlet extends HttpServlet {
 
-  private static final String TESTS_VIEW = "/WEB-INF/views/tests.jsp";
+  private static final String TESTS_VIEW = "/WEB-INF/views/seleccionar-prueba.jsp";
   private static final String CURRENT_USER_ATTR = "currentUser";
 
   @Override

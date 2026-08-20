@@ -14,7 +14,7 @@ import mx.edu.utez.uxvibe.service.ParticipantStore;
 @WebServlet(value = "/participant-report")
 public class ParticipantReportServlet extends HttpServlet {
 
-  private static final String REPORT_VIEW = "/WEB-INF/views/participant-report.jsp";
+  private static final String REPORT_VIEW = "/WEB-INF/views/reporte-participante.jsp";
   private static final String CURRENT_USER_ATTR = "currentUser";
 
   @Override
