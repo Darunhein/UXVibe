@@ -27,7 +27,8 @@ class TestsServletTest {
 
     @Test
     void paginatesInGroupsOfThree() {
-        List<String> items = Arrays.asList("Prueba 1", "Prueba 2", "Prueba 3", "Prueba 4", "Prueba 5", "Prueba 6", "Prueba 7");
+        List<String> items = Arrays.asList("Prueba 1", "Prueba 2", "Prueba 3", "Prueba 4", "Prueba 5", "Prueba 6",
+                "Prueba 7");
 
         assertEquals(Arrays.asList("Prueba 1", "Prueba 2", "Prueba 3"), PaginationSupport.paginate(items, 1, 3));
         assertEquals(Arrays.asList("Prueba 4", "Prueba 5", "Prueba 6"), PaginationSupport.paginate(items, 2, 3));

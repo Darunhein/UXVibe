@@ -15,7 +15,7 @@ public class RecordingUploadServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-    throws IOException {
+      throws IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute("currentUser") == null) {
       resp.sendRedirect(req.getContextPath() + "/login");
@@ -25,8 +25,7 @@ public class RecordingUploadServlet extends HttpServlet {
     UserAccount account = (UserAccount) session.getAttribute("currentUser");
     String testName = (String) session.getAttribute("currentTestName");
     String participantName = (String) session.getAttribute(
-      "currentParticipantName"
-    );
+        "currentParticipantName");
     if (participantName == null || participantName.trim().isEmpty()) {
       participantName = "Participante " + (System.currentTimeMillis() % 1000);
     }
@@ -39,7 +38,8 @@ public class RecordingUploadServlet extends HttpServlet {
       if (filePart != null && filePart.getSize() > 0) {
         if (fileName == null || fileName.trim().isEmpty()) {
           String submitted = filePart.getSubmittedFileName();
-          if (submitted != null) fileName = submitted;
+          if (submitted != null)
+            fileName = submitted;
         }
         try (java.io.InputStream is = filePart.getInputStream()) {
           byte[] bytes = is.readAllBytes();
@@ -50,8 +50,10 @@ public class RecordingUploadServlet extends HttpServlet {
         String audioUrl = req.getParameter("audioUrl");
         if (audioUrl != null && audioUrl.startsWith("data:")) {
           int comma = audioUrl.indexOf(',');
-          if (comma >= 0) audioBase64 = audioUrl.substring(comma + 1);
-        } else audioBase64 = audioUrl;
+          if (comma >= 0)
+            audioBase64 = audioUrl.substring(comma + 1);
+        } else
+          audioBase64 = audioUrl;
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -64,12 +66,11 @@ public class RecordingUploadServlet extends HttpServlet {
     }
 
     ParticipantStore.getInstance().saveAudioAsset(
-      account.getEmail(),
-      testName,
-      participantName,
-      fileName,
-      audioBase64
-    );
+        account.getEmail(),
+        testName,
+        participantName,
+        fileName,
+        audioBase64);
 
     resp.setStatus(HttpServletResponse.SC_OK);
     resp.getWriter().write("OK");

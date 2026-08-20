@@ -77,7 +77,7 @@
       if (AudioCtx) {
         audioContext = new AudioCtx();
         if (audioContext.state === "suspended") {
-          audioContext.resume().catch(function () {});
+          audioContext.resume().catch(function () { });
         }
         analyser = audioContext.createAnalyser();
         analyser.fftSize = 64;
@@ -124,7 +124,7 @@
       animFrameId = null;
     }
     if (audioContext && audioContext.state !== "closed") {
-      audioContext.close().catch(function () {});
+      audioContext.close().catch(function () { });
       audioContext = null;
       analyser = null;
     }
@@ -145,7 +145,7 @@
         sessionStorage.setItem("uxvibe_audio_base64", base64);
         sessionStorage.setItem("uxvibe_audio_filename", fileName);
         sessionStorage.setItem("uxvibe_audio_mimetype", blob.type || "audio/webm");
-      } catch (e) {}
+      } catch (e) { }
 
       fetch(contextPath + "/recording-upload", {
         method: "POST",
@@ -256,7 +256,7 @@
     if (mediaRecorder && mediaRecorder.state === "recording") {
       try {
         mediaRecorder.pause();
-      } catch (e) {}
+      } catch (e) { }
     }
     updateBadgeState(false);
   }
@@ -267,7 +267,7 @@
     if (mediaRecorder && mediaRecorder.state === "paused") {
       try {
         mediaRecorder.resume();
-      } catch (e) {}
+      } catch (e) { }
     }
     updateBadgeState(true);
   }
@@ -278,7 +278,7 @@
         if (typeof mediaRecorder.requestData === "function") {
           mediaRecorder.requestData();
         }
-      } catch (e) {}
+      } catch (e) { }
 
       mediaRecorder.onstop = function () {
         const blob = new Blob(chunks, { type: mediaRecorder.mimeType || recordedMimeType });

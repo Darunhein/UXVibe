@@ -14,14 +14,10 @@ import mx.edu.utez.uxvibe.model.PasswordResetToken;
 
 public interface PasswordResetDao {
 
-  String INSERT_TOKEN_SQL =
-    "INSERT INTO PASSWORD_RESETS (TOKEN, EMAIL, EXPIRES_AT, USED) VALUES (?, ?, ?, ?)";
-  String FIND_TOKEN_SQL =
-    "SELECT TOKEN, EMAIL, EXPIRES_AT, USED FROM PASSWORD_RESETS WHERE TOKEN = ?";
-  String MARK_USED_SQL =
-    "UPDATE PASSWORD_RESETS SET USED = 1 WHERE TOKEN = ?";
-  String INVALIDATE_EMAIL_SQL =
-    "UPDATE PASSWORD_RESETS SET USED = 1 WHERE LOWER(EMAIL) = LOWER(?)";
+  String INSERT_TOKEN_SQL = "INSERT INTO PASSWORD_RESETS (TOKEN, EMAIL, EXPIRES_AT, USED) VALUES (?, ?, ?, ?)";
+  String FIND_TOKEN_SQL = "SELECT TOKEN, EMAIL, EXPIRES_AT, USED FROM PASSWORD_RESETS WHERE TOKEN = ?";
+  String MARK_USED_SQL = "UPDATE PASSWORD_RESETS SET USED = 1 WHERE TOKEN = ?";
+  String INVALIDATE_EMAIL_SQL = "UPDATE PASSWORD_RESETS SET USED = 1 WHERE LOWER(EMAIL) = LOWER(?)";
 
   Map<String, PasswordResetToken> IN_MEMORY_TOKENS = new ConcurrentHashMap<>();
 
@@ -38,9 +34,8 @@ public interface PasswordResetDao {
 
     // Try saving to DB if table exists
     try (
-      Connection conn = ConexionBD.getInstancia().getConnection();
-      PreparedStatement ps = conn.prepareStatement(INSERT_TOKEN_SQL)
-    ) {
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(INSERT_TOKEN_SQL)) {
       ps.setString(1, resetToken.getToken());
       ps.setString(2, normalizedEmail);
       ps.setTimestamp(3, Timestamp.from(resetToken.getExpiresAt()));
@@ -48,7 +43,8 @@ public interface PasswordResetDao {
       ps.executeUpdate();
       return true;
     } catch (SQLException e) {
-      // If table doesn't exist yet or connection fails, the in-memory fallback guarantees it still works
+      // If table doesn't exist yet or connection fails, the in-memory fallback
+      // guarantees it still works
       return true;
     }
   }
@@ -59,9 +55,8 @@ public interface PasswordResetDao {
     }
 
     try (
-      Connection conn = ConexionBD.getInstancia().getConnection();
-      PreparedStatement ps = conn.prepareStatement(FIND_TOKEN_SQL)
-    ) {
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(FIND_TOKEN_SQL)) {
       ps.setString(1, token.trim());
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
@@ -95,9 +90,8 @@ public interface PasswordResetDao {
     }
 
     try (
-      Connection conn = ConexionBD.getInstancia().getConnection();
-      PreparedStatement ps = conn.prepareStatement(MARK_USED_SQL)
-    ) {
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(MARK_USED_SQL)) {
       ps.setString(1, cleanToken);
       ps.executeUpdate();
       return true;
@@ -119,9 +113,8 @@ public interface PasswordResetDao {
     }
 
     try (
-      Connection conn = ConexionBD.getInstancia().getConnection();
-      PreparedStatement ps = conn.prepareStatement(INVALIDATE_EMAIL_SQL)
-    ) {
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(INVALIDATE_EMAIL_SQL)) {
       ps.setString(1, normalizedEmail);
       ps.executeUpdate();
     } catch (SQLException ignored) {

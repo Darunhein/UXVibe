@@ -20,7 +20,7 @@ public class TestsServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute(CURRENT_USER_ATTR) == null) {
       try {
@@ -28,9 +28,8 @@ public class TestsServlet extends HttpServlet {
       } catch (IOException e) {
         try {
           resp.sendError(
-            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-            "No se pudo redirigir al inicio de sesión."
-          );
+              HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+              "No se pudo redirigir al inicio de sesión.");
         } catch (IOException ignored) {
           // Fall through since the response is already in a failed state.
         }
@@ -40,26 +39,21 @@ public class TestsServlet extends HttpServlet {
 
     UserAccount account = (UserAccount) session.getAttribute(CURRENT_USER_ATTR);
     List<TestItem> allTests = TestStore.getInstance().listByUser(
-      account.getEmail()
-    );
+        account.getEmail());
     int totalTests = allTests.size();
     int totalPages = PaginationSupport.countPages(
-      totalTests,
-      PaginationSupport.PAGE_SIZE
-    );
+        totalTests,
+        PaginationSupport.PAGE_SIZE);
     int currentPage = PaginationSupport.resolvePage(
-      req.getParameter("page"),
-      totalPages
-    );
+        req.getParameter("page"),
+        totalPages);
 
     req.setAttribute(
-      "tests",
-      PaginationSupport.paginate(
-        allTests,
-        currentPage,
-        PaginationSupport.PAGE_SIZE
-      )
-    );
+        "tests",
+        PaginationSupport.paginate(
+            allTests,
+            currentPage,
+            PaginationSupport.PAGE_SIZE));
     req.setAttribute("currentPage", currentPage);
     req.setAttribute("totalPages", totalPages);
     req.setAttribute("totalTests", totalTests);
@@ -68,9 +62,8 @@ public class TestsServlet extends HttpServlet {
     } catch (ServletException | IOException e) {
       try {
         resp.sendError(
-          HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-          "No se pudo mostrar la página de pruebas."
-        );
+            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+            "No se pudo mostrar la página de pruebas.");
       } catch (IOException ignored) {
         // Fall through since the response is already in a failed state.
       }

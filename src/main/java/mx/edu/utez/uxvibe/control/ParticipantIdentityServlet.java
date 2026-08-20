@@ -14,7 +14,7 @@ public class ParticipantIdentityServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-    throws IOException {
+      throws IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute("currentUser") == null) {
       resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -34,7 +34,8 @@ public class ParticipantIdentityServlet extends HttpServlet {
     // Save participant name in session
     session.setAttribute("currentParticipantName", participantName);
 
-    // Iterate over provided parameters and store them as survey responses where appropriate.
+    // Iterate over provided parameters and store them as survey responses where
+    // appropriate.
     java.util.Enumeration<String> params = req.getParameterNames();
     while (params.hasMoreElements()) {
       String name = params.nextElement();
@@ -58,12 +59,11 @@ public class ParticipantIdentityServlet extends HttpServlet {
           }
           session.setAttribute("participantAge", age);
           ParticipantStore.getInstance().saveSurveyResponse(
-            account.getEmail(),
-            testName,
-            participantName,
-            "age",
-            age
-          );
+              account.getEmail(),
+              testName,
+              participantName,
+              "age",
+              age);
         } catch (NumberFormatException ex) {
           resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
           resp.getWriter().write("Edad inválida.");
@@ -72,14 +72,14 @@ public class ParticipantIdentityServlet extends HttpServlet {
         continue;
       }
 
-      // For other fields we store raw value (strings) - ParticipantStore will compute numeric equivalents.
+      // For other fields we store raw value (strings) - ParticipantStore will compute
+      // numeric equivalents.
       ParticipantStore.getInstance().saveSurveyResponse(
-        account.getEmail(),
-        testName,
-        participantName,
-        name,
-        value
-      );
+          account.getEmail(),
+          testName,
+          participantName,
+          name,
+          value);
     }
 
     resp.setStatus(HttpServletResponse.SC_OK);

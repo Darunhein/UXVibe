@@ -14,16 +14,11 @@ import mx.edu.utez.uxvibe.model.UserAccount;
 import mx.edu.utez.uxvibe.model.UserRole;
 
 public interface UserDao {
-  String INSERT_SQL =
-    "INSERT INTO USUARIOS (NOMBRE_COMPLETO, EMAIL, PASSWORD, ROL) VALUES (?, ?, ?, ?)";
-  String AUTHENTICATE_SQL =
-    "SELECT NOMBRE_COMPLETO, EMAIL, PASSWORD, ROL FROM USUARIOS WHERE LOWER(EMAIL)=LOWER(?) AND PASSWORD = ?";
-  String EXISTS_SQL =
-    "SELECT 1 FROM USUARIOS WHERE LOWER(EMAIL)=LOWER(?)";
-  String LIST_SQL =
-    "SELECT NOMBRE_COMPLETO, EMAIL, PASSWORD, ROL FROM USUARIOS ORDER BY ID_USUARIO";
-  String RESET_PASSWORD_SQL =
-    "UPDATE USUARIOS SET PASSWORD = ? WHERE LOWER(EMAIL) = LOWER(?)";
+  String INSERT_SQL = "INSERT INTO USUARIOS (NOMBRE_COMPLETO, EMAIL, PASSWORD, ROL) VALUES (?, ?, ?, ?)";
+  String AUTHENTICATE_SQL = "SELECT NOMBRE_COMPLETO, EMAIL, PASSWORD, ROL FROM USUARIOS WHERE LOWER(EMAIL)=LOWER(?) AND PASSWORD = ?";
+  String EXISTS_SQL = "SELECT 1 FROM USUARIOS WHERE LOWER(EMAIL)=LOWER(?)";
+  String LIST_SQL = "SELECT NOMBRE_COMPLETO, EMAIL, PASSWORD, ROL FROM USUARIOS ORDER BY ID_USUARIO";
+  String RESET_PASSWORD_SQL = "UPDATE USUARIOS SET PASSWORD = ? WHERE LOWER(EMAIL) = LOWER(?)";
   Map<String, UserAccount> IN_MEMORY_ACCOUNTS = initDefaultAccounts();
 
   static Map<String, UserAccount> initDefaultAccounts() {
@@ -51,9 +46,8 @@ public interface UserDao {
     }
 
     try (
-      Connection conn = ConexionBD.getInstancia().getConnection();
-      PreparedStatement ps = conn.prepareStatement(INSERT_SQL)
-    ) {
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
       ps.setString(1, account.getFullName());
       ps.setString(2, email);
       ps.setString(3, account.getPassword());
@@ -76,9 +70,8 @@ public interface UserDao {
     }
 
     try (
-      Connection conn = ConexionBD.getInstancia().getConnection();
-      PreparedStatement ps = conn.prepareStatement(AUTHENTICATE_SQL)
-    ) {
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(AUTHENTICATE_SQL)) {
       ps.setString(1, normalizeEmail(email));
       ps.setString(2, password);
       try (ResultSet rs = ps.executeQuery()) {
@@ -95,8 +88,8 @@ public interface UserDao {
       return null;
     }
     return password.equals(account.getPassword())
-      ? cloneAccount(account, normalizeEmail(email))
-      : null;
+        ? cloneAccount(account, normalizeEmail(email))
+        : null;
   }
 
   default boolean exists(String email) {
@@ -110,9 +103,8 @@ public interface UserDao {
     }
 
     try (
-      Connection conn = ConexionBD.getInstancia().getConnection();
-      PreparedStatement ps = conn.prepareStatement(EXISTS_SQL)
-    ) {
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(EXISTS_SQL)) {
       ps.setString(1, normalizedEmail);
       try (ResultSet rs = ps.executeQuery()) {
         return rs.next();
@@ -125,10 +117,9 @@ public interface UserDao {
 
   default List<UserAccount> list() {
     try (
-      Connection conn = ConexionBD.getInstancia().getConnection();
-      PreparedStatement ps = conn.prepareStatement(LIST_SQL);
-      ResultSet rs = ps.executeQuery()
-    ) {
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(LIST_SQL);
+        ResultSet rs = ps.executeQuery()) {
       List<UserAccount> accounts = new ArrayList<>();
       while (rs.next()) {
         accounts.add(mapUser(rs));
@@ -146,9 +137,8 @@ public interface UserDao {
     }
     String normalizedEmail = normalizeEmail(email);
     try (
-      Connection conn = ConexionBD.getInstancia().getConnection();
-      PreparedStatement ps = conn.prepareStatement(RESET_PASSWORD_SQL)
-    ) {
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(RESET_PASSWORD_SQL)) {
       ps.setString(1, newPassword);
       ps.setString(2, normalizedEmail);
       int updated = ps.executeUpdate();

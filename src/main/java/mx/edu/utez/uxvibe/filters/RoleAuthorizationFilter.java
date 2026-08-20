@@ -14,18 +14,19 @@ import mx.edu.utez.uxvibe.model.UserAccount;
 import mx.edu.utez.uxvibe.model.UserRole;
 
 @WebFilter(urlPatterns = {
-    "/tests",
-    "/participants",
-    "/create-test",
-    "/start-test",
-    "/complete-test",
-    "/cancel-test",
-    "/restart-recording",
-    "/participant-report"
+        "/tests",
+        "/participants",
+        "/create-test",
+        "/start-test",
+        "/complete-test",
+        "/cancel-test",
+        "/restart-recording",
+        "/participant-report"
 })
 public class RoleAuthorizationFilter implements Filter {
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 

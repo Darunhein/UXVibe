@@ -15,9 +15,9 @@ input:not([type]) {
   color: #4d5d76;
   background: transparent;
   box-sizing: border-box;
-  appearance: none;
-  -webkit-appearance: none;
   -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
   pointer-events: auto;
 }
 

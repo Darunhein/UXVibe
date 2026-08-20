@@ -20,22 +20,21 @@ public class RecoverServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     forwardToRecover(req, resp, null, null, null);
   }
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     String email = req.getParameter(EMAIL_PARAM);
     if (isBlank(email)) {
       forwardToRecover(
-        req,
-        resp,
-        "Ingresa tu email para recuperar tu contraseña.",
-        null,
-        null
-      );
+          req,
+          resp,
+          "Ingresa tu email para recuperar tu contraseña.",
+          null,
+          null);
       return;
     }
 
@@ -55,7 +54,8 @@ public class RecoverServlet extends HttpServlet {
     }
 
     // Generic confirmation message for security
-    String successMsg = "Si la dirección " + email + " está registrada en nuestra plataforma, recibirás un correo con el enlace para restablecer tu contraseña. Revisa tu bandeja de entrada y spam.";
+    String successMsg = "Si la dirección " + email
+        + " está registrada en nuestra plataforma, recibirás un correo con el enlace para restablecer tu contraseña. Revisa tu bandeja de entrada y spam.";
     forwardToRecover(req, resp, null, successMsg, email);
   }
 
@@ -78,12 +78,11 @@ public class RecoverServlet extends HttpServlet {
   }
 
   private void forwardToRecover(
-    HttpServletRequest req,
-    HttpServletResponse resp,
-    String errorMessage,
-    String successMessage,
-    String email
-  ) throws ServletException, IOException {
+      HttpServletRequest req,
+      HttpServletResponse resp,
+      String errorMessage,
+      String successMessage,
+      String email) throws ServletException, IOException {
     if (errorMessage != null) {
       req.setAttribute(ERROR_MESSAGE_ATTR, errorMessage);
     }

@@ -14,7 +14,7 @@ public class CancelTestServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws IOException {
+      throws IOException {
     HttpSession session = req.getSession(false);
     String role = null;
     if (session != null) {
@@ -36,17 +36,15 @@ public class CancelTestServlet extends HttpServlet {
   }
 
   private void redirectTo(
-    HttpServletRequest req,
-    HttpServletResponse resp,
-    String path
-  ) throws IOException {
+      HttpServletRequest req,
+      HttpServletResponse resp,
+      String path) throws IOException {
     try {
       resp.sendRedirect(req.getContextPath() + path);
     } catch (IOException e) {
       resp.sendError(
-        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-        "No se pudo redirigir a la ruta solicitada."
-      );
+          HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+          "No se pudo redirigir a la ruta solicitada.");
     }
   }
 }

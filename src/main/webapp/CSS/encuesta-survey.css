@@ -163,7 +163,7 @@
     transition: color 0.3s ease;
 }
 
-.scale-option input[type="radio"]:checked + .scale-dot + .scale-number {
+.scale-option input[type="radio"]:checked+.scale-dot+.scale-number {
     color: #5a7a8c;
     font-weight: 600;
 }

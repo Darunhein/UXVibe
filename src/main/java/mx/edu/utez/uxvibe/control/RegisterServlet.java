@@ -19,15 +19,14 @@ public class RegisterServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     try {
       req.getRequestDispatcher(REGISTER_VIEW).forward(req, resp);
     } catch (ServletException | IOException e) {
       try {
         resp.sendError(
-          HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-          "No se pudo mostrar la página de registro."
-        );
+            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+            "No se pudo mostrar la página de registro.");
       } catch (IOException ignored) {
         // Fall through since the response is already in a failed state.
       }
@@ -36,26 +35,23 @@ public class RegisterServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     String fullName = req.getParameter("fullName");
     String email = req.getParameter("email");
     String password = req.getParameter("password");
     String confirmPassword = req.getParameter("confirmPassword");
 
-    if (
-      fullName == null ||
-      fullName.trim().isEmpty() ||
-      email == null ||
-      email.trim().isEmpty() ||
-      password == null ||
-      password.trim().isEmpty() ||
-      confirmPassword == null ||
-      confirmPassword.trim().isEmpty()
-    ) {
+    if (fullName == null ||
+        fullName.trim().isEmpty() ||
+        email == null ||
+        email.trim().isEmpty() ||
+        password == null ||
+        password.trim().isEmpty() ||
+        confirmPassword == null ||
+        confirmPassword.trim().isEmpty()) {
       req.setAttribute(
-        ERROR_MESSAGE_ATTR,
-        "Completa todos los campos para crear tu cuenta."
-      );
+          ERROR_MESSAGE_ATTR,
+          "Completa todos los campos para crear tu cuenta.");
       repopulate(req, fullName, email);
       forwardToRegister(req, resp);
       return;
@@ -70,9 +66,8 @@ public class RegisterServlet extends HttpServlet {
 
     if (password.length() < 8) {
       req.setAttribute(
-        ERROR_MESSAGE_ATTR,
-        "La contraseña debe tener al menos 8 caracteres."
-      );
+          ERROR_MESSAGE_ATTR,
+          "La contraseña debe tener al menos 8 caracteres.");
       repopulate(req, fullName, email);
       forwardToRegister(req, resp);
       return;
@@ -101,52 +96,46 @@ public class RegisterServlet extends HttpServlet {
     if (UserStore.getInstance().register(account)) {
       HttpSession session = req.getSession();
       session.setAttribute(
-        "flashSuccess",
-        "Cuenta creada correctamente. Ahora puedes iniciar sesión."
-      );
+          "flashSuccess",
+          "Cuenta creada correctamente. Ahora puedes iniciar sesión.");
       try {
         resp.sendRedirect(req.getContextPath() + "/login");
       } catch (IOException e) {
         try {
           resp.sendError(
-            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-            "No se pudo redirigir al inicio de sesión."
-          );
+              HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+              "No se pudo redirigir al inicio de sesión.");
         } catch (IOException ignored) {
           // Fall through since the response is already in a failed state.
         }
       }
     } else {
       req.setAttribute(
-        ERROR_MESSAGE_ATTR,
-        "No se pudo crear la cuenta en este momento."
-      );
+          ERROR_MESSAGE_ATTR,
+          "No se pudo crear la cuenta en este momento.");
       repopulate(req, fullName, email);
       forwardToRegister(req, resp);
     }
   }
 
   private void repopulate(
-    HttpServletRequest req,
-    String fullName,
-    String email
-  ) {
+      HttpServletRequest req,
+      String fullName,
+      String email) {
     req.setAttribute("fullName", fullName);
     req.setAttribute("email", email);
   }
 
   private void forwardToRegister(
-    HttpServletRequest req,
-    HttpServletResponse resp
-  ) throws ServletException, IOException {
+      HttpServletRequest req,
+      HttpServletResponse resp) throws ServletException, IOException {
     try {
       req.getRequestDispatcher(REGISTER_VIEW).forward(req, resp);
     } catch (ServletException | IOException e) {
       try {
         resp.sendError(
-          HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-          "No se pudo mostrar la página de registro."
-        );
+            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+            "No se pudo mostrar la página de registro.");
       } catch (IOException ignored) {
         // Fall through since the response is already in a failed state.
       }

@@ -17,7 +17,7 @@ public class QuestionnaireSb1Servlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute("currentUser") == null) {
       resp.sendRedirect(req.getContextPath() + "/login");
@@ -29,7 +29,7 @@ public class QuestionnaireSb1Servlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute("currentUser") == null) {
       resp.sendRedirect(req.getContextPath() + "/login");
@@ -58,15 +58,18 @@ public class QuestionnaireSb1Servlet extends HttpServlet {
       try {
         int age = Integer.parseInt(ageStr.trim());
         ParticipantStore.getInstance().saveSurveyResponse(account.getEmail(), testName, fullName, "age", age);
-      } catch (NumberFormatException ignored) {}
+      } catch (NumberFormatException ignored) {
+      }
     }
 
     if (gender != null && !gender.trim().isEmpty()) {
-      ParticipantStore.getInstance().saveSurveyResponse(account.getEmail(), testName, fullName, "gender", gender.trim());
+      ParticipantStore.getInstance().saveSurveyResponse(account.getEmail(), testName, fullName, "gender",
+          gender.trim());
     }
 
     if (education != null && !education.trim().isEmpty()) {
-      ParticipantStore.getInstance().saveSurveyResponse(account.getEmail(), testName, fullName, "education", education.trim());
+      ParticipantStore.getInstance().saveSurveyResponse(account.getEmail(), testName, fullName, "education",
+          education.trim());
     }
 
     resp.sendRedirect(req.getContextPath() + "/cuestionario-sb-2");

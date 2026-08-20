@@ -21,15 +21,14 @@ public class ResetPasswordServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     String token = req.getParameter("token");
 
     if (isBlank(token)) {
       req.setAttribute(VALID_TOKEN_ATTR, false);
       req.setAttribute(
-        ERROR_MESSAGE_ATTR,
-        "No se proporcionó un token de recuperación. Solicita un nuevo enlace."
-      );
+          ERROR_MESSAGE_ATTR,
+          "No se proporcionó un token de recuperación. Solicita un nuevo enlace.");
       req.getRequestDispatcher(RESET_VIEW).forward(req, resp);
       return;
     }
@@ -38,9 +37,8 @@ public class ResetPasswordServlet extends HttpServlet {
     if (resetToken == null) {
       req.setAttribute(VALID_TOKEN_ATTR, false);
       req.setAttribute(
-        ERROR_MESSAGE_ATTR,
-        "El enlace de recuperación es inválido o ha expirado. Por favor, solicita uno nuevo."
-      );
+          ERROR_MESSAGE_ATTR,
+          "El enlace de recuperación es inválido o ha expirado. Por favor, solicita uno nuevo.");
       req.getRequestDispatcher(RESET_VIEW).forward(req, resp);
       return;
     }
@@ -53,7 +51,7 @@ public class ResetPasswordServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     String token = req.getParameter("token");
     String password = req.getParameter("password");
     String confirmPassword = req.getParameter("confirmPassword");
@@ -61,9 +59,8 @@ public class ResetPasswordServlet extends HttpServlet {
     if (isBlank(token)) {
       req.setAttribute(VALID_TOKEN_ATTR, false);
       req.setAttribute(
-        ERROR_MESSAGE_ATTR,
-        "El token de recuperación no es válido. Solicita un nuevo enlace."
-      );
+          ERROR_MESSAGE_ATTR,
+          "El token de recuperación no es válido. Solicita un nuevo enlace.");
       req.getRequestDispatcher(RESET_VIEW).forward(req, resp);
       return;
     }
@@ -72,9 +69,8 @@ public class ResetPasswordServlet extends HttpServlet {
     if (resetToken == null) {
       req.setAttribute(VALID_TOKEN_ATTR, false);
       req.setAttribute(
-        ERROR_MESSAGE_ATTR,
-        "El enlace de recuperación ha expirado o ya fue utilizado. Solicita uno nuevo."
-      );
+          ERROR_MESSAGE_ATTR,
+          "El enlace de recuperación ha expirado o ya fue utilizado. Solicita uno nuevo.");
       req.getRequestDispatcher(RESET_VIEW).forward(req, resp);
       return;
     }
@@ -108,18 +104,16 @@ public class ResetPasswordServlet extends HttpServlet {
       req.setAttribute(VALID_TOKEN_ATTR, true);
       req.setAttribute(TOKEN_ATTR, token);
       req.setAttribute(
-        ERROR_MESSAGE_ATTR,
-        "No fue posible restablecer la contraseña en este momento. Intenta de nuevo."
-      );
+          ERROR_MESSAGE_ATTR,
+          "No fue posible restablecer la contraseña en este momento. Intenta de nuevo.");
       req.getRequestDispatcher(RESET_VIEW).forward(req, resp);
       return;
     }
 
     HttpSession session = req.getSession();
     session.setAttribute(
-      FLASH_SUCCESS_ATTR,
-      "¡Tu contraseña ha sido restablecida exitosamente! Inicia sesión con tu nueva contraseña."
-    );
+        FLASH_SUCCESS_ATTR,
+        "¡Tu contraseña ha sido restablecida exitosamente! Inicia sesión con tu nueva contraseña.");
     resp.sendRedirect(req.getContextPath() + "/login");
   }
 

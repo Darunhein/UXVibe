@@ -18,7 +18,7 @@ public class CheersByeServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute("currentUser") == null) {
       resp.sendRedirect(req.getContextPath() + "/login");
@@ -30,10 +30,9 @@ public class CheersByeServlet extends HttpServlet {
     String participantName = (String) session.getAttribute("currentParticipantName");
 
     ParticipantReportBean report = ParticipantStore.getInstance().getReport(
-      account.getEmail(),
-      testName,
-      participantName
-    );
+        account.getEmail(),
+        testName,
+        participantName);
 
     req.setAttribute("report", report);
     req.setAttribute("testName", testName);

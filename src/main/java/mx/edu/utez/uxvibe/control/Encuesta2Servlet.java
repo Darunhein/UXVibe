@@ -18,7 +18,7 @@ public class Encuesta2Servlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute("currentUser") == null) {
       resp.sendRedirect(req.getContextPath() + "/login");
@@ -30,7 +30,7 @@ public class Encuesta2Servlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute("currentUser") == null) {
       resp.sendRedirect(req.getContextPath() + "/login");
@@ -54,12 +54,11 @@ public class Encuesta2Servlet extends HttpServlet {
       String value = req.getParameter(name);
       if (value != null && !value.trim().isEmpty()) {
         ParticipantStore.getInstance().saveSurveyResponse(
-          account.getEmail(),
-          testName,
-          participantName,
-          name,
-          value.trim()
-        );
+            account.getEmail(),
+            testName,
+            participantName,
+            name,
+            value.trim());
       }
     }
 
