@@ -19,6 +19,7 @@ import mx.edu.utez.uxvibe.model.TestItem;
 public interface TestDao {
   String INSERT_SQL = "INSERT INTO PRUEBAS (EMAIL_USUARIO, NOMBRE, DESCRIPCION, SYSTEM_LINK, CREATED_ON) VALUES (?, ?, ?, ?, ?)";
   String LIST_BY_USER_SQL = "SELECT NOMBRE, DESCRIPCION, SYSTEM_LINK, CREATED_ON FROM PRUEBAS WHERE LOWER(EMAIL_USUARIO)=LOWER(?) ORDER BY CREATED_ON, ID_PRUEBA";
+  String FIND_ID_SQL = "SELECT ID_PRUEBA FROM PRUEBAS WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE)=LOWER(?)";
   Map<String, List<TestItem>> IN_MEMORY_TESTS_BY_USER = new LinkedHashMap<>();
   String DELETE_TEST_SQL = "DELETE FROM PRUEBAS WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE)=LOWER(?)";
 
@@ -91,6 +92,38 @@ public interface TestDao {
       return new ArrayList<>();
     }
     return new ArrayList<>(cachedTests);
+  }
+
+  default long findIdByEmailAndName(String email, String testName) {
+    String normalizedEmail = normalizeEmail(email);
+    String normalizedName = testName == null ? "" : testName.trim();
+    if (!normalizedEmail.isEmpty() && !normalizedName.isEmpty()) {
+      try (
+          Connection conn = ConexionBD.getInstancia().getConnection();
+          PreparedStatement ps = conn.prepareStatement(FIND_ID_SQL)) {
+        ps.setString(1, normalizedEmail);
+        ps.setString(2, normalizedName);
+        try (ResultSet rs = ps.executeQuery()) {
+          if (rs.next()) {
+            long id = rs.getLong("ID_PRUEBA");
+            if (!rs.wasNull() && id > 0) {
+              return id;
+            }
+          }
+        }
+      } catch (SQLException e) {
+        if (!ConexionBD.isUnavailable(e)) {
+          e.printStackTrace();
+        }
+      }
+    }
+    return fallbackTestId(normalizedEmail, normalizedName);
+  }
+
+  private static long fallbackTestId(String email, String testName) {
+    String key = (email == null ? "" : email) + "|" + (testName == null ? "" : testName.toLowerCase(Locale.ROOT));
+    int hashed = Math.floorMod(key.hashCode(), 1_000_000_000);
+    return hashed == 0 ? 1L : hashed;
   }
 
   private static String normalizeEmail(String email) {

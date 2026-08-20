@@ -10,6 +10,7 @@ import mx.edu.utez.uxvibe.bean.ParticipantReportBean;
 import mx.edu.utez.uxvibe.dao.ParticipantDao;
 import mx.edu.utez.uxvibe.dao.RecordingDao;
 import mx.edu.utez.uxvibe.model.ParticipantItem;
+import mx.edu.utez.uxvibe.util.QuestionNumbers;
 
 public class ParticipantStore implements ParticipantDao, RecordingDao {
 
@@ -267,8 +268,14 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
         String q = row.get("question") == null ? null : String.valueOf(row.get("question"));
         Object ans = row.get("answer");
         Object numericObj = row.get("numeric");
-        if (q != null && ("audio".equalsIgnoreCase(q) || "audio_url".equalsIgnoreCase(q))) {
-          report.setAudioUrl(ans == null ? null : String.valueOf(ans));
+        Object audioData = row.get("audio");
+        if (QuestionNumbers.isAudioName(q)) {
+          if (audioData != null && !String.valueOf(audioData).trim().isEmpty()) {
+            report.setAudioUrl(String.valueOf(audioData));
+          }
+          if (ans != null && !String.valueOf(ans).trim().isEmpty()) {
+            report.setAudioFileName(String.valueOf(ans));
+          }
         } else {
           Map<String, Object> r = new LinkedHashMap<>();
           r.put("question", q);
