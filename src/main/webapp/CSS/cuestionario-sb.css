@@ -857,4 +857,41 @@ body {
     max-width: 100%;
     min-width: 0;
   }
+
+  .survey-navigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+
+    width: 100%;
+    margin-top: 30px;
+    box-sizing: border-box;
+  }
+
+
+  .btn-back,
+  .btn-next {
+    width: 115px;
+    min-width: 115px;
+    height: 40px;
+    margin: 0;
+    padding: 0 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    box-sizing: border-box;
+    font-size: 15px;
+    line-height: 1;
+  }
+
+  .btn-back img,
+  .btn-next img {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+
 }
