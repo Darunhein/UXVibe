@@ -15,10 +15,10 @@ import mx.edu.utez.uxvibe.model.UserRole;
 import mx.edu.utez.uxvibe.security.PasswordHasher;
 
 public interface UserDao {
-  String INSERT_SQL = "INSERT INTO USUARIOS (NOMBRE_COMPLETO, EMAIL, PASSWORD, ROL) VALUES (?, ?, ?, ?)";
-  String FIND_BY_EMAIL_SQL = "SELECT NOMBRE_COMPLETO, EMAIL, PASSWORD, ROL FROM USUARIOS WHERE LOWER(EMAIL)=LOWER(?)";
+  String INSERT_SQL = "INSERT INTO USUARIOS (NOMBRE_COMPLETO, EMAIL, PASSWORD) VALUES (?, ?, ?)";
+  String FIND_BY_EMAIL_SQL = "SELECT NOMBRE_COMPLETO, EMAIL, PASSWORD FROM USUARIOS WHERE LOWER(EMAIL)=LOWER(?)";
   String EXISTS_SQL = "SELECT 1 FROM USUARIOS WHERE LOWER(EMAIL)=LOWER(?)";
-  String LIST_SQL = "SELECT NOMBRE_COMPLETO, EMAIL, PASSWORD, ROL FROM USUARIOS ORDER BY ID_USUARIO";
+  String LIST_SQL = "SELECT NOMBRE_COMPLETO, EMAIL, PASSWORD FROM USUARIOS ORDER BY ID_USUARIO";
   String RESET_PASSWORD_SQL = "UPDATE USUARIOS SET PASSWORD = ? WHERE LOWER(EMAIL) = LOWER(?)";
   Map<String, UserAccount> IN_MEMORY_ACCOUNTS = initDefaultAccounts();
 
@@ -47,7 +47,6 @@ public interface UserDao {
       ps.setString(1, account.getFullName());
       ps.setString(2, email);
       ps.setString(3, hashedPassword);
-      ps.setString(4, account.getRole());
       if (ps.executeUpdate() > 0) {
         IN_MEMORY_ACCOUNTS.put(email, cloneAccount(account, email, hashedPassword));
         return true;
@@ -192,11 +191,9 @@ public interface UserDao {
     UserAccount account = new UserAccount();
     account.setFullName(rs.getString("NOMBRE_COMPLETO"));
     account.setEmail(rs.getString("EMAIL"));
-    account.setPassword(rs.getString("PASSWORD"));
-    account.setRole(rs.getString("ROL"));
-    if (account.getRole() == null || account.getRole().isEmpty()) {
-      account.setRole(UserRole.EVALUATOR);
-    }
+    String storedPassword = rs.getString("PASSWORD");
+    account.setPassword(storedPassword == null ? null : storedPassword.trim());
+    account.setRole(UserRole.EVALUATOR);
     return account;
   }
 

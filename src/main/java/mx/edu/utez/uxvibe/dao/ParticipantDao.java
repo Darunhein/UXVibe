@@ -1,6 +1,5 @@
 package mx.edu.utez.uxvibe.dao;
 
-import java.io.StringReader;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
@@ -23,11 +22,9 @@ import mx.edu.utez.uxvibe.model.ParticipantItem;
 import mx.edu.utez.uxvibe.util.QuestionNumbers;
 
 public interface ParticipantDao {
-  String INSERT_SQL = "INSERT INTO PARTICIPANTES (EMAIL_USUARIO, NOMBRE_PRUEBA, NOMBRE_PARTICIPANTE, DESCRIPCION, DURACION_MINUTOS, FECHA_COMPLETADO) VALUES (?, ?, ?, ?, ?, ?)";
-  String INSERT_SQL_ACCENT = "INSERT INTO PARTICIPANTES (EMAIL_USUARIO, NOMBRE_PRUEBA, NOMBRE_PARTICIPANTE, DESCRIPCION, DURACIÓN_MINUTOS, FECHA_COMPLETADO) VALUES (?, ?, ?, ?, ?, ?)";
+  String INSERT_SQL = "INSERT INTO PARTICIPANTES (EMAIL_USUARIO, NOMBRE_PRUEBA, NOMBRE_PARTICIPANTE, DESCRIPCION, DURACION_MINUTOS, FECHA_COMPLETADO) VALUES (?, ?, ?, ?, NUMTODSINTERVAL(?, 'MINUTE'), ?)";
   String FIND_PARTICIPANT_ID_SQL = "SELECT ID_PARTICIPANTE FROM PARTICIPANTES WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE_PRUEBA)=LOWER(?) AND LOWER(NOMBRE_PARTICIPANTE)=LOWER(?) ORDER BY ID_PARTICIPANTE DESC";
-  String UPDATE_COMPLETION_SQL = "UPDATE PARTICIPANTES SET DESCRIPCION = ?, DURACION_MINUTOS = ?, FECHA_COMPLETADO = ? WHERE ID_PARTICIPANTE = ?";
-  String UPDATE_COMPLETION_SQL_ACCENT = "UPDATE PARTICIPANTES SET DESCRIPCION = ?, DURACIÓN_MINUTOS = ?, FECHA_COMPLETADO = ? WHERE ID_PARTICIPANTE = ?";
+  String UPDATE_COMPLETION_SQL = "UPDATE PARTICIPANTES SET DESCRIPCION = ?, DURACION_MINUTOS = NUMTODSINTERVAL(?, 'MINUTE'), FECHA_COMPLETADO = ? WHERE ID_PARTICIPANTE = ?";
   String MERGE_RESPONSE_SQL = "MERGE INTO RESPUESTAS dest "
       + "USING (SELECT ? AS ID_PRUEBA, ? AS ID_PARTICIPANTE, ? AS NUMERO_PREGUNTA, ? AS RESPUESTA FROM dual) src "
       + "ON (dest.ID_PARTICIPANTE = src.ID_PARTICIPANTE AND dest.NUMERO_PREGUNTA = src.NUMERO_PREGUNTA) "
@@ -45,7 +42,6 @@ public interface ParticipantDao {
   String DELETE_PARTICIPANTES_BY_TEST_SQL = "DELETE FROM PARTICIPANTES WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE_PRUEBA)=LOWER(?)";
   String UPDATE_PARTICIPANT_NAME_SQL = "UPDATE PARTICIPANTES SET NOMBRE_PARTICIPANTE = ? WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE_PRUEBA)=LOWER(?) AND LOWER(NOMBRE_PARTICIPANTE)=LOWER(?)";
   String LIST_BY_USER_AND_TEST_SQL = "SELECT NOMBRE_PARTICIPANTE, DESCRIPCION, DURACION_MINUTOS, FECHA_COMPLETADO FROM PARTICIPANTES WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE_PRUEBA)=LOWER(?) ORDER BY FECHA_COMPLETADO, ID_PARTICIPANTE";
-  String LIST_BY_USER_AND_TEST_SQL_ACCENT = "SELECT NOMBRE_PARTICIPANTE, DESCRIPCION, DURACIÓN_MINUTOS AS DURACION_MINUTOS, FECHA_COMPLETADO FROM PARTICIPANTES WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE_PRUEBA)=LOWER(?) ORDER BY FECHA_COMPLETADO, ID_PARTICIPANTE";
   String LIST_RESPONSES_SQL = "SELECT r.NUMERO_PREGUNTA, r.RESPUESTA, r.AUDIO FROM RESPUESTAS r "
       + "JOIN PARTICIPANTES p ON p.ID_PARTICIPANTE = r.ID_PARTICIPANTE "
       + "WHERE LOWER(p.EMAIL_USUARIO)=LOWER(?) AND LOWER(p.NOMBRE_PRUEBA)=LOWER(?) AND LOWER(p.NOMBRE_PARTICIPANTE)=LOWER(?) "
@@ -126,9 +122,6 @@ public interface ParticipantDao {
 
     String cacheKey = normalizedEmail + "|" + normalizedTestName;
     List<ParticipantItem> participants = queryParticipants(LIST_BY_USER_AND_TEST_SQL, email, testName);
-    if (participants == null) {
-      participants = queryParticipants(LIST_BY_USER_AND_TEST_SQL_ACCENT, email, testName);
-    }
     if (participants != null) {
       IN_MEMORY_PARTICIPANTS.put(cacheKey, new ArrayList<>(participants));
       return participants;
@@ -193,17 +186,9 @@ public interface ParticipantDao {
         try (PreparedStatement ps = conn.prepareStatement(UPDATE_AUDIO_SQL)) {
           ps.setLong(1, testId);
           ps.setString(2, storedName);
-          setAudioColumn(ps, 3, audioData);
+          setAudioAsBlob(ps, 3, audioData);
           ps.setLong(4, responseId);
           return ps.executeUpdate() > 0;
-        } catch (SQLException clobFailed) {
-          try (PreparedStatement ps = conn.prepareStatement(UPDATE_AUDIO_SQL)) {
-            ps.setLong(1, testId);
-            ps.setString(2, storedName);
-            setAudioAsBlob(ps, 3, audioData);
-            ps.setLong(4, responseId);
-            return ps.executeUpdate() > 0;
-          }
         }
       }
       try (PreparedStatement ps = conn.prepareStatement(INSERT_AUDIO_SQL)) {
@@ -211,17 +196,8 @@ public interface ParticipantDao {
         ps.setLong(2, participantId);
         ps.setInt(3, QuestionNumbers.AUDIO);
         ps.setString(4, storedName);
-        setAudioColumn(ps, 5, audioData);
+        setAudioAsBlob(ps, 5, audioData);
         return ps.executeUpdate() > 0;
-      } catch (SQLException clobFailed) {
-        try (PreparedStatement ps = conn.prepareStatement(INSERT_AUDIO_SQL)) {
-          ps.setLong(1, testId);
-          ps.setLong(2, participantId);
-          ps.setInt(3, QuestionNumbers.AUDIO);
-          ps.setString(4, storedName);
-          setAudioAsBlob(ps, 5, audioData);
-          return ps.executeUpdate() > 0;
-        }
       }
     } catch (SQLException ex) {
       if (!ConexionBD.isUnavailable(ex)) {
@@ -409,7 +385,7 @@ public interface ParticipantDao {
       return -1;
     }
     LocalDateTime now = LocalDateTime.now(ZoneId.of("America/Mexico_City"));
-    boolean inserted = insertParticipant(
+    insertParticipant(
         INSERT_SQL,
         normalizedEmail,
         testName,
@@ -417,16 +393,6 @@ public interface ParticipantDao {
         description,
         durationMinutes,
         now);
-    if (!inserted) {
-      inserted = insertParticipant(
-          INSERT_SQL_ACCENT,
-          normalizedEmail,
-          testName,
-          resolvedName,
-          description,
-          durationMinutes,
-          now);
-    }
     Long created = findParticipantId(email, testName, resolvedName);
     return created == null ? -1 : created;
   }
@@ -493,9 +459,7 @@ public interface ParticipantDao {
       String description,
       int durationMinutes,
       LocalDateTime completedOn) {
-    if (!runCompletionUpdate(UPDATE_COMPLETION_SQL, participantId, description, durationMinutes, completedOn)) {
-      runCompletionUpdate(UPDATE_COMPLETION_SQL_ACCENT, participantId, description, durationMinutes, completedOn);
-    }
+    runCompletionUpdate(UPDATE_COMPLETION_SQL, participantId, description, durationMinutes, completedOn);
   }
 
   private static boolean runCompletionUpdate(
@@ -532,7 +496,7 @@ public interface ParticipantDao {
           ParticipantItem participant = new ParticipantItem();
           participant.setName(rs.getString("NOMBRE_PARTICIPANTE"));
           participant.setDescription(rs.getString("DESCRIPCION"));
-          participant.setDurationMinutes(rs.getInt("DURACION_MINUTOS"));
+          participant.setDurationMinutes(readDurationMinutes(rs));
           Timestamp completedOn = rs.getTimestamp("FECHA_COMPLETADO");
           if (completedOn != null) {
             participant.setCompletedOn(completedOn.toLocalDateTime());
@@ -563,14 +527,6 @@ public interface ParticipantDao {
     return null;
   }
 
-  private static void setAudioColumn(PreparedStatement ps, int index, String audioData) throws SQLException {
-    if (audioData == null) {
-      ps.setNull(index, Types.CLOB);
-      return;
-    }
-    ps.setCharacterStream(index, new StringReader(audioData), audioData.length());
-  }
-
   private static void setAudioAsBlob(PreparedStatement ps, int index, String audioData) throws SQLException {
     if (audioData == null) {
       ps.setNull(index, Types.BLOB);
@@ -585,6 +541,14 @@ public interface ParticipantDao {
 
   private static String readAudioColumn(ResultSet rs, String column) throws SQLException {
     try {
+      Blob blob = rs.getBlob(column);
+      if (blob != null && blob.length() > 0) {
+        byte[] bytes = blob.getBytes(1, (int) blob.length());
+        return Base64.getEncoder().encodeToString(bytes);
+      }
+    } catch (SQLException ignored) {
+    }
+    try {
       String asString = rs.getString(column);
       if (asString != null && !asString.isEmpty()) {
         return asString;
@@ -598,15 +562,37 @@ public interface ParticipantDao {
       }
     } catch (SQLException ignored) {
     }
-    try {
-      Blob blob = rs.getBlob(column);
-      if (blob != null && blob.length() > 0) {
-        byte[] bytes = blob.getBytes(1, (int) blob.length());
-        return Base64.getEncoder().encodeToString(bytes);
-      }
-    } catch (SQLException ignored) {
-    }
     return null;
+  }
+
+  private static int readDurationMinutes(ResultSet rs) throws SQLException {
+    try {
+      Duration duration = rs.getObject("DURACION_MINUTOS", Duration.class);
+      if (duration != null) {
+        return (int) Math.max(0, duration.toMinutes());
+      }
+    } catch (Exception ignored) {
+    }
+    Object raw = rs.getObject("DURACION_MINUTOS");
+    if (raw instanceof Duration) {
+      return (int) Math.max(0, ((Duration) raw).toMinutes());
+    }
+    if (raw == null) {
+      return 0;
+    }
+    String text = String.valueOf(raw).trim();
+    try {
+      int space = text.indexOf(' ');
+      String timePart = space >= 0 ? text.substring(space + 1) : text;
+      String[] bits = timePart.split(":");
+      if (bits.length >= 2) {
+        int hours = Integer.parseInt(bits[0].replace("+", "").replace("-", ""));
+        int minutes = Integer.parseInt(bits[1]);
+        return Math.max(0, hours * 60 + minutes);
+      }
+    } catch (NumberFormatException ignored) {
+    }
+    return 0;
   }
 
   private static Integer parseNumeric(String answer) {
