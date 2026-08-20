@@ -183,8 +183,48 @@ body {
 }
 
 .test-section__action-form--run {
-  justify-self: start;
-  transform: translateX(35px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.test-section__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  justify-self: center;
+}
+
+.test-section__action-form--delete {
+  position: static;
+  margin: 0;
+}
+
+.test-section__delete-button {
+  border: none;
+  border-radius: 8px;
+  padding: 6px 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #5b7689;
+  box-shadow: 0 3px 10px rgba(67, 73, 88, 0.18);
+  color: #ffffff;
+  font-family: Actor, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.test-section__delete-button:hover {
+  background: #4d6678;
+  transform: translateY(-1px);
+}
+
+.test-section__delete-button:active {
+  transform: translateY(0);
 }
 
 .test-section__action-form--menu {

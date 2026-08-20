@@ -41,7 +41,7 @@
 
             <button class="submit-btn" type="submit">
               <img class="submit-btn-icon" src="${pageContext.request.contextPath}/public/recuperar-contrasena/material-symbols-light-link.svg" alt="" />
-              <span>Enviar enlace de recuperación</span>
+              <span>Enviar enlace</span>
             </button>
           </form>
 

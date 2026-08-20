@@ -144,6 +144,15 @@ body {
   flex-shrink: 0;
 }
 
+.record-status {
+  color: #6d8f57;
+  background: rgba(109, 143, 87, 0.12);
+  border: 1px solid rgba(109, 143, 87, 0.25);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 600;
+}
+
 
 .status-item {
   display: flex;
@@ -353,6 +362,37 @@ ONDA DEL MICRÓFONO
 .btn-back img {
   width: 15px;
   height: 15px;
+}
+
+.btn-primary,
+.btn-secondary {
+  background: #5e7d95;
+  color: #ffffff;
+  border: 1px solid #4f6c82;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(94, 125, 149, 0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover:not(:disabled) {
+  background: #547189;
+  transform: translateY(-1px);
+}
+
+.btn-primary:active,
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 

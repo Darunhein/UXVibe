@@ -64,23 +64,41 @@
                   <p class="test-section__date">
                     La prueba se realizó el <%= test.getCreatedOnFormatted() %>
                   </p>
-                  <form class="test-section__action-form test-section__action-form--run" action="${pageContext.request.contextPath}/start-test" method="get">
-                    <input type="hidden" name="testName" value="<%= escapedTestName %>" />
-                    <button class="test-section__run-button" type="submit" aria-label="Ir a la prueba <%= escapedTestName %>">
-                      <img src="${pageContext.request.contextPath}/public/test-section/fluent-cursor-click-20-regular.svg" alt="" />
-                      <span>Ir a la prueba</span>
-                    </button>
-                  </form>
+
+
+                  <div class="test-section__actions">
+                    <form class="test-section__action-form test-section__action-form--run"
+                          action="${pageContext.request.contextPath}/start-test"
+                          method="get">
+                      <input type="hidden" name="testName" value="<%= escapedTestName %>" />
+                      <button class="test-section__run-button"
+                              type="submit"
+                              aria-label="Ir a la prueba <%= escapedTestName %>">
+                        <img src="${pageContext.request.contextPath}/public/test-section/fluent-cursor-click-20-regular.svg" alt="" />
+                        <span>Ir a la prueba</span>
+                      </button>
+                    </form>
+                    <form class="test-section__action-form test-section__action-form--delete"
+                          action="${pageContext.request.contextPath}/delete-test"
+                          method="post">
+                      <input type="hidden" name="testName" value="<%= escapedTestName %>" />
+                      <button class="test-section__delete-button"
+                              type="submit"
+                              aria-label="Borrar prueba <%= escapedTestName %>">
+                        Borrar
+                      </button>
+                    </form>
+                  </div>
+
+
                   <form class="test-section__action-form test-section__action-form--menu" action="${pageContext.request.contextPath}/participants" method="get">
                     <input type="hidden" name="testName" value="<%= escapedTestName %>" />
                     <button class="test-section__menu-button" type="submit" aria-label="Ver participantes de <%= escapedTestName %>">
                       <img src="${pageContext.request.contextPath}/public/test-section/Group-7.svg" alt="" />
                     </button>
                   </form>
-                  <form class="test-section__action-form test-section__action-form--delete" action="${pageContext.request.contextPath}/delete-test" method="post">
-                    <input type="hidden" name="testName" value="<%= escapedTestName %>" />
-                    <button class="test-section__delete-button" type="submit" aria-label="Borrar prueba <%= escapedTestName %>">Borrar</button>
-                  </form>
+
+
                 </article>
               <% } %>
             </section>

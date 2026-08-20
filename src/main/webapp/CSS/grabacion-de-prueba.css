@@ -319,7 +319,7 @@ body {
 
 .punto-de-prueba {
   margin: 0;
-  position: relative; /* antes: absolute */
+  position: relative;
   top: auto;
   left: auto;
   width: 100%;

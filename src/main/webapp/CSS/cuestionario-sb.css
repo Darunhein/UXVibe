@@ -17,6 +17,7 @@
 .questionnaire-container {
   width: 100%;
   min-height: 100vh;
+  overflow: hidden;
   background: #7e98ac;
   display: flex;
   align-items: center;
@@ -29,7 +30,7 @@
   min-height: auto;
   background-color: var(--white);
   border-radius: 12px;
-  padding: 30px 50px;
+  padding: 30px 50px 70px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
@@ -261,17 +262,20 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 12px 24px;
+  padding: 10px 16px;
   background-color: var(--primary-blue);
   color: var(--white);
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   font-family: "Inter", sans-serif;
-  font-size: 18px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  align-self: flex-end;
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  width: fit-content;
 }
 
 .btn-next:hover {
