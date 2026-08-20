@@ -44,6 +44,7 @@
                   </div>
 
                   <form id="resetPasswordForm" action="${pageContext.request.contextPath}/reset-password" method="post">
+                    <%@ include file="/WEB-INF/views/_csrf.jsp" %>
                     <input type="hidden" name="token" value="<%= token != null ? token : "" %>" />
 
                     <div class="reset-field-group">

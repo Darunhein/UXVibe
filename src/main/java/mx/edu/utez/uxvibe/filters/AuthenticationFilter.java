@@ -39,7 +39,9 @@ import mx.edu.utez.uxvibe.model.UserRole;
         "/participant-report",
         "/delete-test",
         "/delete-participant",
-        "/recording-upload"
+        "/recording-upload",
+        "/survey-submit",
+        "/participant-identity"
 })
 public class AuthenticationFilter implements Filter {
     @Override

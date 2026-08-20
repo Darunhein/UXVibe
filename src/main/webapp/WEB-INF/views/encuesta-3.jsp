@@ -32,6 +32,7 @@
 
         <form class="survey-form" id="surveyForm3" name="satisfaction3"
           action="${pageContext.request.contextPath}/encuesta-3" method="post">
+          <%@ include file="/WEB-INF/views/_csrf.jsp" %>
           <div class="questions-container">
             <% String[] qTexts3={ "El sistema funciona correctamente en mi navegador y no experimenté errores técnicos."
               , "La plataforma se adapta bien y es fácil de usar si accedo desde el teléfono móvil."

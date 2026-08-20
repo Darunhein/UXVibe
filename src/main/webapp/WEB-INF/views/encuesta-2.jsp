@@ -32,6 +32,7 @@
 
         <form class="survey-form" id="surveyForm2" name="satisfaction2"
           action="${pageContext.request.contextPath}/encuesta-2" method="post">
+          <%@ include file="/WEB-INF/views/_csrf.jsp" %>
           <div class="questions-container">
             <% String[] qTexts2={ "La información, textos y contenidos que ofrece la plataforma son claros y valiosos."
               , "El diseño visual de la página web es atractivo, limpio y moderno."

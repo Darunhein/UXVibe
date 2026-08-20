@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+  <% String emailVal="" ; Object emailAttr=request.getAttribute("email"); if (emailAttr !=null) {
+    emailVal=String.valueOf(emailAttr).replace("&", "&amp;" ).replace("\"", "&quot;").replace("<", "&lt;"); } %>
   <!doctype html>
   <html lang="es">
 
@@ -37,14 +39,14 @@
                 <% } %>
 
                   <form id="recoverForm" action="${pageContext.request.contextPath}/recover" method="post">
+                    <%@ include file="/WEB-INF/views/_csrf.jsp" %>
                     <label class="email-label" for="recuperar-email">Email</label>
                     <section class="email-row">
                       <div class="email-shell">
                         <img class="email-icon-panel" alt=""
                           src="${pageContext.request.contextPath}/public/recuperar-contrasena/merged-asset-1@2x.png" />
                         <input id="recuperar-email" class="form-input email-input" placeholder="Ingresa tu email"
-                          type="email" name="email" autocomplete="email" value="<%= request.getAttribute(" email")
-                          !=null ? request.getAttribute("email") : "" %>" required />
+                          type="email" name="email" autocomplete="email" value="<%= emailVal %>" required />
                       </div>
                     </section>
 

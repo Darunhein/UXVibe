@@ -37,3 +37,10 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Secrets and Oracle wallet ###
+src/main/resources/local-secrets.properties
+**/Wallet_Integradora/
+*.jks
+*.sso
+ewallet.pem

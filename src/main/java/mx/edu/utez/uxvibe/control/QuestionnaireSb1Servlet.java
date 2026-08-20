@@ -45,11 +45,15 @@ public class QuestionnaireSb1Servlet extends HttpServlet {
 
     if (fullName != null && !fullName.trim().isEmpty()) {
       fullName = fullName.trim();
+      String previousName = (String) session.getAttribute("currentParticipantName");
       session.setAttribute("currentParticipantName", fullName);
+      if (previousName != null && !previousName.trim().isEmpty() && !previousName.equals(fullName)) {
+        ParticipantStore.getInstance().renameParticipant(account.getEmail(), testName, previousName, fullName);
+      }
     } else {
       fullName = (String) session.getAttribute("currentParticipantName");
       if (fullName == null || fullName.trim().isEmpty()) {
-        fullName = "Participante " + (System.currentTimeMillis() % 1000);
+        fullName = mx.edu.utez.uxvibe.util.ParticipantIds.newFallbackName();
         session.setAttribute("currentParticipantName", fullName);
       }
     }

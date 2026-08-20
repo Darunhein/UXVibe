@@ -37,8 +37,6 @@ public interface TestDao {
         description,
         systemLink,
         LocalDate.now(ZoneId.of("America/Mexico_City")));
-    IN_MEMORY_TESTS_BY_USER.computeIfAbsent(normalizedEmail, key -> new ArrayList<>()).add(test);
-
     try (
         Connection conn = ConexionBD.getInstancia().getConnection();
         PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
@@ -48,7 +46,12 @@ public interface TestDao {
       ps.setString(4, test.getSystemLink());
       ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("America/Mexico_City"))));
       ps.executeUpdate();
+      IN_MEMORY_TESTS_BY_USER.computeIfAbsent(normalizedEmail, key -> new ArrayList<>()).add(test);
     } catch (SQLException e) {
+      if (ConexionBD.isUnavailable(e)) {
+        IN_MEMORY_TESTS_BY_USER.computeIfAbsent(normalizedEmail, key -> new ArrayList<>()).add(test);
+        return;
+      }
       e.printStackTrace();
     }
   }
@@ -77,10 +80,8 @@ public interface TestDao {
           tests.add(test);
         }
       }
-      if (!tests.isEmpty()) {
-        IN_MEMORY_TESTS_BY_USER.put(normalizedEmail, new ArrayList<>(tests));
-        return tests;
-      }
+      IN_MEMORY_TESTS_BY_USER.put(normalizedEmail, new ArrayList<>(tests));
+      return tests;
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -102,19 +103,23 @@ public interface TestDao {
     if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty()) {
       return false;
     }
+    boolean deletedOnDb = false;
+    int affected = 0;
     try (
         Connection conn = ConexionBD.getInstancia().getConnection();
         PreparedStatement ps = conn.prepareStatement(DELETE_TEST_SQL)) {
       ps.setString(1, normalizedEmail);
       ps.setString(2, normalizedTestName);
-      ps.executeUpdate();
+      affected = ps.executeUpdate();
+      deletedOnDb = true;
     } catch (SQLException ex) {
       ex.printStackTrace();
     }
+    boolean removedFromMemory = false;
     List<TestItem> list = IN_MEMORY_TESTS_BY_USER.get(normalizedEmail);
     if (list != null) {
-      list.removeIf(t -> normalizedTestName.equals(t.getName()));
+      removedFromMemory = list.removeIf(t -> t.getName() != null && t.getName().equalsIgnoreCase(normalizedTestName));
     }
-    return true;
+    return (deletedOnDb && affected > 0) || (!deletedOnDb && removedFromMemory);
   }
 }

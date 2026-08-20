@@ -15,6 +15,12 @@ public class CancelTestServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws IOException {
+    resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Cancela la prueba desde el menú de grabación.");
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+      throws IOException {
     HttpSession session = req.getSession(false);
     String role = null;
     if (session != null) {

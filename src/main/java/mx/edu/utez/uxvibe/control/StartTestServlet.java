@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import mx.edu.utez.uxvibe.util.ParticipantIds;
 
 @WebServlet(value = "/start-test")
 public class StartTestServlet extends HttpServlet {
@@ -20,6 +21,11 @@ public class StartTestServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Usa el botón de la lista de pruebas.");
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     HttpSession session = req.getSession(false);
     if (session == null || session.getAttribute(CURRENT_USER_ATTR) == null) {
       resp.sendRedirect(req.getContextPath() + "/login");
@@ -37,9 +43,7 @@ public class StartTestServlet extends HttpServlet {
         CURRENT_TEST_STARTED_AT_ATTR,
         LocalDateTime.now(ZoneId.of("America/Mexico_City")));
     session.setAttribute(CURRENT_TEST_COMPLETION_RECORDED_ATTR, Boolean.FALSE);
-    session.setAttribute(
-        CURRENT_PARTICIPANT_NAME_ATTR,
-        "Participante " + (System.currentTimeMillis() % 1000));
+    session.setAttribute(CURRENT_PARTICIPANT_NAME_ATTR, ParticipantIds.newFallbackName());
 
     resp.sendRedirect(req.getContextPath() + "/terms");
   }

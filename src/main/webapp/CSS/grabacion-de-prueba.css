@@ -318,6 +318,11 @@ body {
   cursor: pointer;
 }
 
+.pause-menu__item-form {
+  margin: 0;
+  width: 100%;
+}
+
 .pause-menu__item--button {
   width: 100%;
 }

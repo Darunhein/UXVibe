@@ -40,6 +40,7 @@
         </div>
 
         <form class="survey-form" id="impactForm" action="${pageContext.request.contextPath}/sam-2" method="post">
+          <%@ include file="/WEB-INF/views/_csrf.jsp" %>
           <div class="scale-options">
             <% for (int i=1; i <=9; i++) { %>
               <label class="scale-option" for="rating<%= i %>">

@@ -25,6 +25,8 @@ public interface ParticipantDao {
   String DELETE_PARTICIPANT_SQL = "DELETE FROM PARTICIPANTES WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE_PRUEBA)=LOWER(?) AND LOWER(NOMBRE_PARTICIPANTE)=LOWER(?)";
   String DELETE_RESPONSES_BY_TEST_SQL = "DELETE FROM RESPUESTAS WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE_PRUEBA)=LOWER(?)";
   String DELETE_PARTICIPANTES_BY_TEST_SQL = "DELETE FROM PARTICIPANTES WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE_PRUEBA)=LOWER(?)";
+  String UPDATE_PARTICIPANT_NAME_SQL = "UPDATE PARTICIPANTES SET NOMBRE_PARTICIPANTE = ? WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE_PRUEBA)=LOWER(?) AND LOWER(NOMBRE_PARTICIPANTE)=LOWER(?)";
+  String UPDATE_RESPONSE_PARTICIPANT_SQL = "UPDATE RESPUESTAS SET PARTICIPANTE = ? WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE_PRUEBA)=LOWER(?) AND LOWER(PARTICIPANTE)=LOWER(?)";
   String LIST_BY_USER_AND_TEST_SQL = "SELECT NOMBRE_PARTICIPANTE, DESCRIPCION, DURACION_MINUTOS, FECHA_COMPLETADO FROM PARTICIPANTES WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE_PRUEBA)=LOWER(?) ORDER BY FECHA_COMPLETADO, ID_PARTICIPANTE";
   // omit FECHA in select because some schemas don't include that column
   String LIST_RESPONSES_SQL = "SELECT PREGUNTA, RESPUESTA, VALOR_NUMERICO FROM RESPUESTAS WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE_PRUEBA)=LOWER(?) AND LOWER(PARTICIPANTE)=LOWER(?) ORDER BY 1";
@@ -122,17 +124,8 @@ public interface ParticipantDao {
           participants.add(participant);
         }
       }
-      if (!participants.isEmpty()) {
-        IN_MEMORY_PARTICIPANTS.put(cacheKey, new ArrayList<>(participants));
-        // log loaded participant names
-        StringBuilder names = new StringBuilder();
-        for (ParticipantItem p : participants) {
-          names.append(p.getName()).append(",");
-        }
-        LOGGER.info("listByUserAndTest loaded " + participants.size() + " participants for user="
-            + normalizeEmail(email) + ", test=" + safeTestName(testName) + ". names=" + names.toString());
-        return participants;
-      }
+      IN_MEMORY_PARTICIPANTS.put(cacheKey, new ArrayList<>(participants));
+      return participants;
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -209,7 +202,7 @@ public interface ParticipantDao {
     if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty() || participantName == null) {
       return false;
     }
-    // delete responses
+    int affected = 0;
     try (
         Connection conn = ConexionBD.getInstancia().getConnection();
         PreparedStatement ps = conn.prepareStatement(DELETE_PARTICIPANT_RESPONSES_SQL)) {
@@ -220,22 +213,63 @@ public interface ParticipantDao {
     } catch (SQLException ex) {
       ex.printStackTrace();
     }
-    // delete participant row
     try (
         Connection conn = ConexionBD.getInstancia().getConnection();
         PreparedStatement ps2 = conn.prepareStatement(DELETE_PARTICIPANT_SQL)) {
       ps2.setString(1, normalizedEmail);
       ps2.setString(2, normalizedTestName);
       ps2.setString(3, participantName);
-      ps2.executeUpdate();
+      affected = ps2.executeUpdate();
     } catch (SQLException ex) {
       ex.printStackTrace();
     }
-    // remove from in-memory participants cache
+    boolean removedFromMemory = false;
     String cacheKey = normalizedEmail + "|" + normalizedTestName;
     List<ParticipantItem> list = IN_MEMORY_PARTICIPANTS.get(cacheKey);
     if (list != null) {
-      list.removeIf(p -> participantName.equals(p.getName()));
+      removedFromMemory = list.removeIf(p -> p.getName() != null && p.getName().equalsIgnoreCase(participantName));
+    }
+    return affected > 0 || removedFromMemory;
+  }
+
+  default boolean renameParticipant(String email, String testName, String fromName, String toName) {
+    String normalizedEmail = normalizeEmail(email);
+    String normalizedTestName = normalizeText(testName);
+    if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty() || fromName == null || toName == null
+        || toName.trim().isEmpty() || fromName.equals(toName.trim())) {
+      return false;
+    }
+    String trimmedTo = toName.trim();
+    try (
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(UPDATE_RESPONSE_PARTICIPANT_SQL)) {
+      ps.setString(1, trimmedTo);
+      ps.setString(2, normalizedEmail);
+      ps.setString(3, normalizedTestName);
+      ps.setString(4, fromName);
+      ps.executeUpdate();
+    } catch (SQLException ex) {
+      LOGGER.log(java.util.logging.Level.WARNING, "Could not rename responses", ex);
+    }
+    try (
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(UPDATE_PARTICIPANT_NAME_SQL)) {
+      ps.setString(1, trimmedTo);
+      ps.setString(2, normalizedEmail);
+      ps.setString(3, normalizedTestName);
+      ps.setString(4, fromName);
+      ps.executeUpdate();
+    } catch (SQLException ex) {
+      LOGGER.log(java.util.logging.Level.WARNING, "Could not rename participant row", ex);
+    }
+    String cacheKey = normalizedEmail + "|" + normalizedTestName;
+    List<ParticipantItem> list = IN_MEMORY_PARTICIPANTS.get(cacheKey);
+    if (list != null) {
+      for (ParticipantItem item : list) {
+        if (item.getName() != null && item.getName().equalsIgnoreCase(fromName)) {
+          item.setName(trimmedTo);
+        }
+      }
     }
     return true;
   }

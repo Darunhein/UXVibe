@@ -32,6 +32,7 @@
 
         <form class="survey-form" id="surveyForm1" name="satisfaction"
           action="${pageContext.request.contextPath}/encuesta-1" method="post">
+          <%@ include file="/WEB-INF/views/_csrf.jsp" %>
           <div class="questions-container">
             <% String[] qTexts1={ "Me resultó fácil aprender a navegar por esta página/sistema web."
               , "La estructura del menú y los enlaces es intuitiva y sé dónde encontrar la información."

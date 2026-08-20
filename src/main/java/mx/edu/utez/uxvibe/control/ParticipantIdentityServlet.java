@@ -39,7 +39,7 @@ public class ParticipantIdentityServlet extends HttpServlet {
     java.util.Enumeration<String> params = req.getParameterNames();
     while (params.hasMoreElements()) {
       String name = params.nextElement();
-      if ("participantName".equals(name)) {
+      if ("participantName".equals(name) || "_csrf".equals(name)) {
         continue;
       }
       String[] values = req.getParameterValues(name);

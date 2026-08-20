@@ -27,14 +27,14 @@ public class SurveySubmissionServlet extends HttpServlet {
     String participantName = (String) session.getAttribute(
         "currentParticipantName");
     if (participantName == null || participantName.trim().isEmpty()) {
-      participantName = "Participante " + (System.currentTimeMillis() % 1000);
+      participantName = mx.edu.utez.uxvibe.util.ParticipantIds.newFallbackName();
       session.setAttribute("currentParticipantName", participantName);
     }
 
     Enumeration<String> parameterNames = req.getParameterNames();
     while (parameterNames.hasMoreElements()) {
       String name = parameterNames.nextElement();
-      if ("submit".equalsIgnoreCase(name)) {
+      if ("submit".equalsIgnoreCase(name) || "_csrf".equals(name)) {
         continue;
       }
       String[] values = req.getParameterValues(name);

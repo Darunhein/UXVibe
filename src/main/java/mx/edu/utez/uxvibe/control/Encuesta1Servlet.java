@@ -41,14 +41,14 @@ public class Encuesta1Servlet extends HttpServlet {
     String testName = (String) session.getAttribute("currentTestName");
     String participantName = (String) session.getAttribute("currentParticipantName");
     if (participantName == null || participantName.trim().isEmpty()) {
-      participantName = "Participante " + (System.currentTimeMillis() % 1000);
+      participantName = mx.edu.utez.uxvibe.util.ParticipantIds.newFallbackName();
       session.setAttribute("currentParticipantName", participantName);
     }
 
     Enumeration<String> parameterNames = req.getParameterNames();
     while (parameterNames.hasMoreElements()) {
       String name = parameterNames.nextElement();
-      if ("submit".equalsIgnoreCase(name)) {
+      if ("submit".equalsIgnoreCase(name) || "_csrf".equals(name)) {
         continue;
       }
       String value = req.getParameter(name);

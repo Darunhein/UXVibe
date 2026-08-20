@@ -25,6 +25,7 @@
             <main class="frame">
               <form class="registro-form" id="registroForm" action="${pageContext.request.contextPath}/register"
                 method="post">
+                <%@ include file="/WEB-INF/views/_csrf.jsp" %>
                 <div class="registro-field">
                   <label class="registro-label-name" for="nombre-completo">Nombre completo</label>
                   <div class="registro-input-shell">

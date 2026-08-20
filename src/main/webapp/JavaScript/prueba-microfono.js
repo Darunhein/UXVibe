@@ -301,9 +301,14 @@
       const fileName = "mic-test-" + Date.now() + ".webm";
       const formData = new FormData();
       formData.append("file", recordedBlob, fileName);
-      
+      const csrf = document.body.dataset.csrf || "";
+      if (csrf) {
+        formData.append("_csrf", csrf);
+      }
+
       fetch(ctx + "/recording-upload", {
         method: "POST",
+        headers: csrf ? { "X-CSRF-Token": csrf } : {},
         body: formData
       }).catch(function () { });
     };

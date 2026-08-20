@@ -66,7 +66,12 @@ public class LoginServlet extends HttpServlet {
       return;
     }
 
-    HttpSession session = req.getSession();
+    HttpSession previous = req.getSession(false);
+    if (previous != null) {
+      previous.invalidate();
+    }
+    HttpSession session = req.getSession(true);
+    account.setPassword(null);
     session.setAttribute(CURRENT_USER_ATTR, account);
     redirectToHome(req, resp, account);
   }

@@ -12,24 +12,18 @@ import java.util.Map;
 import mx.edu.utez.uxvibe.ConexionBD;
 import mx.edu.utez.uxvibe.model.UserAccount;
 import mx.edu.utez.uxvibe.model.UserRole;
+import mx.edu.utez.uxvibe.security.PasswordHasher;
 
 public interface UserDao {
   String INSERT_SQL = "INSERT INTO USUARIOS (NOMBRE_COMPLETO, EMAIL, PASSWORD, ROL) VALUES (?, ?, ?, ?)";
-  String AUTHENTICATE_SQL = "SELECT NOMBRE_COMPLETO, EMAIL, PASSWORD, ROL FROM USUARIOS WHERE LOWER(EMAIL)=LOWER(?) AND PASSWORD = ?";
+  String FIND_BY_EMAIL_SQL = "SELECT NOMBRE_COMPLETO, EMAIL, PASSWORD, ROL FROM USUARIOS WHERE LOWER(EMAIL)=LOWER(?)";
   String EXISTS_SQL = "SELECT 1 FROM USUARIOS WHERE LOWER(EMAIL)=LOWER(?)";
   String LIST_SQL = "SELECT NOMBRE_COMPLETO, EMAIL, PASSWORD, ROL FROM USUARIOS ORDER BY ID_USUARIO";
   String RESET_PASSWORD_SQL = "UPDATE USUARIOS SET PASSWORD = ? WHERE LOWER(EMAIL) = LOWER(?)";
   Map<String, UserAccount> IN_MEMORY_ACCOUNTS = initDefaultAccounts();
 
   static Map<String, UserAccount> initDefaultAccounts() {
-    Map<String, UserAccount> map = new LinkedHashMap<>();
-    UserAccount defaultUser = new UserAccount();
-    defaultUser.setFullName("Free Collector Prime");
-    defaultUser.setEmail("freecollectorprime@gmail.com");
-    defaultUser.setPassword("DaRenHein869");
-    defaultUser.setRole(UserRole.EVALUATOR);
-    map.put("freecollectorprime@gmail.com", defaultUser);
-    return map;
+    return new LinkedHashMap<>();
   }
 
   default boolean register(UserAccount account) {
@@ -45,23 +39,31 @@ public interface UserDao {
       return false;
     }
 
+    String hashedPassword = PasswordHasher.hash(account.getPassword());
+
     try (
         Connection conn = ConexionBD.getInstancia().getConnection();
         PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
       ps.setString(1, account.getFullName());
       ps.setString(2, email);
-      ps.setString(3, account.getPassword());
+      ps.setString(3, hashedPassword);
       ps.setString(4, account.getRole());
       if (ps.executeUpdate() > 0) {
-        IN_MEMORY_ACCOUNTS.put(email, cloneAccount(account, email));
+        IN_MEMORY_ACCOUNTS.put(email, cloneAccount(account, email, hashedPassword));
         return true;
       }
+      return false;
     } catch (SQLException e) {
+      if (e.getErrorCode() == 1) {
+        return false;
+      }
+      if (ConexionBD.isUnavailable(e)) {
+        IN_MEMORY_ACCOUNTS.put(email, cloneAccount(account, email, hashedPassword));
+        return true;
+      }
       e.printStackTrace();
+      return false;
     }
-
-    IN_MEMORY_ACCOUNTS.put(email, cloneAccount(account, email));
-    return true;
   }
 
   default UserAccount authenticate(String email, String password) {
@@ -71,25 +73,31 @@ public interface UserDao {
 
     try (
         Connection conn = ConexionBD.getInstancia().getConnection();
-        PreparedStatement ps = conn.prepareStatement(AUTHENTICATE_SQL)) {
+        PreparedStatement ps = conn.prepareStatement(FIND_BY_EMAIL_SQL)) {
       ps.setString(1, normalizeEmail(email));
-      ps.setString(2, password);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
-          return mapUser(rs);
+          UserAccount account = mapUser(rs);
+          if (!PasswordHasher.matches(password, account.getPassword())) {
+            return null;
+          }
+          if (!PasswordHasher.isHashed(account.getPassword())) {
+            upgradeStoredPassword(normalizeEmail(email), password);
+          }
+          return publicCopy(account);
         }
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      if (!ConexionBD.isUnavailable(e)) {
+        e.printStackTrace();
+      }
     }
 
     UserAccount account = IN_MEMORY_ACCOUNTS.get(normalizeEmail(email));
-    if (account == null) {
+    if (account == null || !PasswordHasher.matches(password, account.getPassword())) {
       return null;
     }
-    return password.equals(account.getPassword())
-        ? cloneAccount(account, normalizeEmail(email))
-        : null;
+    return publicCopy(account);
   }
 
   default boolean exists(String email) {
@@ -135,32 +143,49 @@ public interface UserDao {
     if (email == null || newPassword == null) {
       return false;
     }
+    String hashedPassword = PasswordHasher.hash(newPassword);
     String normalizedEmail = normalizeEmail(email);
     try (
         Connection conn = ConexionBD.getInstancia().getConnection();
         PreparedStatement ps = conn.prepareStatement(RESET_PASSWORD_SQL)) {
-      ps.setString(1, newPassword);
+      ps.setString(1, hashedPassword);
       ps.setString(2, normalizedEmail);
       int updated = ps.executeUpdate();
       if (updated > 0) {
-        // update in-memory cache if present
         UserAccount account = IN_MEMORY_ACCOUNTS.get(normalizedEmail);
         if (account != null) {
-          account.setPassword(newPassword);
+          account.setPassword(hashedPassword);
         }
         return true;
       }
     } catch (SQLException e) {
-      // Fallback to in-memory
+      if (!ConexionBD.isUnavailable(e)) {
+        return false;
+      }
     }
 
-    // If DB update did not run, fall back to in-memory update if exists
     UserAccount account = IN_MEMORY_ACCOUNTS.get(normalizedEmail);
     if (account != null) {
-      account.setPassword(newPassword);
+      account.setPassword(hashedPassword);
       return true;
     }
     return false;
+  }
+
+  private static void upgradeStoredPassword(String email, String rawPassword) {
+    try (
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(RESET_PASSWORD_SQL)) {
+      String hashed = PasswordHasher.hash(rawPassword);
+      ps.setString(1, hashed);
+      ps.setString(2, email);
+      ps.executeUpdate();
+      UserAccount cached = IN_MEMORY_ACCOUNTS.get(email);
+      if (cached != null) {
+        cached.setPassword(hashed);
+      }
+    } catch (SQLException ignored) {
+    }
   }
 
   private static UserAccount mapUser(ResultSet rs) throws SQLException {
@@ -175,11 +200,20 @@ public interface UserDao {
     return account;
   }
 
-  private static UserAccount cloneAccount(UserAccount source, String email) {
+  private static UserAccount cloneAccount(UserAccount source, String email, String password) {
     UserAccount account = new UserAccount();
     account.setFullName(source.getFullName());
     account.setEmail(email);
-    account.setPassword(source.getPassword());
+    account.setPassword(password);
+    account.setRole(source.getRole());
+    return account;
+  }
+
+  private static UserAccount publicCopy(UserAccount source) {
+    UserAccount account = new UserAccount();
+    account.setFullName(source.getFullName());
+    account.setEmail(source.getEmail());
+    account.setPassword(null);
     account.setRole(source.getRole());
     return account;
   }

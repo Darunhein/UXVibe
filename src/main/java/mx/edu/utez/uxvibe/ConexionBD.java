@@ -7,9 +7,6 @@ import java.nio.file.Paths;
 import java.sql.*;
 
 public class ConexionBD {
-    private static final String USUARIO = "ADMIN";
-    private static final String PASSWORD = "Alfaro180107";
-    private static final String WALLET_PASSWORD = "Alfaro180107";
     private static final String NOMBRE_WALLET = "Wallet_Integradora";
     private static final String JDBC_URL = "jdbc:oracle:thin:@"
             + "(description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.us-phoenix-1.oraclecloud.com))(connect_data=(service_name=gc5a7c8f4fbdb11_integradora_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))";
@@ -38,12 +35,49 @@ public class ConexionBD {
         } catch (ClassNotFoundException e) {
             throw new SQLException("No se encontró ojdbc11. Rebuild del WAR y redeploy en Tomcat.", e);
         }
+        String usuario = AppSettings.get("ORACLE_USER", "oracle.user");
+        String password = AppSettings.get("ORACLE_PASSWORD", "oracle.password");
+        String walletPassword = AppSettings.get("ORACLE_WALLET_PASSWORD", "oracle.wallet.password");
+        if (isBlank(usuario) || isBlank(password) || isBlank(walletPassword)) {
+            throw new SQLException(
+                    "Faltan credenciales Oracle. Define ORACLE_USER, ORACLE_PASSWORD y ORACLE_WALLET_PASSWORD "
+                            + "o crea src/main/resources/local-secrets.properties (ver local-secrets.properties.example).");
+        }
         String rutaWallet = resolverRutaWallet();
         System.setProperty("javax.net.ssl.trustStore", rutaWallet + "/" + TRUSTSTORE);
-        System.setProperty("javax.net.ssl.trustStorePassword", WALLET_PASSWORD);
+        System.setProperty("javax.net.ssl.trustStorePassword", walletPassword);
         System.setProperty("javax.net.ssl.keyStore", rutaWallet + "/" + KEYSTORE);
-        System.setProperty("javax.net.ssl.keyStorePassword", WALLET_PASSWORD);
-        return DriverManager.getConnection(JDBC_URL, USUARIO, PASSWORD);
+        System.setProperty("javax.net.ssl.keyStorePassword", walletPassword);
+        return DriverManager.getConnection(JDBC_URL, usuario, password);
+    }
+
+    public static boolean isUnavailable(SQLException e) {
+        if (e == null) {
+            return false;
+        }
+        String state = e.getSQLState();
+        if (state != null && state.startsWith("08")) {
+            return true;
+        }
+        int code = e.getErrorCode();
+        if (code == 17002 || code == 17008 || code == 18730) {
+            return true;
+        }
+        String message = e.getMessage();
+        if (message == null) {
+            return e.getCause() instanceof SQLException && isUnavailable((SQLException) e.getCause());
+        }
+        String lower = message.toLowerCase();
+        return lower.contains("faltan credenciales")
+                || lower.contains("no se encontró la carpeta")
+                || lower.contains("network adapter")
+                || lower.contains("i/o error")
+                || lower.contains("io error")
+                || lower.contains("could not establish");
+    }
+
+    private static boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     private static String resolverRutaWallet() throws SQLException {

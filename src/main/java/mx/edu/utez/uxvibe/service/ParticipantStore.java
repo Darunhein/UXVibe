@@ -91,19 +91,10 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
     }
 
     List<ParticipantItem> participants = participantDao.listByUserAndTest(email, testName);
-    if (!participants.isEmpty()) {
-      participantsByUserAndTest.put(
-          normalizedEmail + "|" + normalizedTestName,
-          new ArrayList<>(participants));
-      return new ArrayList<>(participants);
-    }
-
-    List<ParticipantItem> cachedParticipants = participantsByUserAndTest.get(
-        normalizedEmail + "|" + normalizedTestName);
-    if (cachedParticipants == null) {
-      return new ArrayList<>();
-    }
-    return new ArrayList<>(cachedParticipants);
+    participantsByUserAndTest.put(
+        normalizedEmail + "|" + normalizedTestName,
+        new ArrayList<>(participants));
+    return new ArrayList<>(participants);
   }
 
   public synchronized void saveSurveyResponse(
@@ -180,6 +171,34 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
     return ok;
   }
 
+  @Override
+  public synchronized boolean renameParticipant(String email, String testName, String fromName, String toName) {
+    if (fromName == null || toName == null || toName.trim().isEmpty() || fromName.equals(toName.trim())) {
+      return false;
+    }
+    boolean renamed = participantDao.renameParticipant(email, testName, fromName, toName.trim());
+    recordingDao.renameRecordingParticipant(email, testName, fromName, toName.trim());
+
+    String oldKey = normalize(email) + "|" + normalize(testName) + "|" + normalize(fromName);
+    String newKey = normalize(email) + "|" + normalize(testName) + "|" + normalize(toName);
+    ParticipantReportBean report = reportsByParticipant.remove(oldKey);
+    if (report != null) {
+      report.setParticipantName(toName.trim());
+      reportsByParticipant.put(newKey, report);
+    }
+    String listKey = normalize(email) + "|" + normalize(testName);
+    List<ParticipantItem> list = participantsByUserAndTest.get(listKey);
+    if (list != null) {
+      for (ParticipantItem item : list) {
+        if (item.getName() != null && item.getName().equalsIgnoreCase(fromName)) {
+          item.setName(toName.trim());
+        }
+      }
+    }
+    participantNameByUserAndTest.put(listKey, toName.trim());
+    return renamed;
+  }
+
   public synchronized void saveAudioAsset(
       String email,
       String testName,
@@ -214,11 +233,6 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
           report.getDurationMinutes() != null ? report.getDurationMinutes() * 60 : null);
     } catch (Throwable t) {
       t.printStackTrace();
-    }
-
-    try {
-      participantDao.saveSurveyResponseToDb(email, testName, rememberedParticipantName, "audio", audioUrl, null);
-    } catch (Throwable ignore) {
     }
   }
 

@@ -26,7 +26,7 @@ public class CompleteTestServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    processCompletion(req, resp);
+    resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Completar la prueba requiere confirmar desde el formulario.");
   }
 
   @Override
@@ -106,7 +106,7 @@ public class CompleteTestServlet extends HttpServlet {
     if (participantName instanceof String && !((String) participantName).trim().isEmpty()) {
       return ((String) participantName).trim();
     }
-    String fallbackName = "Participante " + (System.currentTimeMillis() % 1000);
+    String fallbackName = mx.edu.utez.uxvibe.util.ParticipantIds.newFallbackName();
     session.setAttribute(CURRENT_PARTICIPANT_NAME_ATTR, fallbackName);
     return fallbackName;
   }

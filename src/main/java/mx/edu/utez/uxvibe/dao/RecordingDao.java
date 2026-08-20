@@ -36,8 +36,8 @@ public interface RecordingDao {
       "ORDER BY ID_GRABACION DESC";
 
   String DELETE_BY_TEST_SQL = "DELETE FROM GRABACIONES WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE_PRUEBA)=LOWER(?)";
-
   String DELETE_BY_PARTICIPANT_SQL = "DELETE FROM GRABACIONES WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE_PRUEBA)=LOWER(?) AND LOWER(NOMBRE_PARTICIPANTE)=LOWER(?)";
+  String UPDATE_PARTICIPANT_SQL = "UPDATE GRABACIONES SET NOMBRE_PARTICIPANTE = ? WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE_PRUEBA)=LOWER(?) AND LOWER(NOMBRE_PARTICIPANTE)=LOWER(?)";
 
   Map<String, Map<String, Object>> IN_MEMORY_RECORDINGS = new LinkedHashMap<>();
 
@@ -168,6 +168,44 @@ public interface RecordingDao {
       return true;
     } catch (SQLException e) {
       LOGGER.log(Level.WARNING, "Database delete recordings by participant failed: " + e.getMessage());
+      return true;
+    }
+  }
+
+  default boolean renameRecordingParticipant(String email, String testName, String fromName, String toName) {
+    if (fromName == null || toName == null || toName.trim().isEmpty() || fromName.equals(toName.trim())) {
+      return false;
+    }
+    String normalizedEmail = normalizeEmail(email);
+    String normalizedTestName = normalizeText(testName);
+    String fromKey = normalizedEmail + "|" + normalizedTestName + "|" + normalizeText(fromName) + "|";
+    String toPrefix = normalizedEmail + "|" + normalizedTestName + "|" + normalizeText(toName) + "|";
+    Map<String, Map<String, Object>> moved = new LinkedHashMap<>();
+    IN_MEMORY_RECORDINGS.keySet().removeIf(k -> {
+      if (k.startsWith(fromKey)) {
+        Map<String, Object> data = IN_MEMORY_RECORDINGS.get(k);
+        if (data != null) {
+          data.put("participantName", toName.trim());
+          String suffix = k.substring(fromKey.length());
+          moved.put(toPrefix + suffix, data);
+        }
+        return true;
+      }
+      return false;
+    });
+    IN_MEMORY_RECORDINGS.putAll(moved);
+
+    try (
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        PreparedStatement ps = conn.prepareStatement(UPDATE_PARTICIPANT_SQL)) {
+      ps.setString(1, toName.trim());
+      ps.setString(2, normalizedEmail);
+      ps.setString(3, testName != null ? testName.trim() : "");
+      ps.setString(4, fromName);
+      ps.executeUpdate();
+      return true;
+    } catch (SQLException e) {
+      LOGGER.log(Level.WARNING, "Database rename recording participant failed: " + e.getMessage());
       return true;
     }
   }

@@ -10,10 +10,20 @@
     } catch (Exception e) { 
       return value; 
     } 
+  }
+
+  private String escapeHtml(String value) {
+    if (value == null) { return ""; }
+    return value
+      .replace("&", "&amp;")
+      .replace("<", "&lt;")
+      .replace(">", "&gt;")
+      .replace("\"", "&quot;")
+      .replace("'", "&#39;");
   } 
 
   private boolean isInvertedSurveyQuestion(String question) { 
-    return "q3".equals(question) || "q9".equals(question) || "q15".equals(question); 
+    return mx.edu.utez.uxvibe.bean.ParticipantReportBean.isInvertedQuestion(question); 
   } 
 
   private int normalizeLikertScore(String question, Object rawAnswer) { 
@@ -148,22 +158,23 @@
                 else if (q != null && q.startsWith("q")) { encuestaTotal += numeric; encuestaCount++; }
                 }
                 }
-                double stressAvg = stressCount == 0 ? 3.0 : stressTotal / stressCount;
-                double samAvg = samCount == 0 ? 6.0 : samTotal / samCount;
-                double encuestaAvg = encuestaCount == 0 ? 4.0 : encuestaTotal / encuestaCount;
+                double stressAvg = stressCount == 0 ? 0.0 : stressTotal / stressCount;
+                double samAvg = samCount == 0 ? 0.0 : samTotal / samCount;
+                double encuestaAvg = encuestaCount == 0 ? 0.0 : encuestaTotal / encuestaCount;
 
-                double samScaled = (samAvg / 9.0 * 5.0);
+                double samScaled = samCount == 0 ? 0.0 : (samAvg / 9.0 * 5.0);
                 double overallAvg = 0;
                 int overallParts = 0;
                 if (encuestaCount > 0) { overallAvg += encuestaAvg; overallParts++; }
                 if (stressCount > 0) { overallAvg += stressAvg; overallParts++; }
                 if (samCount > 0) { overallAvg += samScaled; overallParts++; }
-                overallAvg = overallParts == 0 ? 4.0 : overallAvg / overallParts;
+                overallAvg = overallParts == 0 ? 0.0 : overallAvg / overallParts;
 
-                String overallLabel = String.format(java.util.Locale.US, "%.2f", overallAvg);
-                String stressLabel = String.format(java.util.Locale.US, "%.2f", stressAvg);
-                String samLabel = String.format(java.util.Locale.US, "%.2f", samAvg);
-                String encuestaLabel = String.format(java.util.Locale.US, "%.2f", encuestaAvg);
+                boolean hasOverall = overallParts > 0;
+                String overallLabel = hasOverall ? String.format(java.util.Locale.US, "%.2f", overallAvg) : "—";
+                String stressLabel = stressCount == 0 ? "—" : String.format(java.util.Locale.US, "%.2f", stressAvg);
+                String samLabel = samCount == 0 ? "—" : String.format(java.util.Locale.US, "%.2f", samAvg);
+                String encuestaLabel = encuestaCount == 0 ? "—" : String.format(java.util.Locale.US, "%.2f", encuestaAvg);
                 %>
                 <!doctype html>
                 <html lang="es">
@@ -186,7 +197,7 @@
                         alt="Participante" />
                       <div class="reporte-user-info">
                         <div class="reporte-user-name">
-                          <%= participantName %>
+                          <%= escapeHtml(participantName) %>
                         </div>
                         <div class="reporte-meta-row">
                           <img class="reporte-time-icon"
@@ -208,7 +219,7 @@
                       <section class="reporte-block-1">
                         <h2>Detalles de la prueba</h2>
                         <div class="reporte-box reporte-box--summary">
-                          <%= description %>
+                          <%= escapeHtml(description) %>
                         </div>
                       </section>
 
@@ -227,10 +238,10 @@
                             <tbody>
                               <tr>
                                 <td>
-                                  <%= participantName %>
+                                  <%= escapeHtml(participantName) %>
                                 </td>
                                 <td>
-                                  <%= testName %>
+                                  <%= escapeHtml(testName) %>
                                 </td>
                                 <td>
                                   <%= durationLabel %>
@@ -250,10 +261,10 @@
                           <article class="reporte-summary-card">
                             <span class="reporte-summary-title">Promedio general ponderado</span>
                             <span class="reporte-summary-value">
-                              <%= overallLabel %>/5
+                              <%= hasOverall ? overallLabel + "/5" : "Sin datos" %>
                             </span>
                             <span class="reporte-summary-note">
-                              <%= getSummaryLabel(overallAvg) %>
+                              <%= hasOverall ? getSummaryLabel(overallAvg) : "Aún no hay respuestas cuantitativas." %>
                             </span>
                           </article>
                         </div>
@@ -311,9 +322,9 @@
                               if (q == null || "audio".equalsIgnoreCase(q) || "audio_url".equalsIgnoreCase(q)) continue;
                               %>
                               <li><strong>
-                                  <%= getDisplayLabel(q) %>:
+                                  <%= escapeHtml(getDisplayLabel(q)) %>:
                                 </strong>
-                                <%= formatResponseValue(q, a) %>
+                                <%= escapeHtml(formatResponseValue(q, a)) %>
                               </li>
                               <% shown++; } } if (shown==0) { %>
                                 <li>No hay respuestas adicionales registradas.</li>
@@ -330,10 +341,10 @@
                           report.getAudioFileName(); %>
                           <div class="reporte-box reporte-box--summary reporte-box--audio">
                             <audio controls preload="auto" class="reporte-audio-player"
-                              src="<%= cleanAudioSrc %>"></audio>
+                              src="<%= escapeHtml(cleanAudioSrc) %>"></audio>
                             <div class="reporte-audio-footer">
-                              <span class="reporte-audio-filename">Archivo: <%= audioName %></span>
-                              <a href="<%= cleanAudioSrc %>" download="<%= audioName %>"
+                              <span class="reporte-audio-filename">Archivo: <%= escapeHtml(audioName) %></span>
+                              <a href="<%= escapeHtml(cleanAudioSrc) %>" download="<%= escapeHtml(audioName) %>"
                                 class="reporte-audio-download">Descargar audio (.webm)</a>
                             </div>
                           </div>

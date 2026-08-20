@@ -16,9 +16,9 @@ public class EmailService {
 
   private static final String DEFAULT_SMTP_HOST = "smtp.gmail.com";
   private static final String DEFAULT_SMTP_PORT = "587";
-  private static final String DEFAULT_SMTP_USER = "FreeCollectorPrime@gmail.com";
-  private static final String DEFAULT_SMTP_PASS = "xvhepyxfwyarrnxb";
-  private static final String DEFAULT_SMTP_FROM = "FreeCollectorPrime@gmail.com";
+  private static final String DEFAULT_SMTP_USER = "";
+  private static final String DEFAULT_SMTP_PASS = "";
+  private static final String DEFAULT_SMTP_FROM = "";
 
   public static boolean isConfigured() {
     String host = getSetting("SMTP_HOST", "mail.smtp.host", DEFAULT_SMTP_HOST);
@@ -35,19 +35,19 @@ public class EmailService {
   }
 
   public static boolean sendPasswordResetLink(String to, String resetUrl) {
-    String host = getSetting("SMTP_HOST", "mail.smtp.host", DEFAULT_SMTP_HOST);
-    String port = getSetting("SMTP_PORT", "mail.smtp.port", DEFAULT_SMTP_PORT);
-    String user = getSetting("SMTP_USER", "mail.smtp.user", DEFAULT_SMTP_USER);
-    String pass = getSetting("SMTP_PASS", "mail.smtp.pass", DEFAULT_SMTP_PASS);
-    String from = getSetting("SMTP_FROM", "mail.smtp.from", DEFAULT_SMTP_FROM);
-
-    if (host == null || port == null || user == null || pass == null || from == null) {
+    if (!isConfigured()) {
       LOGGER.info("==========================================================================");
       LOGGER.info("[DEV MODE / SMTP UNCONFIGURED] Password Reset Link for " + to + ":");
       LOGGER.info(resetUrl);
       LOGGER.info("==========================================================================");
       return false;
     }
+
+    String host = getSetting("SMTP_HOST", "mail.smtp.host", DEFAULT_SMTP_HOST);
+    String port = getSetting("SMTP_PORT", "mail.smtp.port", DEFAULT_SMTP_PORT);
+    String user = getSetting("SMTP_USER", "mail.smtp.user", DEFAULT_SMTP_USER);
+    String pass = getSetting("SMTP_PASS", "mail.smtp.pass", DEFAULT_SMTP_PASS);
+    String from = getSetting("SMTP_FROM", "mail.smtp.from", DEFAULT_SMTP_FROM);
 
     Properties props = new Properties();
     props.put("mail.smtp.auth", "true");
@@ -56,7 +56,7 @@ public class EmailService {
     props.put("mail.smtp.host", host.trim());
     props.put("mail.smtp.port", port.trim());
     props.put("mail.smtp.ssl.protocols", "TLSv1.2 TLSv1.3");
-    props.put("mail.smtp.ssl.trust", "*");
+    props.put("mail.smtp.ssl.trust", host.trim());
     props.put("mail.smtp.connectiontimeout", "15000");
     props.put("mail.smtp.timeout", "15000");
     props.put("mail.smtp.writetimeout", "15000");
@@ -131,11 +131,7 @@ public class EmailService {
   }
 
   private static String getSetting(String envKey, String propKey, String defaultValue) {
-    String val = System.getenv(envKey);
-    if (val != null && !val.isBlank()) {
-      return val;
-    }
-    val = System.getProperty(propKey);
+    String val = mx.edu.utez.uxvibe.AppSettings.get(envKey, propKey);
     if (val != null && !val.isBlank()) {
       return val;
     }

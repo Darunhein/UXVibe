@@ -21,7 +21,9 @@ import mx.edu.utez.uxvibe.model.UserRole;
         "/complete-test",
         "/cancel-test",
         "/restart-recording",
-        "/participant-report"
+        "/participant-report",
+        "/delete-test",
+        "/delete-participant"
 })
 public class RoleAuthorizationFilter implements Filter {
     @Override
@@ -65,6 +67,8 @@ public class RoleAuthorizationFilter implements Filter {
                 || "/participants".equals(servletPath)
                 || "/create-test".equals(servletPath)
                 || "/start-test".equals(servletPath)
-                || "/participant-report".equals(servletPath);
+                || "/participant-report".equals(servletPath)
+                || "/delete-test".equals(servletPath)
+                || "/delete-participant".equals(servletPath);
     }
 }

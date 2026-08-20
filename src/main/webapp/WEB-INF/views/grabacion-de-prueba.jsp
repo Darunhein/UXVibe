@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
   </head>
 
-  <body data-context-path="${pageContext.request.contextPath}">
+  <body data-context-path="${pageContext.request.contextPath}" data-csrf="<%= mx.edu.utez.uxvibe.security.CsrfTokens.get(request) %>">
     <div class="pantalla-escondida-de-prueba">
       <main class="frame">
         <h1 class="punto-de-prueba">Punto de Prueba</h1>
@@ -53,7 +53,10 @@
                 href="${pageContext.request.contextPath}/cuestionario-sb-1">Empezar encuesta</a>
               <button class="pause-menu__item pause-menu__item--button" id="restartBtn" type="button">Reiniciar
                 grabación</button>
-              <a class="pause-menu__item" href="${pageContext.request.contextPath}/cancel-test">Cancelar prueba</a>
+              <form class="pause-menu__item-form" action="${pageContext.request.contextPath}/cancel-test" method="post">
+                <%@ include file="/WEB-INF/views/_csrf.jsp" %>
+                <button class="pause-menu__item pause-menu__item--button" type="submit">Cancelar prueba</button>
+              </form>
             </div>
           </details>
         </section>

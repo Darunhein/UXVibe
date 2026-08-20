@@ -36,6 +36,7 @@
 
         <form class="crear-prueba__form" id="createTestForm"
           action="${pageContext.request.contextPath}/create-test" method="post">
+          <%@ include file="/WEB-INF/views/_csrf.jsp" %>
           <label class="visually-hidden" for="nombre-prueba">Nombre de la prueba</label>
           <div class="crear-prueba__input-shell">
             <img class="crear-prueba__input-icon"

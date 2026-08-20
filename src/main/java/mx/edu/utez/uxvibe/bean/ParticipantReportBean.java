@@ -104,6 +104,10 @@ public class ParticipantReportBean {
     return surveyResponses;
   }
 
+  public static boolean isInvertedQuestion(String question) {
+    return "q5".equals(question) || "q9".equals(question) || "q15".equals(question);
+  }
+
   public void addSurveyResponse(String question, Object answer) {
     if ("age".equals(question) && answer != null) {
       try {
@@ -132,7 +136,7 @@ public class ParticipantReportBean {
     try {
       if (question != null && question.startsWith("q")) {
         int v = Integer.parseInt(answer);
-        if ("q3".equals(question) || "q9".equals(question) || "q15".equals(question)) {
+        if (isInvertedQuestion(question)) {
           return 6 - v;
         }
         return v;
