@@ -3,6 +3,17 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
 <%!
+  private String urlEncode(String value) {
+    if (value == null) {
+      return "";
+    }
+    try {
+      return java.net.URLEncoder.encode(value, "UTF-8");
+    } catch (Exception e) {
+      return value;
+    }
+  }
+
   private boolean isInvertedSurveyQuestion(String question) {
     return "q3".equals(question) || "q9".equals(question) || "q15".equals(question);
   }
@@ -258,18 +269,6 @@
               </div>
             </div>
           </div>
-
-          <style>
-            .reporte-graphs{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
-            .reporte-graph-item{flex:1;min-width:140px;display:flex;flex-direction:column;align-items:center}
-            .reporte-graph-title{font-size:14px;margin-bottom:8px;font-weight:600;text-align:center}
-            .pie-chart{width:150px;height:150px;display:flex;align-items:center;justify-content:center}
-            .pie{width:100%;height:100%;border-radius:50%;background:conic-gradient(var(--color) var(--pct,0)%, #eee 0);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
-            .pie::before{content:"";position:absolute;width:64%;height:64%;background:white;border-radius:50%}
-            .pie-center{position:relative;display:flex;align-items:baseline;gap:4px;font-weight:700}
-            .pie-center span{font-size:22px}
-            .pie-center small{font-weight:600;font-size:14px;color:#666}
-          </style>
         </section>
 
         <section class="reporte-block-1">
@@ -299,10 +298,16 @@
 
         <section class="reporte-block-2">
           <h2>Grabación de audio de la sesión</h2>
-          <% if (audioUrl != null && !audioUrl.isEmpty()) { %>
+          <% if (audioUrl != null && !audioUrl.isEmpty()) { 
+               String cleanAudioSrc = audioUrl.startsWith("data:") ? audioUrl : ("data:audio/webm;base64," + audioUrl);
+               String audioName = report.getAudioFileName() == null ? "grabacion-sesion.webm" : report.getAudioFileName();
+          %>
             <div class="reporte-box reporte-box--summary reporte-box--audio">
-              <audio controls preload="metadata" src="<%= audioUrl.startsWith("data:") ? audioUrl : ("data:audio/webm;base64," + audioUrl) %>"></audio>
-              <p class="reporte-audio-filename">Archivo: <%= report.getAudioFileName() == null ? "grabacion-sesion.webm" : report.getAudioFileName() %></p>
+              <audio controls preload="auto" class="reporte-audio-player" src="<%= cleanAudioSrc %>"></audio>
+              <div class="reporte-audio-footer">
+                <span class="reporte-audio-filename">Archivo: <%= audioName %></span>
+                <a href="<%= cleanAudioSrc %>" download="<%= audioName %>" class="reporte-audio-download">Descargar audio (.webm)</a>
+              </div>
             </div>
           <% } else { %>
             <div class="reporte-box reporte-box--summary">
@@ -312,7 +317,7 @@
         </section>
       </main>
 
-      <a class="reporte-back" href="${pageContext.request.contextPath}/participants?testName=<%= java.net.URLEncoder.encode(testName, "UTF-8") %>">
+      <a class="reporte-back" href="${pageContext.request.contextPath}/participants?testName=<%= urlEncode(testName) %>">
         <img src="${pageContext.request.contextPath}/public/reporte-participante/lets-icons-back-light.svg" alt="" />
         <span>Regresar a Participantes</span>
       </a>

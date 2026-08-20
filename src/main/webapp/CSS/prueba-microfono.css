@@ -216,95 +216,260 @@ body {
 
 /* ============================================================================
 ONDA DEL MICRÓFONO
-============================================================================ */
+/* ============================================================================
+   ONDA DEL MICRÓFONO
+   ============================================================================ */
 
 .waveform-container {
   width: min(100%, 650px);
-  height: 145px;
+  height: 120px;
   box-sizing: border-box;
-  background-color: #e8eef5;
-  border-radius: 8px;
-  border: 2px solid #d0dce8;
+  background: linear-gradient(180deg, #edf3f8 0%, #dbe6f0 100%);
+  border-radius: 12px;
+  border: 2px solid #b8cee0;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 14px;
-  flex-shrink: 1;
+  padding: 12px 18px;
+  flex-shrink: 0;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
-.wave {
+.waveform-bars {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 5px;
   width: 100%;
   height: 100%;
 }
 
-.wave span {
+.wave-bar {
   display: block;
-  width: 10px;
-  background-color: #5a7a8c;
-  border-radius: 20px;
+  flex: 1;
+  max-width: 9px;
+  min-width: 4px;
+  height: var(--wave-height, 15%);
+  background: linear-gradient(180deg, #4a6b87 0%, #2f4b63 100%);
+  border-radius: 999px;
+  transition: height 0.08s ease-out, background 0.15s ease;
   transform-origin: center;
-  animation: pulse 1.2s infinite ease-in-out;
 }
 
-.wave span:nth-child(1) {
-  height: 20px;
-  animation-delay: 0s;
+.wave-bar--active {
+  background: linear-gradient(180deg, #2563eb 0%, #1e40af 100%);
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.4);
 }
 
-.wave span:nth-child(2) {
-  height: 40px;
-  animation-delay: 0.1s;
+/* ============================================================================
+   CONTROLES DEL MICRÓFONO
+   ============================================================================ */
+
+.microphone-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: min(100%, 650px);
+  flex-wrap: wrap;
 }
 
-.wave span:nth-child(3) {
-  height: 70px;
-  animation-delay: 0.2s;
+.btn-primary,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  text-decoration: none;
+  min-height: 44px;
 }
 
-.wave span:nth-child(4) {
-  height: 100px;
-  animation-delay: 0.3s;
+.btn-primary {
+  background: linear-gradient(135deg, #3f5669 0%, #244f6d 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(36, 79, 109, 0.25);
 }
 
-.wave span:nth-child(5) {
-  height: 120px;
-  animation-delay: 0.4s;
+.btn-primary:hover {
+  background: linear-gradient(135deg, #4b667d 0%, #2c5c7e 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(36, 79, 109, 0.35);
 }
 
-.wave span:nth-child(6) {
-  height: 100px;
-  animation-delay: 0.5s;
+.btn-primary.is-recording {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+  box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.25);
+  animation: pulseRecording 1.5s infinite;
 }
 
-.wave span:nth-child(7) {
-  height: 70px;
-  animation-delay: 0.6s;
-}
-
-.wave span:nth-child(8) {
-  height: 40px;
-  animation-delay: 0.7s;
-}
-
-.wave span:nth-child(9) {
-  height: 20px;
-  animation-delay: 0.8s;
-}
-
-@keyframes pulse {
-  0%,
+@keyframes pulseRecording {
+  0% {
+    box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(225, 29, 72, 0);
+  }
   100% {
-    transform: scaleY(0.5);
+    box-shadow: 0 0 0 0 rgba(225, 29, 72, 0);
   }
+}
 
-  50% {
-    transform: scaleY(1);
-  }
+.rec-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  display: inline-block;
+}
+
+.btn-primary.is-recording .rec-dot {
+  background-color: #ffffff;
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.btn-secondary {
+  background-color: #e2e8f0;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary.is-playing {
+  background-color: #dbeafe;
+  color: #1e40af;
+  border-color: #93c5fd;
+}
+
+/* ============================================================================
+   REPRODUCTOR DE AUDIO INTERACTIVO (PLAYBACK WIDGET)
+   ============================================================================ */
+
+.playback-widget {
+  display: none;
+  width: min(100%, 650px);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 18px;
+  box-sizing: border-box;
+  animation: fadeInWidget 0.3s ease;
+}
+
+.preview-audio-hidden {
+  display: none;
+}
+
+@keyframes fadeInWidget {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.playback-widget-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.widget-play-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #3f5669;
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  flex-shrink: 0;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.widget-play-btn:hover {
+  background: #244f6d;
+  transform: scale(1.05);
+}
+
+.widget-seek-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.widget-seek-bar {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #cbd5e1;
+  outline: none;
+  cursor: pointer;
+  accent-color: #3f5669;
+}
+
+.widget-time-display {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  font-family: monospace;
+}
+
+.widget-volume-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.volume-icon {
+  font-size: 14px;
+}
+
+.widget-volume-bar {
+  width: 70px;
+  height: 5px;
+  border-radius: 3px;
+  background: #cbd5e1;
+  outline: none;
+  cursor: pointer;
+  accent-color: #3f5669;
+}
+
+.status-msg-box {
+  text-align: center;
+  min-height: 22px;
+}
+
+.record-status {
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+  transition: color 0.2s;
 }
 
 /* ============================================================================

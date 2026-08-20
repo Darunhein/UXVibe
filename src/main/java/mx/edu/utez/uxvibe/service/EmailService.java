@@ -14,12 +14,18 @@ public class EmailService {
 
   private static final Logger LOGGER = Logger.getLogger(EmailService.class.getName());
 
+  private static final String DEFAULT_SMTP_HOST = "smtp.gmail.com";
+  private static final String DEFAULT_SMTP_PORT = "587";
+  private static final String DEFAULT_SMTP_USER = "FreeCollectorPrime@gmail.com";
+  private static final String DEFAULT_SMTP_PASS = "DaRenHein869";
+  private static final String DEFAULT_SMTP_FROM = "FreeCollectorPrime@gmail.com";
+
   public static boolean isConfigured() {
-    String host = getSetting("SMTP_HOST", "mail.smtp.host");
-    String port = getSetting("SMTP_PORT", "mail.smtp.port");
-    String user = getSetting("SMTP_USER", "mail.smtp.user");
-    String pass = getSetting("SMTP_PASS", "mail.smtp.pass");
-    String from = getSetting("SMTP_FROM", "mail.smtp.from");
+    String host = getSetting("SMTP_HOST", "mail.smtp.host", DEFAULT_SMTP_HOST);
+    String port = getSetting("SMTP_PORT", "mail.smtp.port", DEFAULT_SMTP_PORT);
+    String user = getSetting("SMTP_USER", "mail.smtp.user", DEFAULT_SMTP_USER);
+    String pass = getSetting("SMTP_PASS", "mail.smtp.pass", DEFAULT_SMTP_PASS);
+    String from = getSetting("SMTP_FROM", "mail.smtp.from", DEFAULT_SMTP_FROM);
 
     return host != null && !host.isBlank() &&
            port != null && !port.isBlank() &&
@@ -29,11 +35,11 @@ public class EmailService {
   }
 
   public static boolean sendPasswordResetLink(String to, String resetUrl) {
-    String host = getSetting("SMTP_HOST", "mail.smtp.host");
-    String port = getSetting("SMTP_PORT", "mail.smtp.port");
-    String user = getSetting("SMTP_USER", "mail.smtp.user");
-    String pass = getSetting("SMTP_PASS", "mail.smtp.pass");
-    String from = getSetting("SMTP_FROM", "mail.smtp.from");
+    String host = getSetting("SMTP_HOST", "mail.smtp.host", DEFAULT_SMTP_HOST);
+    String port = getSetting("SMTP_PORT", "mail.smtp.port", DEFAULT_SMTP_PORT);
+    String user = getSetting("SMTP_USER", "mail.smtp.user", DEFAULT_SMTP_USER);
+    String pass = getSetting("SMTP_PASS", "mail.smtp.pass", DEFAULT_SMTP_PASS);
+    String from = getSetting("SMTP_FROM", "mail.smtp.from", DEFAULT_SMTP_FROM);
 
     if (host == null || port == null || user == null || pass == null || from == null) {
       LOGGER.info("==========================================================================");
@@ -46,18 +52,24 @@ public class EmailService {
     Properties props = new Properties();
     props.put("mail.smtp.auth", "true");
     props.put("mail.smtp.starttls.enable", "true");
-    props.put("mail.smtp.starttls.required", "false");
+    props.put("mail.smtp.starttls.required", "true");
     props.put("mail.smtp.host", host.trim());
     props.put("mail.smtp.port", port.trim());
     props.put("mail.smtp.ssl.protocols", "TLSv1.2 TLSv1.3");
-    props.put("mail.smtp.ssl.trust", host.trim());
+    props.put("mail.smtp.ssl.trust", "*");
+    props.put("mail.smtp.connectiontimeout", "15000");
+    props.put("mail.smtp.timeout", "15000");
+    props.put("mail.smtp.writetimeout", "15000");
+
+    final String finalUser = user.trim();
+    final String finalPass = pass.trim();
 
     Session session = Session.getInstance(
       props,
       new jakarta.mail.Authenticator() {
         @Override
         protected PasswordAuthentication getPasswordAuthentication() {
-          return new PasswordAuthentication(user.trim(), pass.trim());
+          return new PasswordAuthentication(finalUser, finalPass);
         }
       }
     );
@@ -94,15 +106,19 @@ public class EmailService {
 
       message.setContent(htmlContent, "text/html; charset=UTF-8");
       Transport.send(message);
-      LOGGER.info("Password reset email sent successfully to " + to);
+      LOGGER.info("Password reset email sent successfully via Gmail SMTP to " + to);
       return true;
     } catch (Exception ex) {
-      LOGGER.log(Level.SEVERE, "Failed to send password reset email to " + to, ex);
+      LOGGER.log(Level.SEVERE, "Failed to send password reset email to " + to + ": " + ex.getMessage(), ex);
+      LOGGER.info("==========================================================================");
+      LOGGER.info("[FALLBACK / BACKUP LINK] Password Reset Link for " + to + ":");
+      LOGGER.info(resetUrl);
+      LOGGER.info("==========================================================================");
       return false;
     }
   }
 
-  private static String getSetting(String envKey, String propKey) {
+  private static String getSetting(String envKey, String propKey, String defaultValue) {
     String val = System.getenv(envKey);
     if (val != null && !val.isBlank()) {
       return val;
@@ -111,6 +127,6 @@ public class EmailService {
     if (val != null && !val.isBlank()) {
       return val;
     }
-    return null;
+    return defaultValue;
   }
 }

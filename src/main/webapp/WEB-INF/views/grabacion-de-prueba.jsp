@@ -14,8 +14,13 @@
       <main class="frame">
         <h1 class="punto-de-prueba">Punto de Prueba</h1>
         <section class="frame2" aria-label="Panel de grabación de prueba">
+          <div class="live-rec-badge" id="liveRecBadge" aria-live="polite">
+            <span class="live-rec-dot"></span>
+            <span class="live-rec-text" id="liveRecText">GRABANDO AUDIO EN VIVO</span>
+          </div>
+
           <div class="wave-card" aria-hidden="true">
-            <div class="wave-card-inner">
+            <div class="wave-card-inner" id="waveCardInner">
               <span class="wave-wave wave-wave-a"></span>
               <span class="wave-wave wave-wave-b"></span>
               <span class="wave-wave wave-wave-c"></span>

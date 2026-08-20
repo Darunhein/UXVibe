@@ -80,6 +80,7 @@
 }
 
 .password-feedback-error {
+  display: none;
   width: 100%;
   max-width: 620px;
   margin: -12px auto 20px;

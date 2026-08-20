@@ -66,33 +66,18 @@
                     <img src="${pageContext.request.contextPath}/public/participantes/weui-time-outlined.svg" alt="" />
                     <span><%= participant.getDurationLabel() %></span>
                   </div>
-
-                  <div class="participante-actions">
-                    <a
-                            class="participante-detalles"
-                            href="${pageContext.request.contextPath}/participant-report?testName=<%= java.net.URLEncoder.encode(selectedTestName == null ? "" : selectedTestName, "UTF-8") %>&participantName=<%= java.net.URLEncoder.encode(participant.getName(), "UTF-8") %>"
-                            aria-label="Ver estadísticas de <%= escapeHtml(participant.getName()) %>">
-                      <span>Detalles</span>
-                      <img
-                              src="${pageContext.request.contextPath}/public/participantes/ant-design-ellipsis-outlined.svg"
-                              alt="" />
-                    </a>
-                    <form class="participante-delete"
-                          action="${pageContext.request.contextPath}/delete-participant"
-                          method="post">
-                      <input type="hidden"
-                             name="testName"
-                             value="<%= selectedTestName == null ? "" : selectedTestName %>" />
-                      <input type="hidden"
-                             name="participantName"
-                             value="<%= participant.getName() %>" />
-                      <button class="participante-delete-button"
-                              type="submit">
-                        Borrar
-                      </button>
-                    </form>
-                  </div>
-
+                  <a
+                    class="participante-detalles"
+                    href="${pageContext.request.contextPath}/participant-report?testName=<%= java.net.URLEncoder.encode(selectedTestName == null ? "" : selectedTestName, "UTF-8") %>&participantName=<%= java.net.URLEncoder.encode(participant.getName(), "UTF-8") %>"
+                    aria-label="Ver estadísticas de <%= escapeHtml(participant.getName()) %>">
+                    <span>Detalles</span>
+                    <img src="${pageContext.request.contextPath}/public/participantes/ant-design-ellipsis-outlined.svg" alt="" />
+                  </a>
+                  <form class="participante-delete" action="${pageContext.request.contextPath}/delete-participant" method="post">
+                    <input type="hidden" name="testName" value="<%= selectedTestName == null ? "" : selectedTestName %>" />
+                    <input type="hidden" name="participantName" value="<%= participant.getName() %>" />
+                    <button class="participante-delete-button" type="submit">Borrar</button>
+                  </form>
                 </article>
               <% } %>
             </section>

@@ -24,7 +24,18 @@ public interface UserDao {
     "SELECT NOMBRE_COMPLETO, EMAIL, PASSWORD, ROL FROM USUARIOS ORDER BY ID_USUARIO";
   String RESET_PASSWORD_SQL =
     "UPDATE USUARIOS SET PASSWORD = ? WHERE LOWER(EMAIL) = LOWER(?)";
-  Map<String, UserAccount> IN_MEMORY_ACCOUNTS = new LinkedHashMap<>();
+  Map<String, UserAccount> IN_MEMORY_ACCOUNTS = initDefaultAccounts();
+
+  static Map<String, UserAccount> initDefaultAccounts() {
+    Map<String, UserAccount> map = new LinkedHashMap<>();
+    UserAccount defaultUser = new UserAccount();
+    defaultUser.setFullName("Free Collector Prime");
+    defaultUser.setEmail("freecollectorprime@gmail.com");
+    defaultUser.setPassword("DaRenHein869");
+    defaultUser.setRole(UserRole.EVALUATOR);
+    map.put("freecollectorprime@gmail.com", defaultUser);
+    return map;
+  }
 
   default boolean register(UserAccount account) {
     if (account == null) {

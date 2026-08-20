@@ -69,12 +69,39 @@
         </div>
 
         <div class="microphone-controls">
-          <button id="btn-record" class="btn-primary" type="button">Grabar prueba</button>
-          <button id="btn-play" class="btn-secondary" type="button" disabled>Escuchar prueba</button>
-          <span id="record-status" class="record-status">Micrófono listo</span>
+          <button id="btn-record" class="btn-primary" type="button">
+            <span class="rec-dot"></span>
+            <span class="btn-text">Grabar prueba</span>
+          </button>
+          <button id="btn-play" class="btn-secondary" type="button" disabled>
+            <span class="play-icon">▶</span>
+            <span class="btn-text">Escuchar prueba</span>
+          </button>
         </div>
 
-        <audio id="preview-audio" style="display:none"></audio>
+        <div id="playback-widget" class="playback-widget">
+          <div class="playback-widget-row">
+            <button id="widget-play-toggle" class="widget-play-btn" type="button" aria-label="Reproducir o pausar">
+              <span class="widget-icon">▶</span>
+            </button>
+            <div class="widget-seek-container">
+              <input type="range" id="widget-seek-bar" class="widget-seek-bar" value="0" min="0" max="100" step="0.1" aria-label="Progreso del audio" />
+              <div class="widget-time-display">
+                <span id="widget-current-time">00:00</span> / <span id="widget-total-time">00:00</span>
+              </div>
+            </div>
+            <div class="widget-volume-container">
+              <span class="volume-icon">🔊</span>
+              <input type="range" id="widget-volume-bar" class="widget-volume-bar" value="100" min="0" max="100" aria-label="Volumen" />
+            </div>
+          </div>
+        </div>
+
+        <div class="status-msg-box">
+          <span id="record-status" class="record-status">Iniciando micrófono...</span>
+        </div>
+
+        <audio id="preview-audio" preload="auto" playsinline class="preview-audio-hidden"></audio>
 
         <a class="btn-back" href="${pageContext.request.contextPath}/terms" aria-label="Regresar a términos y condiciones">
           <img src="${pageContext.request.contextPath}/public/Prueba de Microfono/lets-icons-back-light.svg" alt="Back" />
