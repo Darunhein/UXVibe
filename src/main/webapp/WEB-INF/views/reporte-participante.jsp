@@ -1,82 +1,139 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-  <%@ page import="mx.edu.utez.uxvibe.bean.ParticipantReportBean" %>
-    <%@ page import="java.util.Map" %>
-      <%@ page import="java.util.List" %>
-        <%! private String urlEncode(String value) { if (value==null) { return "" ; } try { return
-          java.net.URLEncoder.encode(value, "UTF-8" ); } catch (Exception e) { return value; } } private boolean
-          isInvertedSurveyQuestion(String question) { return "q3" .equals(question) || "q9" .equals(question) || "q15"
-          .equals(question); } private int normalizeLikertScore(String question, Object rawAnswer) { try { int
-          value=Integer.parseInt(String.valueOf(rawAnswer).trim()); if (isInvertedSurveyQuestion(question)) { return 6 -
-          value; } return value; } catch (Exception ex) { return 0; } } private String formatResponseValue(String
-          question, Object rawAnswer) { if (rawAnswer==null) { return "Sin respuesta" ; } if (question !=null &&
-          question.startsWith("q")) { return normalizeLikertScore(question, rawAnswer) + "/5" ; } if
-          ("satisfaction".equals(question) || "impact" .equals(question) || "control" .equals(question)) { return
-          String.valueOf(rawAnswer) + "/9" ; } if ("stress".equals(question) || "relaxation" .equals(question)) { String
-          a=String.valueOf(rawAnswer).toLowerCase(); switch (a) { case "never" : case "nunca" : return "Nunca (1/5)" ;
-          case "sometimes" : case "a veces" : case "aveces" : return "De vez en cuando (2/5)" ; case "half-time" :
-          case "medio tiempo" : case "mitad del tiempo" : return "Mitad del tiempo (3/5)" ; case "most-time" :
-          case "la mayor parte" : case "casi siempre" : return "La mayor parte (4/5)" ; case "always" : case "siempre" :
-          return "Siempre (5/5)" ; default: return String.valueOf(rawAnswer); } } if ("gender".equals(question)) {
-          String g=String.valueOf(rawAnswer).toLowerCase(); if ("masculine".equals(g) || "masculino" .equals(g))
-          return "Masculino" ; if ("feminine".equals(g) || "femenino" .equals(g)) return "Femenino" ; return
-          String.valueOf(rawAnswer); } if ("education".equals(question)) { String
-          e=String.valueOf(rawAnswer).toLowerCase(); switch (e) { case "basic" : return "Básico (Primaria)" ;
-          case "secondary" : return "Medio (Secundaria)" ; case "preparatory" : return "Medio Superior (Preparatoria)" ;
-          case "university" : return "Superior (Universidad)" ; case "masters" : return "Superior (Maestría)" ;
-          case "doctorate" : return "Superior (Doctorado)" ; default: return String.valueOf(rawAnswer); } } return
-          String.valueOf(rawAnswer); } private String getDisplayLabel(String question) { if (question==null) {
-          return "Pregunta" ; } if ("age".equals(question)) return "Edad" ; if ("gender".equals(question)) return "Sexo"
-          ; if ("education".equals(question)) return "Nivel de Educación" ; if ("stress".equals(question))
-          return "Frecuencia de estrés (SB-2)" ; if ("relaxation".equals(question))
-          return "Frecuencia de relajación (SB-2)" ; if ("satisfaction".equals(question))
-          return "Valencia / Satisfacción (SAM-1)" ; if ("impact".equals(question))
-          return "Activación / Impacto (SAM-2)" ; if ("control".equals(question))
-          return "Dominio / Control emocional (SAM-3)" ; if (question.startsWith("q")) { return "Pregunta " +
-          question.substring(1) + " (SUS)" ; } return question; } private String getSummaryLabel(double average) { if
-          (average>= 4.5) return "Muy alta satisfacción / Usabilidad excelente";
-          if (average >= 3.5) return "Alta satisfacción / Buena usabilidad";
-          if (average >= 2.5) return "Satisfacción media / Usabilidad regular";
-          if (average >= 1.5) return "Baja satisfacción / Oportunidades de mejora";
-          return "Muy baja / Requiere atención urgente";
-          }
+<%@ page import="mx.edu.utez.uxvibe.bean.ParticipantReportBean" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.List" %>
+<%! 
+  private String urlEncode(String value) { 
+    if (value == null) { return ""; } 
+    try { 
+      return java.net.URLEncoder.encode(value, "UTF-8"); 
+    } catch (Exception e) { 
+      return value; 
+    } 
+  } 
 
-          private Integer parseNumeric(Map<String, Object> r) {
-            if (r == null) return null;
-            Object numObj = r.get("numeric");
-            if (numObj != null) {
-            try { return Integer.parseInt(String.valueOf(numObj)); } catch(Exception ignored) {}
-            }
-            Object ans = r.get("answer");
-            String q = r.get("question") == null ? null : String.valueOf(r.get("question"));
-            if (q != null && q.startsWith("q")) {
-            return normalizeLikertScore(q, ans);
-            }
-            if (ans == null) return null;
-            String s = String.valueOf(ans).trim();
-            try { return Integer.parseInt(s); } catch(Exception ignored) {}
-            String low = s.toLowerCase();
-            switch(low) {
-            case "never": case "nunca": return 1;
-            case "sometimes": case "a veces": case "aveces": return 2;
-            case "half-time": case "medio tiempo": case "mitad del tiempo": return 3;
-            case "most-time": case "la mayor parte": case "casi siempre": return 4;
-            case "always": case "siempre": return 5;
-            default: return null;
-            }
-            }
-            %>
-            <% ParticipantReportBean report=(ParticipantReportBean) request.getAttribute("report"); if (report==null) {
-              report=new ParticipantReportBean(); report.setParticipantName("Participante"); report.setTestName("Prueba
-              sin nombre"); report.setDescription("No se encontró información adicional para este participante."); }
-              String participantName=report.getParticipantName()==null ? "Participante" : report.getParticipantName();
-              String testName=report.getTestName()==null ? "Prueba sin nombre" : report.getTestName(); String
-              description=report.getDescription()==null ? "" : report.getDescription(); Integer
-              durationMinutes=report.getDurationMinutes(); String durationLabel=durationMinutes==null ? "5 min" :
-              durationMinutes + " min" ; java.time.format.DateTimeFormatter
-              dtf=java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"); String
-              completedOn=report.getCompletedOn()==null ? "Reciente" : report.getCompletedOn().format(dtf); String
-              audioUrl=report.getAudioUrl(); List<Map<String, Object>> responses = report.getSurveyResponses();
+  private boolean isInvertedSurveyQuestion(String question) { 
+    return "q3".equals(question) || "q9".equals(question) || "q15".equals(question); 
+  } 
 
+  private int normalizeLikertScore(String question, Object rawAnswer) { 
+    try { 
+      int value = Integer.parseInt(String.valueOf(rawAnswer).trim()); 
+      if (isInvertedSurveyQuestion(question)) { 
+        return 6 - value; 
+      } 
+      return value; 
+    } catch (Exception ex) { 
+      return 0; 
+    } 
+  } 
+
+  private String formatResponseValue(String question, Object rawAnswer) { 
+    if (rawAnswer == null) { return "Sin respuesta"; } 
+    if (question != null && question.startsWith("q")) { 
+      return normalizeLikertScore(question, rawAnswer) + "/5"; 
+    } 
+    if ("satisfaction".equals(question) || "impact".equals(question) || "control".equals(question)) { 
+      return String.valueOf(rawAnswer) + "/9"; 
+    } 
+    if ("stress".equals(question) || "relaxation".equals(question)) { 
+      String a = String.valueOf(rawAnswer).toLowerCase(); 
+      switch (a) { 
+        case "never": case "nunca": return "Nunca (1/5)";
+        case "sometimes": case "a veces": case "aveces": return "De vez en cuando (2/5)"; 
+        case "half-time": case "medio tiempo": case "mitad del tiempo": return "Mitad del tiempo (3/5)"; 
+        case "most-time": case "la mayor parte": case "casi siempre": return "La mayor parte (4/5)"; 
+        case "always": case "siempre": return "Siempre (5/5)"; 
+        default: return String.valueOf(rawAnswer); 
+      } 
+    } 
+    if ("gender".equals(question)) {
+      String g = String.valueOf(rawAnswer).toLowerCase(); 
+      if ("masculine".equals(g) || "masculino".equals(g)) return "Masculino"; 
+      if ("feminine".equals(g) || "femenino".equals(g)) return "Femenino"; 
+      return String.valueOf(rawAnswer); 
+    } 
+    if ("education".equals(question)) { 
+      String e = String.valueOf(rawAnswer).toLowerCase(); 
+      switch (e) { 
+        case "basic": return "Básico (Primaria)";
+        case "secondary": return "Medio (Secundaria)"; 
+        case "preparatory": return "Medio Superior (Preparatoria)";
+        case "university": return "Superior (Universidad)"; 
+        case "masters": return "Superior (Maestría)";
+        case "doctorate": return "Superior (Doctorado)"; 
+        default: return String.valueOf(rawAnswer); 
+      } 
+    } 
+    return String.valueOf(rawAnswer); 
+  } 
+
+  private String getDisplayLabel(String question) { 
+    if (question == null) { return "Pregunta"; } 
+    if ("age".equals(question)) return "Edad"; 
+    if ("gender".equals(question)) return "Sexo";
+    if ("education".equals(question)) return "Nivel de Educación"; 
+    if ("stress".equals(question)) return "Frecuencia de estrés (SB-2)"; 
+    if ("relaxation".equals(question)) return "Frecuencia de relajación (SB-2)"; 
+    if ("satisfaction".equals(question)) return "Valencia / Satisfacción (SAM-1)"; 
+    if ("impact".equals(question)) return "Activación / Impacto (SAM-2)"; 
+    if ("control".equals(question)) return "Dominio / Control emocional (SAM-3)"; 
+    if (question.startsWith("q")) { 
+      return "Pregunta " + question.substring(1) + " (SUS)"; 
+    } 
+    return question; 
+  } 
+
+  private String getSummaryLabel(double average) { 
+    if (average >= 4.5) return "Muy alta satisfacción / Usabilidad excelente";
+    if (average >= 3.5) return "Alta satisfacción / Buena usabilidad";
+    if (average >= 2.5) return "Satisfacción media / Usabilidad regular";
+    if (average >= 1.5) return "Baja satisfacción / Oportunidades de mejora";
+    return "Muy baja / Requiere atención urgente";
+  }
+
+  private Integer parseNumeric(Map<String, Object> r) {
+    if (r == null) return null;
+    Object numObj = r.get("numeric");
+    if (numObj != null) {
+      try { return Integer.parseInt(String.valueOf(numObj)); } catch(Exception ignored) {}
+    }
+    Object ans = r.get("answer");
+    String q = r.get("question") == null ? null : String.valueOf(r.get("question"));
+    if (q != null && q.startsWith("q")) {
+      return normalizeLikertScore(q, ans);
+    }
+    if (ans == null) return null;
+    String s = String.valueOf(ans).trim();
+    try { return Integer.parseInt(s); } catch(Exception ignored) {}
+    String low = s.toLowerCase();
+    switch(low) {
+      case "never": case "nunca": return 1;
+      case "sometimes": case "a veces": case "aveces": return 2;
+      case "half-time": case "medio tiempo": case "mitad del tiempo": return 3;
+      case "most-time": case "la mayor parte": case "casi siempre": return 4;
+      case "always": case "siempre": return 5;
+      default: return null;
+    }
+  }
+%>
+<% 
+  ParticipantReportBean report = (ParticipantReportBean) request.getAttribute("report"); 
+  if (report == null) {
+    report = new ParticipantReportBean(); 
+    report.setParticipantName("Participante"); 
+    report.setTestName("Prueba sin nombre"); 
+    report.setDescription("No se encontró información adicional para este participante."); 
+  }
+  String participantName = report.getParticipantName() == null ? "Participante" : report.getParticipantName();
+  String testName = report.getTestName() == null ? "Prueba sin nombre" : report.getTestName(); 
+  String description = report.getDescription() == null ? "" : report.getDescription(); 
+  Integer durationMinutes = report.getDurationMinutes(); 
+  String durationLabel = durationMinutes == null ? "5 min" : durationMinutes + " min"; 
+  java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"); 
+  String completedOn = report.getCompletedOn() == null ? "Reciente" : report.getCompletedOn().format(dtf); 
+  String audioUrl = report.getAudioUrl(); 
+  List<Map<String, Object>> responses = report.getSurveyResponses();
               double stressTotal = 0; int stressCount = 0;
               double samTotal = 0; int samCount = 0;
               double encuestaTotal = 0; int encuestaCount = 0;

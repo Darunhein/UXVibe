@@ -147,16 +147,12 @@
         sessionStorage.setItem("uxvibe_audio_mimetype", blob.type || "audio/webm");
       } catch (e) { }
 
+      const formData = new FormData();
+      formData.append("file", blob, fileName);
+
       fetch(contextPath + "/recording-upload", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-        },
-        body:
-          "fileName=" +
-          encodeURIComponent(fileName) +
-          "&audioUrl=" +
-          encodeURIComponent(base64),
+        body: formData
       })
         .then(function () {
           if (typeof callback === "function") callback();
