@@ -58,7 +58,9 @@
             <% String[] rowClasses = {"participantes-row--pink", "participantes-row--blue", "participantes-row--sand"};
                for (int i = 0; i < participants.size(); i++) {
                  ParticipantItem participant = participants.get(i); %>
-              <article class="participantes-row <%= rowClasses[i % rowClasses.length] %>">
+
+
+            <article class="participantes-row <%= rowClasses[i % rowClasses.length] %>">
                 <h2 class="participante-nombre">
                   <%= escapeHtml(participant.getName()) %>
                 </h2>
@@ -73,22 +75,36 @@
                     <%= participant.getDurationLabel() %>
                   </span>
                 </div>
-                <a class="participante-detalles"
-                  href="${pageContext.request.contextPath}/participant-report?testName=<%= java.net.URLEncoder.encode(selectedTestName == null ? "" : selectedTestName, "UTF-8") %>&participantName=<%= java.net.URLEncoder.encode(participant.getName(), "UTF-8") %>"
-                  aria-label="Ver estadísticas de <%= escapeHtml(participant.getName()) %>">
+
+              <div class="participante-actions">
+                <a
+                        class="participante-detalles"
+                        href="${pageContext.request.contextPath}/participant-report?testName=<%= java.net.URLEncoder.encode(selectedTestName == null ? "" : selectedTestName, "UTF-8") %>&participantName=<%= java.net.URLEncoder.encode(participant.getName(), "UTF-8") %>"
+                        aria-label="Ver estadísticas de <%= escapeHtml(participant.getName()) %>">
                   <span>Detalles</span>
                   <img
-                    src="${pageContext.request.contextPath}/public/participantes/ant-design-ellipsis-outlined.svg"
-                    alt="" />
+                          src="${pageContext.request.contextPath}/public/participantes/ant-design-ellipsis-outlined.svg"
+                          alt="" />
                 </a>
                 <form class="participante-delete"
-                  action="${pageContext.request.contextPath}/delete-participant" method="post">
-                  <input type="hidden" name="testName"
-                    value="<%= selectedTestName == null ? "" : selectedTestName %>" />
-                  <input type="hidden" name="participantName" value="<%= participant.getName() %>" />
-                  <button class="participante-delete-button" type="submit">Borrar</button>
+                      action="${pageContext.request.contextPath}/delete-participant"
+                      method="post">
+                  <input type="hidden"
+                         name="testName"
+                         value="<%= selectedTestName == null ? "" : selectedTestName %>" />
+                  <input type="hidden"
+                         name="participantName"
+                         value="<%= participant.getName() %>" />
+                  <button class="participante-delete-button"
+                          type="submit">
+                    Borrar
+                  </button>
                 </form>
+              </div>
+
               </article>
+
+
             <% } %>
           </section>
           <% if (totalPages != null && totalPages > 1) { %>
