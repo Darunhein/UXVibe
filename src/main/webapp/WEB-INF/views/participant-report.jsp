@@ -269,18 +269,6 @@
               </div>
             </div>
           </div>
-
-          <style>
-            .reporte-graphs{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
-            .reporte-graph-item{flex:1;min-width:140px;display:flex;flex-direction:column;align-items:center}
-            .reporte-graph-title{font-size:14px;margin-bottom:8px;font-weight:600;text-align:center}
-            .pie-chart{width:150px;height:150px;display:flex;align-items:center;justify-content:center}
-            .pie{width:100%;height:100%;border-radius:50%;background:conic-gradient(var(--color) var(--pct,0)%, #eee 0);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
-            .pie::before{content:"";position:absolute;width:64%;height:64%;background:white;border-radius:50%}
-            .pie-center{position:relative;display:flex;align-items:baseline;gap:4px;font-weight:700}
-            .pie-center span{font-size:22px}
-            .pie-center small{font-weight:600;font-size:14px;color:#666}
-          </style>
         </section>
 
         <section class="reporte-block-1">
@@ -315,10 +303,10 @@
                String audioName = report.getAudioFileName() == null ? "grabacion-sesion.webm" : report.getAudioFileName();
           %>
             <div class="reporte-box reporte-box--summary reporte-box--audio">
-              <audio controls preload="auto" style="width:100%;" src="<%= cleanAudioSrc %>"></audio>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12px;color:#64748b;">
+              <audio controls preload="auto" class="reporte-audio-player" src="<%= cleanAudioSrc %>"></audio>
+              <div class="reporte-audio-footer">
                 <span class="reporte-audio-filename">Archivo: <%= audioName %></span>
-                <a href="<%= cleanAudioSrc %>" download="<%= audioName %>" style="color:#2563eb;text-decoration:underline;">Descargar audio (.webm)</a>
+                <a href="<%= cleanAudioSrc %>" download="<%= audioName %>" class="reporte-audio-download">Descargar audio (.webm)</a>
               </div>
             </div>
           <% } else { %>

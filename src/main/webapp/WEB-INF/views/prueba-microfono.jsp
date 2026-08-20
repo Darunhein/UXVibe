@@ -79,7 +79,7 @@
           </button>
         </div>
 
-        <div id="playback-widget" class="playback-widget" style="display: none;">
+        <div id="playback-widget" class="playback-widget">
           <div class="playback-widget-row">
             <button id="widget-play-toggle" class="widget-play-btn" type="button" aria-label="Reproducir o pausar">
               <span class="widget-icon">▶</span>
@@ -101,7 +101,7 @@
           <span id="record-status" class="record-status">Iniciando micrófono...</span>
         </div>
 
-        <audio id="preview-audio" preload="auto" playsinline style="display:none;"></audio>
+        <audio id="preview-audio" preload="auto" playsinline class="preview-audio-hidden"></audio>
 
         <a class="btn-back" href="${pageContext.request.contextPath}/terms" aria-label="Regresar a términos y condiciones">
           <img src="${pageContext.request.contextPath}/public/Prueba de Microfono/lets-icons-back-light.svg" alt="Back" />

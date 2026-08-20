@@ -432,3 +432,153 @@ body {
     font-size: 12px;
   }
 }
+
+/* ============================================================================
+   EVALUATOR REVIEW MODAL & AUDIO PREVIEW
+   ============================================================================ */
+
+.evaluator-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.evaluator-modal-overlay.active {
+  display: flex;
+}
+
+.evaluator-modal-card {
+  background: #ffffff;
+  border-radius: 16px;
+  max-width: 520px;
+  width: 100%;
+  padding: 32px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  animation: modalFadeIn 0.25s ease-out;
+  text-align: center;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.modal-desc {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 20px;
+}
+
+.audio-preview-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.audio-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.audio-preview-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.evaluator-download-link {
+  display: none;
+  font-size: 12px;
+  color: #2563eb;
+  text-decoration: underline;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.evaluator-download-link:hover {
+  color: #1d4ed8;
+}
+
+.evaluator-audio-player {
+  width: 100%;
+  margin-top: 4px;
+  border-radius: 8px;
+  outline: none;
+}
+
+.no-audio-warning {
+  color: #e11d48;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.no-audio-warning.is-hidden {
+  display: none;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn-save-all {
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 14px 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-save-all:hover {
+  background: #1d4ed8;
+}
+
+.btn-modal-close {
+  background: transparent;
+  color: #64748b;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.btn-modal-close:hover {
+  color: #334155;
+}
+

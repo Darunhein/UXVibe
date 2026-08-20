@@ -89,7 +89,7 @@
                 </div>
               </div>
 
-              <div id="password-match-error" class="password-feedback-error" style="display: none;">
+              <div id="password-match-error" class="password-feedback-error">
                 Las contraseñas no coinciden.
               </div>
 
