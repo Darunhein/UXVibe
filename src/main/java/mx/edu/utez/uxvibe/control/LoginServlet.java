@@ -50,6 +50,12 @@ public class LoginServlet extends HttpServlet {
       throws ServletException, IOException {
     String email = req.getParameter(EMAIL_PARAM);
     String password = req.getParameter(PASSWORD_PARAM);
+    if (email != null) {
+      email = email.trim();
+    }
+    if (password != null) {
+      password = password.trim();
+    }
 
     if (isBlank(email) || isBlank(password)) {
       forwardToLogin(
@@ -60,7 +66,18 @@ public class LoginServlet extends HttpServlet {
       return;
     }
 
-    UserAccount account = UserStore.getInstance().authenticate(email, password);
+    UserAccount account;
+    try {
+      account = UserStore.getInstance().authenticate(email, password);
+    } catch (RuntimeException e) {
+      e.printStackTrace();
+      forwardToLogin(
+          req,
+          resp,
+          "No se pudo consultar USUARIOS. Si el log menciona ROL, Tomcat sigue usando la versión anterior. Rebuild y vuelve a desplegar.",
+          email);
+      return;
+    }
     if (account == null) {
       forwardToLogin(req, resp, "Email o contraseña incorrectos.", email);
       return;

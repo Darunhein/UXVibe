@@ -69,34 +69,39 @@ public interface UserDao {
     if (email == null || password == null) {
       return null;
     }
+    String normalizedEmail = normalizeEmail(email);
+    String rawPassword = password.trim();
+    if (normalizedEmail.isEmpty() || rawPassword.isEmpty()) {
+      return null;
+    }
 
     try (
         Connection conn = ConexionBD.getInstancia().getConnection();
         PreparedStatement ps = conn.prepareStatement(FIND_BY_EMAIL_SQL)) {
-      ps.setString(1, normalizeEmail(email));
+      ps.setString(1, normalizedEmail);
       try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          UserAccount account = mapUser(rs);
-          if (!PasswordHasher.matches(password, account.getPassword())) {
-            return null;
-          }
-          if (!PasswordHasher.isHashed(account.getPassword())) {
-            upgradeStoredPassword(normalizeEmail(email), password);
-          }
-          return publicCopy(account);
+        if (!rs.next()) {
+          return null;
         }
+        UserAccount account = mapUser(rs);
+        if (!PasswordHasher.matches(rawPassword, account.getPassword())) {
+          return null;
+        }
+        if (!PasswordHasher.isHashed(account.getPassword())) {
+          upgradeStoredPassword(normalizedEmail, rawPassword);
+        }
+        return publicCopy(account);
       }
     } catch (SQLException e) {
-      if (!ConexionBD.isUnavailable(e)) {
-        e.printStackTrace();
+      if (ConexionBD.isUnavailable(e)) {
+        UserAccount cached = IN_MEMORY_ACCOUNTS.get(normalizedEmail);
+        if (cached == null || !PasswordHasher.matches(rawPassword, cached.getPassword())) {
+          return null;
+        }
+        return publicCopy(cached);
       }
+      throw new IllegalStateException("USUARIOS query failed: " + e.getMessage(), e);
     }
-
-    UserAccount account = IN_MEMORY_ACCOUNTS.get(normalizeEmail(email));
-    if (account == null || !PasswordHasher.matches(password, account.getPassword())) {
-      return null;
-    }
-    return publicCopy(account);
   }
 
   default boolean exists(String email) {
