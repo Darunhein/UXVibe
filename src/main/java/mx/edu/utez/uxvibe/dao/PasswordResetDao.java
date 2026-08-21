@@ -5,21 +5,45 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mx.edu.utez.uxvibe.ConexionBD;
 import mx.edu.utez.uxvibe.model.PasswordResetToken;
 
 public interface PasswordResetDao {
+  Logger LOGGER = Logger.getLogger(PasswordResetDao.class.getName());
 
   String INSERT_TOKEN_SQL = "INSERT INTO PASSWORD_RESETS (TOKEN, EMAIL, EXPIRES_AT, USED) VALUES (?, ?, ?, ?)";
   String FIND_TOKEN_SQL = "SELECT TOKEN, EMAIL, EXPIRES_AT, USED FROM PASSWORD_RESETS WHERE TOKEN = ?";
   String MARK_USED_SQL = "UPDATE PASSWORD_RESETS SET USED = 1 WHERE TOKEN = ?";
   String INVALIDATE_EMAIL_SQL = "UPDATE PASSWORD_RESETS SET USED = 1 WHERE LOWER(EMAIL) = LOWER(?)";
+  String CREATE_TABLE_SQL = "BEGIN "
+      + "EXECUTE IMMEDIATE 'CREATE TABLE PASSWORD_RESETS ("
+      + "TOKEN VARCHAR2(128) PRIMARY KEY, "
+      + "EMAIL VARCHAR2(150) NOT NULL, "
+      + "EXPIRES_AT TIMESTAMP NOT NULL, "
+      + "USED NUMBER(1) DEFAULT 0 NOT NULL)'; "
+      + "EXCEPTION WHEN OTHERS THEN "
+      + "IF SQLCODE != -955 THEN RAISE; END IF; "
+      + "END;";
 
   Map<String, PasswordResetToken> IN_MEMORY_TOKENS = new ConcurrentHashMap<>();
+
+  default void ensureTableExists() {
+    try (
+        Connection conn = ConexionBD.getInstancia().getConnection();
+        java.sql.Statement stmt = conn.createStatement()) {
+      stmt.execute(CREATE_TABLE_SQL);
+      LOGGER.info("PASSWORD_RESETS is ready");
+    } catch (SQLException e) {
+      if (!ConexionBD.isUnavailable(e)) {
+        LOGGER.log(Level.WARNING, "Could not ensure PASSWORD_RESETS exists; tokens stay in memory", e);
+      }
+    }
+  }
 
   default boolean saveToken(PasswordResetToken resetToken) {
     if (resetToken == null || resetToken.getToken() == null || resetToken.getEmail() == null) {

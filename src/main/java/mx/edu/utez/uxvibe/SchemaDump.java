@@ -15,6 +15,12 @@ public class SchemaDump {
                 }
             }
 
+            new mx.edu.utez.uxvibe.dao.PasswordResetDao() {
+            }.ensureTableExists();
+            int upgraded = new mx.edu.utez.uxvibe.dao.UserDao() {
+            }.upgradePlaintextPasswords();
+            System.out.println("password_upgrades=" + upgraded);
+
             System.out.println("--- USER_TABLES ---");
             try (ResultSet rs = stmt.executeQuery("SELECT table_name FROM user_tables ORDER BY 1")) {
                 while (rs.next()) {
@@ -39,7 +45,7 @@ public class SchemaDump {
                 }
             }
             String[] tables = {
-                    "USUARIOS", "PARTICIPANTES", "RESPUESTAS", "PRUEBAS"
+                    "USUARIOS", "PARTICIPANTES", "RESPUESTAS", "PRUEBAS", "PASSWORD_RESETS"
             };
             for (String table : tables) {
                 dumpTable(stmt, table);

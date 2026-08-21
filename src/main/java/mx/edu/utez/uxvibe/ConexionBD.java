@@ -35,6 +35,9 @@ public class ConexionBD {
         } catch (ClassNotFoundException e) {
             throw new SQLException("No se encontró ojdbc11. Rebuild del WAR y redeploy en Tomcat.", e);
         }
+        if (Boolean.getBoolean("uxvibe.disable.oracle") || testsAreOnClasspath()) {
+            throw new SQLException("Faltan credenciales Oracle. (disabled for tests)");
+        }
         String usuario = AppSettings.get("ORACLE_USER", "oracle.user");
         String password = AppSettings.get("ORACLE_PASSWORD", "oracle.password");
         String walletPassword = AppSettings.get("ORACLE_WALLET_PASSWORD", "oracle.wallet.password");
@@ -74,6 +77,15 @@ public class ConexionBD {
                 || lower.contains("i/o error")
                 || lower.contains("io error")
                 || lower.contains("could not establish");
+    }
+
+    private static boolean testsAreOnClasspath() {
+        try {
+            Class.forName("mx.edu.utez.uxvibe.DisableOracle");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     private static boolean isBlank(String value) {

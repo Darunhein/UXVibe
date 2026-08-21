@@ -1,8 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="mx.edu.utez.uxvibe.util.HtmlEscape" %>
 <%
-  String testNameVal    = request.getAttribute("testName")    != null ? (String) request.getAttribute("testName")    : "";
-  String descriptionVal = request.getAttribute("description") != null ? (String) request.getAttribute("description") : "";
-  String systemLinkVal  = request.getAttribute("systemLink")  != null ? (String) request.getAttribute("systemLink")  : "";
+  String testNameVal    = HtmlEscape.text(request.getAttribute("testName"));
+  String descriptionVal = HtmlEscape.text(request.getAttribute("description"));
+  String systemLinkVal  = HtmlEscape.text(request.getAttribute("systemLink"));
 %>
 <!doctype html>
 <html lang="es">
@@ -30,7 +31,7 @@
 
         <% if (request.getAttribute("errorMessage") != null) { %>
           <p class="form-message form-message--error">
-            <%= request.getAttribute("errorMessage") %>
+            <%= HtmlEscape.text(request.getAttribute("errorMessage")) %>
           </p>
         <% } %>
 

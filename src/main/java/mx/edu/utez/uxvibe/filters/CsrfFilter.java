@@ -19,7 +19,7 @@ public class CsrfFilter implements Filter {
     HttpServletRequest req = (HttpServletRequest) request;
     HttpServletResponse resp = (HttpServletResponse) response;
 
-    if (!"POST".equalsIgnoreCase(req.getMethod()) || isStaticPath(req.getServletPath()) || isAuthPath(req.getServletPath())) {
+    if (!"POST".equalsIgnoreCase(req.getMethod()) || isStaticPath(req.getServletPath())) {
       chain.doFilter(request, response);
       return;
     }
@@ -39,12 +39,5 @@ public class CsrfFilter implements Filter {
     return servletPath.startsWith("/CSS/")
         || servletPath.startsWith("/JavaScript/")
         || servletPath.startsWith("/public/");
-  }
-
-  private boolean isAuthPath(String servletPath) {
-    return "/login".equals(servletPath)
-        || "/register".equals(servletPath)
-        || "/recover".equals(servletPath)
-        || "/reset-password".equals(servletPath);
   }
 }

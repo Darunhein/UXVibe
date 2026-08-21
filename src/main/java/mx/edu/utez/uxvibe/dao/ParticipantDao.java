@@ -146,6 +146,11 @@ public interface ParticipantDao {
       return;
     }
     long testId = resolveTestId(email, testName);
+    if (testId <= 0) {
+      LOGGER.warning("Refuse survey save: no PRUEBAS row for email=" + normalizeEmail(email)
+          + ", test=" + safeTestName(testName));
+      return;
+    }
     String storedAnswer = answer == null ? (numeric == null ? null : String.valueOf(numeric))
         : String.valueOf(answer);
     try (
@@ -179,6 +184,11 @@ public interface ParticipantDao {
       return false;
     }
     long testId = resolveTestId(email, testName);
+    if (testId <= 0) {
+      LOGGER.warning("Refuse audio save: no PRUEBAS row for email=" + normalizeEmail(email)
+          + ", test=" + safeTestName(testName));
+      return false;
+    }
     String storedName = fileName == null || fileName.trim().isEmpty() ? "grabacion-sesion.webm" : fileName.trim();
     try (Connection conn = ConexionBD.getInstancia().getConnection()) {
       Long responseId = findResponseId(conn, participantId, QuestionNumbers.AUDIO);

@@ -117,13 +117,7 @@ public interface TestDao {
         }
       }
     }
-    return fallbackTestId(normalizedEmail, normalizedName);
-  }
-
-  private static long fallbackTestId(String email, String testName) {
-    String key = (email == null ? "" : email) + "|" + (testName == null ? "" : testName.toLowerCase(Locale.ROOT));
-    int hashed = Math.floorMod(key.hashCode(), 1_000_000_000);
-    return hashed == 0 ? 1L : hashed;
+    return -1;
   }
 
   private static String normalizeEmail(String email) {

@@ -9,11 +9,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mx.edu.utez.uxvibe.ConexionBD;
 import mx.edu.utez.uxvibe.model.UserAccount;
 import mx.edu.utez.uxvibe.security.PasswordHasher;
 
 public interface UserDao {
+  Logger LOGGER = Logger.getLogger(UserDao.class.getName());
   String INSERT_SQL = "INSERT INTO USUARIOS (NOMBRE_COMPLETO, EMAIL, PASSWORD) VALUES (?, ?, ?)";
   String FIND_BY_EMAIL_SQL = "SELECT NOMBRE_COMPLETO, EMAIL, PASSWORD FROM USUARIOS WHERE LOWER(EMAIL)=LOWER(?)";
   String EXISTS_SQL = "SELECT 1 FROM USUARIOS WHERE LOWER(EMAIL)=LOWER(?)";
@@ -175,6 +178,26 @@ public interface UserDao {
     return false;
   }
 
+  default int upgradePlaintextPasswords() {
+    int upgraded = 0;
+    for (UserAccount account : list()) {
+      if (account == null || account.getEmail() == null || account.getPassword() == null) {
+        continue;
+      }
+      if (PasswordHasher.isHashed(account.getPassword())) {
+        continue;
+      }
+      String email = normalizeEmail(account.getEmail());
+      String rawPassword = account.getPassword().trim();
+      if (email.isEmpty() || rawPassword.isEmpty()) {
+        continue;
+      }
+      upgradeStoredPassword(email, rawPassword);
+      upgraded++;
+    }
+    return upgraded;
+  }
+
   private static void upgradeStoredPassword(String email, String rawPassword) {
     try (
         Connection conn = ConexionBD.getInstancia().getConnection();
@@ -182,12 +205,18 @@ public interface UserDao {
       String hashed = PasswordHasher.hash(rawPassword);
       ps.setString(1, hashed);
       ps.setString(2, email);
-      ps.executeUpdate();
-      UserAccount cached = IN_MEMORY_ACCOUNTS.get(email);
-      if (cached != null) {
-        cached.setPassword(hashed);
+      int updated = ps.executeUpdate();
+      if (updated > 0) {
+        LOGGER.info("Upgraded plaintext password to PBKDF2 for " + email);
+        UserAccount cached = IN_MEMORY_ACCOUNTS.get(email);
+        if (cached != null) {
+          cached.setPassword(hashed);
+        }
+      } else {
+        LOGGER.warning("Password upgrade matched no USUARIOS row for " + email);
       }
-    } catch (SQLException ignored) {
+    } catch (SQLException e) {
+      LOGGER.log(Level.WARNING, "Could not upgrade stored password for " + email, e);
     }
   }
 

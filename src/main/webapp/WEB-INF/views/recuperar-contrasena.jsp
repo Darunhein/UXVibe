@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-  <% String emailVal="" ; Object emailAttr=request.getAttribute("email"); if (emailAttr !=null) {
-    emailVal=String.valueOf(emailAttr).replace("&", "&amp;" ).replace("\"", "&quot;").replace("<", "&lt;"); } %>
+<%@ page import="mx.edu.utez.uxvibe.util.HtmlEscape" %>
+<% String emailVal = HtmlEscape.text(request.getAttribute("email")); %>
   <!doctype html>
   <html lang="es">
 
@@ -28,13 +28,13 @@
 
           <% if (request.getAttribute("errorMessage") !=null) { %>
             <p class="form-message form-message--error">
-              <%= request.getAttribute("errorMessage") %>
+              <%= HtmlEscape.text(request.getAttribute("errorMessage")) %>
             </p>
             <% } %>
 
               <% if (request.getAttribute("successMessage") !=null) { %>
                 <p class="form-message form-message--success">
-                  <%= request.getAttribute("successMessage") %>
+                  <%= HtmlEscape.text(request.getAttribute("successMessage")) %>
                 </p>
                 <% } %>
 
