@@ -7,6 +7,9 @@ import java.nio.file.Paths;
 import java.sql.*;
 
 public class ConexionBD {
+    private static final String USUARIO = "ADMIN";
+    private static final String PASSWORD = "Alfaro180107";
+    private static final String WALLET_PASSWORD = "Alfaro180107";
     private static final String NOMBRE_WALLET = "Wallet_Integradora";
     private static final String JDBC_URL = "jdbc:oracle:thin:@"
             + "(description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.us-phoenix-1.oraclecloud.com))(connect_data=(service_name=gc5a7c8f4fbdb11_integradora_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))";
@@ -38,20 +41,12 @@ public class ConexionBD {
         if (Boolean.getBoolean("uxvibe.disable.oracle") || testsAreOnClasspath()) {
             throw new SQLException("Faltan credenciales Oracle. (disabled for tests)");
         }
-        String usuario = AppSettings.get("ORACLE_USER", "oracle.user");
-        String password = AppSettings.get("ORACLE_PASSWORD", "oracle.password");
-        String walletPassword = AppSettings.get("ORACLE_WALLET_PASSWORD", "oracle.wallet.password");
-        if (isBlank(usuario) || isBlank(password) || isBlank(walletPassword)) {
-            throw new SQLException(
-                    "Faltan credenciales Oracle. Define ORACLE_USER, ORACLE_PASSWORD y ORACLE_WALLET_PASSWORD "
-                            + "o crea src/main/resources/local-secrets.properties (ver local-secrets.properties.example).");
-        }
         String rutaWallet = resolverRutaWallet();
         System.setProperty("javax.net.ssl.trustStore", rutaWallet + "/" + TRUSTSTORE);
-        System.setProperty("javax.net.ssl.trustStorePassword", walletPassword);
+        System.setProperty("javax.net.ssl.trustStorePassword", WALLET_PASSWORD);
         System.setProperty("javax.net.ssl.keyStore", rutaWallet + "/" + KEYSTORE);
-        System.setProperty("javax.net.ssl.keyStorePassword", walletPassword);
-        return DriverManager.getConnection(JDBC_URL, usuario, password);
+        System.setProperty("javax.net.ssl.keyStorePassword", WALLET_PASSWORD);
+        return DriverManager.getConnection(JDBC_URL, USUARIO, PASSWORD);
     }
 
     public static boolean isUnavailable(SQLException e) {
@@ -86,10 +81,6 @@ public class ConexionBD {
         } catch (ClassNotFoundException e) {
             return false;
         }
-    }
-
-    private static boolean isBlank(String value) {
-        return value == null || value.isBlank();
     }
 
     private static String resolverRutaWallet() throws SQLException {
