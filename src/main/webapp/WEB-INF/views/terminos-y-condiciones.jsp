@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
     </head>
 
-    <body>
+    <body data-context-path="${pageContext.request.contextPath}">
         <div class="terminos-container">
             <main class="terminos-frame">
                 <section class="terminos-header">

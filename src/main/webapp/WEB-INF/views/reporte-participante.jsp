@@ -425,27 +425,23 @@
                         </div>
                       </section>
 
+                      <% if (micAudioUrl != null && !micAudioUrl.trim().isEmpty()) { 
+                        String cleanMicSrc = micAudioUrl.startsWith("data:") ? micAudioUrl : ("data:audio/webm;base64," + micAudioUrl); 
+                        String micName = report.getMicAudioFileName() == null ? "prueba-microfono.webm" : report.getMicAudioFileName(); 
+                      %>
                       <section class="reporte-block-2">
                         <h2>Prueba de micrófono</h2>
-                        <% if (micAudioUrl !=null && !micAudioUrl.isEmpty()) { String
-                          cleanMicSrc=micAudioUrl.startsWith("data:") ? micAudioUrl : ("data:audio/webm;base64," +
-                          micAudioUrl); String micName=report.getMicAudioFileName()==null ? "prueba-microfono.webm" :
-                          report.getMicAudioFileName(); %>
-                          <div class="reporte-box reporte-box--summary reporte-box--audio">
-                            <audio controls preload="auto" class="reporte-audio-player"
-                              src="<%= escapeHtml(cleanMicSrc) %>"></audio>
-                            <div class="reporte-audio-footer">
-                              <span class="reporte-audio-filename">Archivo: <%= escapeHtml(micName) %></span>
-                              <a href="<%= escapeHtml(cleanMicSrc) %>" download="<%= escapeHtml(micName) %>"
-                                class="reporte-audio-download">Descargar audio (.webm)</a>
-                            </div>
+                        <div class="reporte-box reporte-box--summary reporte-box--audio">
+                          <audio controls preload="auto" class="reporte-audio-player"
+                            src="<%= cleanMicSrc %>"></audio>
+                          <div class="reporte-audio-footer">
+                            <span class="reporte-audio-filename">Archivo: <%= escapeHtml(micName) %></span>
+                            <a href="<%= cleanMicSrc %>" download="<%= escapeHtml(micName) %>"
+                              class="reporte-audio-download">Descargar audio (.webm)</a>
                           </div>
-                          <% } else { %>
-                            <div class="reporte-box reporte-box--summary">
-                              No se registró audio de prueba de micrófono para esta sesión.
-                            </div>
-                            <% } %>
+                        </div>
                       </section>
+                      <% } %>
 
                       <section class="reporte-block-2">
                         <h2>Grabación de audio de la sesión</h2>
@@ -455,10 +451,10 @@
                           report.getAudioFileName(); %>
                           <div class="reporte-box reporte-box--summary reporte-box--audio">
                             <audio controls preload="auto" class="reporte-audio-player"
-                              src="<%= escapeHtml(cleanAudioSrc) %>"></audio>
+                              src="<%= cleanAudioSrc %>"></audio>
                             <div class="reporte-audio-footer">
                               <span class="reporte-audio-filename">Archivo: <%= escapeHtml(audioName) %></span>
-                              <a href="<%= escapeHtml(cleanAudioSrc) %>" download="<%= escapeHtml(audioName) %>"
+                              <a href="<%= cleanAudioSrc %>" download="<%= escapeHtml(audioName) %>"
                                 class="reporte-audio-download">Descargar audio (.webm)</a>
                             </div>
                           </div>

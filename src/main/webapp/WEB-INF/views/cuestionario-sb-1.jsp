@@ -71,22 +71,27 @@
                   <input type="radio" name="education" value="basic" required />
                   <span class="radio-label">Básico (Primaria)</span>
                 </label>
-                <label class="radio-option">
-                  <input type="radio" name="education" value="secondary" required />
-                  <span class="radio-label">Medio (Secundaria)</span>
-                </label>
-                <label class="radio-option">
-                  <input type="radio" name="education" value="preparatory" required />
-                  <span class="radio-label">Medio Superior (Preparatoria)</span>
-                </label>
+
                 <label class="radio-option">
                   <input type="radio" name="education" value="university" required />
                   <span class="radio-label">Superior (Universidad)</span>
                 </label>
+
+                <label class="radio-option">
+                  <input type="radio" name="education" value="secondary" required />
+                  <span class="radio-label">Medio (Secundaria)</span>
+                </label>
+
                 <label class="radio-option">
                   <input type="radio" name="education" value="masters" required />
                   <span class="radio-label">Superior (Maestría)</span>
                 </label>
+
+                <label class="radio-option">
+                  <input type="radio" name="education" value="preparatory" required />
+                  <span class="radio-label">Medio Superior (Preparatoria)</span>
+                </label>
+
                 <label class="radio-option">
                   <input type="radio" name="education" value="doctorate" required />
                   <span class="radio-label">Superior (Doctorado)</span>
