@@ -109,6 +109,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (recChannel) {
       recChannel.postMessage({ type: "CLOSE_RECORDING_TAB" });
     }
+    try {
+      localStorage.setItem("uxvibe_close_recording_event", String(Date.now()));
+    } catch (e) { }
   }
 
   if (btnSaveAll) {

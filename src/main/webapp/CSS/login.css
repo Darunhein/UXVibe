@@ -343,68 +343,47 @@ body {
 }
 
 /* =========================================
-   CREAR CUENTA
+   CREAR CUENTA Y OLVIDÉ MI CONTRASEÑA
    ========================================= */
 
-.crear-cuenta {
+.crear-cuenta,
+.olvid-mi-contrasea {
   width: auto;
   height: auto;
-  margin-top: 6px;
-  padding: 8px 16px;
+  margin-top: 4px;
+  padding: 6px 12px;
 
   border: none;
   border-radius: 6px;
 
   background: transparent;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
+  font-family: Inter, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #4d6475;
+
   text-decoration: none;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.crear-cuenta:hover {
-  opacity: 0.8;
+.crear-cuenta:hover,
+.olvid-mi-contrasea:hover {
+  color: #1e3a5f;
   text-decoration: underline;
+  opacity: 0.9;
 }
 
 .crear-cuenta-text {
   margin: 0;
-
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-
-  line-height: 1.15;
-
-  color: #557283;
-}
-
-
-/* =========================================
-   OLVIDÉ MI CONTRASEÑA
-   ========================================= */
-
-.olvid-mi-contrasea {
-  width: auto;
-  height: auto;
-
-  padding: 0;
-
-  border: none;
-
-  background: transparent;
-
-  color: #005078;
-
-  font-family: Inter, sans-serif;
-
-  font-size: 17px;
-  font-weight: 500;
-
-  cursor: pointer;
+  color: inherit;
 }
 
 

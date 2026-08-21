@@ -107,11 +107,11 @@ body {
 .manikin-scale,
 .character-scale {
     display: grid;
-    grid-template-columns: repeat(9, 64px);
-    column-gap: 16px;
+    grid-template-columns: repeat(9, 80px);
+    column-gap: 20px;
     justify-content: center;
     align-items: flex-end;
-    margin: 40px auto 16px auto;
+    margin: 32px auto 20px auto;
     width: auto;
     max-width: 100%;
 }
@@ -119,8 +119,8 @@ body {
 .emoji-item,
 .manikin-item,
 .character-item {
-    width: 64px;
-    height: 120px;
+    width: 80px;
+    height: 130px;
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -162,34 +162,25 @@ body {
     grid-column: 9;
 }
 
-.emoji,
-.manikin,
+.emoji {
+    width: 80px;
+    height: 120px;
+    object-fit: contain;
+    display: block;
+}
+
+.manikin {
+    width: 80px;
+    height: 120px;
+    object-fit: contain;
+    display: block;
+}
+
 .character {
     width: 100%;
     height: 100%;
     object-fit: contain;
     display: block;
-}
-
-/* SAM 3 Character Progressive Heights */
-.character-item:nth-child(1) .character {
-    height: 48px;
-}
-
-.character-item:nth-child(2) .character {
-    height: 66px;
-}
-
-.character-item:nth-child(3) .character {
-    height: 84px;
-}
-
-.character-item:nth-child(4) .character {
-    height: 102px;
-}
-
-.character-item:nth-child(5) .character {
-    height: 120px;
 }
 
 /* ============================================================================
@@ -198,8 +189,8 @@ body {
 
 .scale-options {
     display: grid;
-    grid-template-columns: repeat(9, 64px);
-    column-gap: 16px;
+    grid-template-columns: repeat(9, 80px);
+    column-gap: 20px;
     justify-content: center;
     align-items: center;
     margin: 0 auto;
@@ -212,8 +203,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 64px;
-    gap: 8px;
+    width: 80px;
+    gap: 10px;
     cursor: pointer;
 }
 
@@ -297,7 +288,7 @@ body {
 
     cursor: pointer;
 
-    transition: all 0.25s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-back:hover,
@@ -306,7 +297,13 @@ body {
 
     transform: translateY(-2px);
 
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 6px 16px rgba(90, 122, 140, 0.35);
+}
+
+.btn-back:active,
+.btn-next:active {
+    transform: translateY(0) scale(0.99);
+    box-shadow: 0 2px 6px rgba(90, 122, 140, 0.2);
 }
 
 .btn-back img,
@@ -323,12 +320,12 @@ body {
 
     .emoji,
     .manikin {
-        width: 80px;
+        width: 64px;
         height: 110px;
     }
 
     .character-scale {
-        gap: 20px;
+        gap: 16px;
     }
 
     .survey-navigation {
@@ -357,37 +354,40 @@ body {
 
         min-height: 94vh;
 
-        padding: 28px 40px;
+        padding: 24px 36px;
     }
 
     .survey-title {
-        font-size: 34px;
+        font-size: 30px;
     }
 
     .survey-question {
-        margin-top: 12px;
+        margin-top: 8px;
     }
 
     .survey-question p {
-        font-size: 23px;
+        font-size: 20px;
     }
 
     .emoji-scale,
     .manikin-scale,
     .character-scale {
-        margin-top: 30px;
-        margin-bottom: 18px;
+        margin-top: 18px;
+        margin-bottom: 12px;
+        grid-template-columns: repeat(9, 64px);
+        column-gap: 14px;
     }
 
     .emoji,
     .manikin {
-        width: 80px;
+        width: 64px;
         height: 110px;
     }
 
     .emoji-item,
-    .manikin-item {
-        width: 80px;
+    .manikin-item,
+    .character-item {
+        width: 64px;
         height: 110px;
     }
 

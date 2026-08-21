@@ -308,6 +308,18 @@
     timerLabel.textContent = formatTime(timerSeconds);
   }
 
+  // Dual Signaling: Storage event fallback to close tab
+  window.addEventListener("storage", function (e) {
+    if (e.key === "uxvibe_close_recording_event" && e.newValue) {
+      stopTimer();
+      stopRecording();
+      stopMediaTracks();
+      setTimeout(function () {
+        window.close();
+      }, 150);
+    }
+  });
+
   // Cross-Tab Communication with Cheers Bye
   const recChannel = typeof BroadcastChannel !== "undefined" ? new BroadcastChannel("uxvibe_recording_channel") : null;
   if (recChannel) {
@@ -361,7 +373,7 @@
     });
   }
 
-  // When clicking "Empezar encuesta", unpause recording, update status, and open survey in new tab
+  // When clicking "Empezar encuesta", unpause recording, update status, and open survey in new tab if not already open
   if (startSurveyLink) {
     startSurveyLink.addEventListener("click", function (event) {
       event.preventDefault();
@@ -374,7 +386,6 @@
         liveRecText.textContent = "GRABANDO EN SEGUNDO PLANO (ENCUESTA EN CURSO)";
       }
 
-      // Open survey in a new window/tab so this recording tab stays alive capturing audio
       window.open(contextPath + "/cuestionario-sb-1", "_blank");
     });
   }

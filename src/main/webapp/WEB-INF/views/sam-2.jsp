@@ -14,7 +14,7 @@
   <body data-context-path="${pageContext.request.contextPath}">
     <div class="satisfaction-survey-container">
       <main class="survey-frame">
-        <h1 class="survey-title">Encuesta de Satisfacción (SAM 2)</h1>
+        <h1 class="survey-title">Encuesta de Satisfacción SAM 2</h1>
 
         <section class="survey-question">
           <p>¿Qué tan impactante o estimulante fue tu experiencia?</p>
