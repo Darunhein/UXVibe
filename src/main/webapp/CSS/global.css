@@ -1,4 +1,4 @@
-﻿.login-del-evaluador {
+.login-del-evaluador {
   font-family: Inter, sans-serif;
 }
 
@@ -67,16 +67,95 @@ input.form-input {
 .btn-secondary,
 .btn-primary,
 .btn-back,
+.btn-next,
 .btn-exit,
+.entrar,
+.submit-btn,
+.registro-submit,
+.crear-prueba__submit,
 .test-section__run-button,
 .test-section__menu-button,
 .test-section__pagination-link,
 .participante-detalles,
 .participantes-pagination-link,
 .participantes-back,
-.pause-menu__item {
+.pause-menu__item,
+.btn-modal-close,
+.btn-save-all,
+.btn-restart-test,
+.btn-delete-test,
+.participante-delete-button,
+.test-section__delete-button {
   text-decoration: none !important;
-  color: inherit;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer;
+}
+
+/* Primary Action Buttons Unified Hover */
+.btn-primary:hover:not(.disabled):not(:disabled),
+.btn-next:hover:not(:disabled),
+.entrar:hover:not(:disabled),
+.submit-btn:hover:not(:disabled),
+.registro-submit:hover:not(:disabled),
+.crear-prueba__submit:hover:not(:disabled),
+.test-section__run-button:hover:not(:disabled),
+.btn-save-all:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow: 0 6px 18px rgba(67, 73, 88, 0.28) !important;
+}
+
+/* Primary Active Click Feedback */
+.btn-primary:active:not(.disabled):not(:disabled),
+.btn-next:active:not(:disabled),
+.entrar:active:not(:disabled),
+.submit-btn:active:not(:disabled),
+.registro-submit:active:not(:disabled),
+.crear-prueba__submit:active:not(:disabled),
+.test-section__run-button:active:not(:disabled),
+.btn-save-all:active:not(:disabled) {
+  transform: translateY(0) scale(0.99);
+  box-shadow: 0 2px 6px rgba(67, 73, 88, 0.18) !important;
+}
+
+/* Secondary & Back Navigation Buttons Unified Hover */
+.btn-secondary:hover:not(:disabled),
+.btn-back:hover,
+.back-btn:hover,
+.participantes-back:hover,
+.test-section__menu-button:hover,
+.participante-detalles:hover,
+.btn-restart-test:hover,
+.btn-exit:hover {
+  transform: translateY(-1.5px);
+  filter: brightness(1.08);
+  box-shadow: 0 4px 12px rgba(67, 73, 88, 0.2) !important;
+}
+
+.btn-secondary:active:not(:disabled),
+.btn-back:active,
+.back-btn:active,
+.participantes-back:active,
+.test-section__menu-button:active,
+.participante-detalles:active,
+.btn-restart-test:active,
+.btn-exit:active {
+  transform: translateY(0);
+}
+
+/* Danger / Delete Actions Unified Hover */
+.participante-delete-button:hover,
+.test-section__delete-button:hover,
+.btn-delete-test:hover {
+  transform: translateY(-1.5px);
+  filter: brightness(1.08);
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3) !important;
+}
+
+.participante-delete-button:active,
+.test-section__delete-button:active,
+.btn-delete-test:active {
+  transform: translateY(0);
 }
 
 :root {

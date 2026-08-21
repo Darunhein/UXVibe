@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 final class PaginationSupport {
-    static final int PAGE_SIZE = 3;
+    static final int PAGE_SIZE = 4;
 
     private PaginationSupport() {
     }

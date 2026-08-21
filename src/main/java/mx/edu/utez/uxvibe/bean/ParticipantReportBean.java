@@ -162,7 +162,7 @@ public class ParticipantReportBean {
       if ("satisfaction".equals(question) || "impact".equals(question) || "control".equals(question)) {
         return Integer.parseInt(answer);
       }
-      if ("stress".equals(question) || "relaxation".equals(question)) {
+      if ("stress".equals(question)) {
         String a = answer.toLowerCase();
         switch (a) {
           case "never":
@@ -192,6 +192,41 @@ public class ParticipantReportBean {
           case "always":
           case "siempre":
             return 5;
+          default:
+            return null;
+        }
+      }
+      if ("relaxation".equals(question)) {
+        String a = answer.toLowerCase();
+        // Inverted score: Higher relaxation lowers stress (Always relaxed = 1 stress, Never relaxed = 5 stress)
+        switch (a) {
+          case "never":
+          case "nunca":
+            return 5;
+          case "sometimes":
+          case "a veces":
+          case "aveces":
+          case "a_veces":
+            return 4;
+          case "half-time":
+          case "half time":
+          case "half_time":
+          case "medio tiempo":
+          case "medio-tiempo":
+          case "medio_tiempo":
+          case "mitad del tiempo":
+            return 3;
+          case "most-time":
+          case "most time":
+          case "most_time":
+          case "la mayor parte":
+          case "la mayor parte del tiempo":
+          case "casi siempre":
+          case "frecuentemente":
+            return 2;
+          case "always":
+          case "siempre":
+            return 1;
           default:
             return null;
         }
