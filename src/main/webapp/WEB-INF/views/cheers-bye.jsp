@@ -87,6 +87,7 @@
             </div>
 
             <form class="modal-actions" action="${pageContext.request.contextPath}/complete-test" method="post">
+              <%@ include file="/WEB-INF/views/_csrf.jsp" %>
               <input type="hidden" name="testName" value="<%= testName != null ? testName : "" %>" />
               <input type="hidden" name="participantName"
                 value="<%= participantName != null ? participantName : "" %>" />

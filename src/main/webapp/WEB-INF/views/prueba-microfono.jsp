@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
   </head>
 
-  <body data-context-path="${pageContext.request.contextPath}">
+  <body data-context-path="${pageContext.request.contextPath}" data-csrf="<%= mx.edu.utez.uxvibe.security.CsrfTokens.get(request) %>">
     <div class="microphone-test-container">
       <main class="microphone-test-frame">
         <section class="test-header">

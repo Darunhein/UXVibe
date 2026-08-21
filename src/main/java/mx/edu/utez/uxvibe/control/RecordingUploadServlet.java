@@ -10,7 +10,10 @@ import mx.edu.utez.uxvibe.model.UserAccount;
 import mx.edu.utez.uxvibe.service.ParticipantStore;
 
 @WebServlet(value = "/recording-upload")
-@jakarta.servlet.annotation.MultipartConfig
+@jakarta.servlet.annotation.MultipartConfig(
+    maxFileSize = 20 * 1024 * 1024,
+    maxRequestSize = 21 * 1024 * 1024,
+    fileSizeThreshold = 1024 * 1024)
 public class RecordingUploadServlet extends HttpServlet {
 
   @Override
@@ -27,7 +30,7 @@ public class RecordingUploadServlet extends HttpServlet {
     String participantName = (String) session.getAttribute(
         "currentParticipantName");
     if (participantName == null || participantName.trim().isEmpty()) {
-      participantName = "Participante " + (System.currentTimeMillis() % 1000);
+      participantName = mx.edu.utez.uxvibe.util.ParticipantIds.newFallbackName();
     }
 
     String fileName = req.getParameter("fileName");
@@ -55,6 +58,10 @@ public class RecordingUploadServlet extends HttpServlet {
         } else
           audioBase64 = audioUrl;
       }
+    } catch (IllegalStateException e) {
+      resp.setStatus(HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE);
+      resp.getWriter().write("El archivo de audio supera el límite de 20 MB");
+      return;
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -65,12 +72,28 @@ public class RecordingUploadServlet extends HttpServlet {
       return;
     }
 
-    ParticipantStore.getInstance().saveAudioAsset(
+    String recordingType = req.getParameter("recordingType");
+    if (recordingType == null || recordingType.isBlank()) {
+      if (fileName != null && fileName.toLowerCase().contains("mic-test")) {
+        recordingType = mx.edu.utez.uxvibe.util.QuestionNumbers.TYPE_MIC;
+      } else {
+        recordingType = mx.edu.utez.uxvibe.util.QuestionNumbers.TYPE_SESSION;
+      }
+    }
+
+    boolean saved = ParticipantStore.getInstance().saveAudioAsset(
         account.getEmail(),
         testName,
         participantName,
         fileName,
-        audioBase64);
+        audioBase64,
+        recordingType);
+
+    if (!saved) {
+      resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      resp.getWriter().write("No se pudo guardar el audio en Oracle. Crea la prueba antes de grabar.");
+      return;
+    }
 
     resp.setStatus(HttpServletResponse.SC_OK);
     resp.getWriter().write("OK");

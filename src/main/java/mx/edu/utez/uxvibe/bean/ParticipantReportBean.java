@@ -15,6 +15,8 @@ public class ParticipantReportBean {
   private LocalDateTime completedOn;
   private String audioFileName;
   private String audioUrl;
+  private String micAudioFileName;
+  private String micAudioUrl;
   private Integer age;
   private String gender;
   private String education;
@@ -76,6 +78,22 @@ public class ParticipantReportBean {
     this.audioUrl = audioUrl;
   }
 
+  public String getMicAudioFileName() {
+    return micAudioFileName;
+  }
+
+  public void setMicAudioFileName(String micAudioFileName) {
+    this.micAudioFileName = micAudioFileName;
+  }
+
+  public String getMicAudioUrl() {
+    return micAudioUrl;
+  }
+
+  public void setMicAudioUrl(String micAudioUrl) {
+    this.micAudioUrl = micAudioUrl;
+  }
+
   public Integer getAge() {
     return age;
   }
@@ -102,6 +120,10 @@ public class ParticipantReportBean {
 
   public List<Map<String, Object>> getSurveyResponses() {
     return surveyResponses;
+  }
+
+  public static boolean isInvertedQuestion(String question) {
+    return "q5".equals(question) || "q9".equals(question) || "q15".equals(question);
   }
 
   public void addSurveyResponse(String question, Object answer) {
@@ -132,7 +154,7 @@ public class ParticipantReportBean {
     try {
       if (question != null && question.startsWith("q")) {
         int v = Integer.parseInt(answer);
-        if ("q3".equals(question) || "q9".equals(question) || "q15".equals(question)) {
+        if (isInvertedQuestion(question)) {
           return 6 - v;
         }
         return v;

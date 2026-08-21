@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-  <% Boolean validTokenObj=(Boolean) request.getAttribute("validToken"); boolean validToken=validTokenObj !=null &&
-    validTokenObj; String token=(String) request.getAttribute("token"); String email=(String)
-    request.getAttribute("email"); %>
+<%@ page import="mx.edu.utez.uxvibe.util.HtmlEscape" %>
+<% Boolean validTokenObj=(Boolean) request.getAttribute("validToken"); boolean validToken=validTokenObj !=null &&
+    validTokenObj; String token=HtmlEscape.text(request.getAttribute("token")); String email=HtmlEscape.text(request.getAttribute("email")); %>
     <!doctype html>
     <html lang="es">
 
@@ -26,7 +26,7 @@
 
             <% if (request.getAttribute("errorMessage") !=null) { %>
               <p class="form-message form-message--error">
-                <%= request.getAttribute("errorMessage") %>
+                <%= HtmlEscape.text(request.getAttribute("errorMessage")) %>
               </p>
               <% } %>
 
@@ -44,7 +44,8 @@
                   </div>
 
                   <form id="resetPasswordForm" action="${pageContext.request.contextPath}/reset-password" method="post">
-                    <input type="hidden" name="token" value="<%= token != null ? token : "" %>" />
+                    <%@ include file="/WEB-INF/views/_csrf.jsp" %>
+                    <input type="hidden" name="token" value="<%= token %>" />
 
                     <div class="reset-field-group">
                       <label class="field-label" for="reset-password">Nueva contraseña</label>

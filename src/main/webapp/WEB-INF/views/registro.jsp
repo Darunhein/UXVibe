@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="mx.edu.utez.uxvibe.util.HtmlEscape" %>
   <!doctype html>
   <html lang="es">
 
@@ -17,14 +18,15 @@
       <p class="registro-subtitle">Completa los datos para crear tu cuenta</p>
       <% if (request.getAttribute("errorMessage") !=null) { %>
         <p class="form-message form-message--error">
-          <%= request.getAttribute("errorMessage") %>
+          <%= HtmlEscape.text(request.getAttribute("errorMessage")) %>
         </p>
         <% } %>
-          <% String fullNameVal=request.getAttribute("fullName") !=null ? (String) request.getAttribute("fullName") : ""
-            ; String emailVal=request.getAttribute("email") !=null ? (String) request.getAttribute("email") : "" ; %>
+          <% String fullNameVal = HtmlEscape.text(request.getAttribute("fullName"));
+             String emailVal = HtmlEscape.text(request.getAttribute("email")); %>
             <main class="frame">
               <form class="registro-form" id="registroForm" action="${pageContext.request.contextPath}/register"
                 method="post">
+                <%@ include file="/WEB-INF/views/_csrf.jsp" %>
                 <div class="registro-field">
                   <label class="registro-label-name" for="nombre-completo">Nombre completo</label>
                   <div class="registro-input-shell">

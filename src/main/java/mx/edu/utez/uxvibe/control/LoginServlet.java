@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import mx.edu.utez.uxvibe.model.UserAccount;
-import mx.edu.utez.uxvibe.model.UserRole;
 import mx.edu.utez.uxvibe.service.UserStore;
 
 @WebServlet(value = "/login")
@@ -50,6 +49,12 @@ public class LoginServlet extends HttpServlet {
       throws ServletException, IOException {
     String email = req.getParameter(EMAIL_PARAM);
     String password = req.getParameter(PASSWORD_PARAM);
+    if (email != null) {
+      email = email.trim();
+    }
+    if (password != null) {
+      password = password.trim();
+    }
 
     if (isBlank(email) || isBlank(password)) {
       forwardToLogin(
@@ -60,13 +65,29 @@ public class LoginServlet extends HttpServlet {
       return;
     }
 
-    UserAccount account = UserStore.getInstance().authenticate(email, password);
+    UserAccount account;
+    try {
+      account = UserStore.getInstance().authenticate(email, password);
+    } catch (RuntimeException e) {
+      e.printStackTrace();
+      forwardToLogin(
+          req,
+          resp,
+          "No se pudo consultar USUARIOS. Revisa el log de Tomcat e inténtalo de nuevo.",
+          email);
+      return;
+    }
     if (account == null) {
       forwardToLogin(req, resp, "Email o contraseña incorrectos.", email);
       return;
     }
 
-    HttpSession session = req.getSession();
+    HttpSession previous = req.getSession(false);
+    if (previous != null) {
+      previous.invalidate();
+    }
+    HttpSession session = req.getSession(true);
+    account.setPassword(null);
     session.setAttribute(CURRENT_USER_ATTR, account);
     redirectToHome(req, resp, account);
   }
@@ -101,7 +122,7 @@ public class LoginServlet extends HttpServlet {
       HttpServletResponse resp,
       UserAccount account) {
     try {
-      resp.sendRedirect(req.getContextPath() + resolveHomePath(account));
+      resp.sendRedirect(req.getContextPath() + "/tests");
     } catch (IOException e) {
       writeError(resp, REDIRECT_ERROR_MESSAGE);
     }
@@ -131,10 +152,4 @@ public class LoginServlet extends HttpServlet {
     return value == null ? null : String.valueOf(value);
   }
 
-  private String resolveHomePath(UserAccount account) {
-    if (account != null && UserRole.PARTICIPANT.equals(account.getRole())) {
-      return "/terms";
-    }
-    return "/tests";
-  }
 }

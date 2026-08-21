@@ -40,7 +40,7 @@ public class QuestionnaireSb2Servlet extends HttpServlet {
     String testName = (String) session.getAttribute("currentTestName");
     String participantName = (String) session.getAttribute("currentParticipantName");
     if (participantName == null || participantName.trim().isEmpty()) {
-      participantName = "Participante " + (System.currentTimeMillis() % 1000);
+      participantName = mx.edu.utez.uxvibe.util.ParticipantIds.newFallbackName();
       session.setAttribute("currentParticipantName", participantName);
     }
 

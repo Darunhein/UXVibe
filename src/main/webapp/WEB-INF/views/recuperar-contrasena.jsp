@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="mx.edu.utez.uxvibe.util.HtmlEscape" %>
+<% String emailVal = HtmlEscape.text(request.getAttribute("email")); %>
   <!doctype html>
   <html lang="es">
 
@@ -26,25 +28,25 @@
 
           <% if (request.getAttribute("errorMessage") !=null) { %>
             <p class="form-message form-message--error">
-              <%= request.getAttribute("errorMessage") %>
+              <%= HtmlEscape.text(request.getAttribute("errorMessage")) %>
             </p>
             <% } %>
 
               <% if (request.getAttribute("successMessage") !=null) { %>
                 <p class="form-message form-message--success">
-                  <%= request.getAttribute("successMessage") %>
+                  <%= HtmlEscape.text(request.getAttribute("successMessage")) %>
                 </p>
                 <% } %>
 
                   <form id="recoverForm" action="${pageContext.request.contextPath}/recover" method="post">
+                    <%@ include file="/WEB-INF/views/_csrf.jsp" %>
                     <label class="email-label" for="recuperar-email">Email</label>
                     <section class="email-row">
                       <div class="email-shell">
                         <img class="email-icon-panel" alt=""
                           src="${pageContext.request.contextPath}/public/recuperar-contrasena/merged-asset-1@2x.png" />
                         <input id="recuperar-email" class="form-input email-input" placeholder="Ingresa tu email"
-                          type="email" name="email" autocomplete="email" value="<%= request.getAttribute(" email")
-                          !=null ? request.getAttribute("email") : "" %>" required />
+                          type="email" name="email" autocomplete="email" value="<%= emailVal %>" required />
                       </div>
                     </section>
 

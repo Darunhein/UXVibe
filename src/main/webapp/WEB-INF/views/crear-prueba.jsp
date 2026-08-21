@@ -1,8 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="mx.edu.utez.uxvibe.util.HtmlEscape" %>
 <%
-  String testNameVal    = request.getAttribute("testName")    != null ? (String) request.getAttribute("testName")    : "";
-  String descriptionVal = request.getAttribute("description") != null ? (String) request.getAttribute("description") : "";
-  String systemLinkVal  = request.getAttribute("systemLink")  != null ? (String) request.getAttribute("systemLink")  : "";
+  String testNameVal    = HtmlEscape.text(request.getAttribute("testName"));
+  String descriptionVal = HtmlEscape.text(request.getAttribute("description"));
+  String systemLinkVal  = HtmlEscape.text(request.getAttribute("systemLink"));
 %>
 <!doctype html>
 <html lang="es">
@@ -30,12 +31,13 @@
 
         <% if (request.getAttribute("errorMessage") != null) { %>
           <p class="form-message form-message--error">
-            <%= request.getAttribute("errorMessage") %>
+            <%= HtmlEscape.text(request.getAttribute("errorMessage")) %>
           </p>
         <% } %>
 
         <form class="crear-prueba__form" id="createTestForm"
           action="${pageContext.request.contextPath}/create-test" method="post">
+          <%@ include file="/WEB-INF/views/_csrf.jsp" %>
           <label class="visually-hidden" for="nombre-prueba">Nombre de la prueba</label>
           <div class="crear-prueba__input-shell">
             <img class="crear-prueba__input-icon"

@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import mx.edu.utez.uxvibe.model.UserAccount;
-import mx.edu.utez.uxvibe.model.UserRole;
 
 @WebFilter(urlPatterns = {
         "/tests",
@@ -39,7 +38,9 @@ import mx.edu.utez.uxvibe.model.UserRole;
         "/participant-report",
         "/delete-test",
         "/delete-participant",
-        "/recording-upload"
+        "/recording-upload",
+        "/survey-submit",
+        "/participant-identity"
 })
 public class AuthenticationFilter implements Filter {
     @Override
@@ -56,13 +57,6 @@ public class AuthenticationFilter implements Filter {
 
         Object currentUserAttribute = session.getAttribute("currentUser");
         if (!(currentUserAttribute instanceof UserAccount)) {
-            session.invalidate();
-            resp.sendRedirect(req.getContextPath() + "/login");
-            return;
-        }
-
-        UserAccount currentUser = (UserAccount) currentUserAttribute;
-        if (!UserRole.isValid(currentUser.getRole())) {
             session.invalidate();
             resp.sendRedirect(req.getContextPath() + "/login");
             return;

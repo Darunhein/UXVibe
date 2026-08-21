@@ -12,7 +12,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import mx.edu.utez.uxvibe.model.UserAccount;
-import mx.edu.utez.uxvibe.model.UserRole;
 import mx.edu.utez.uxvibe.service.ParticipantStore;
 
 @WebServlet(value = "/complete-test")
@@ -26,7 +25,7 @@ public class CompleteTestServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    processCompletion(req, resp);
+    resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Completar la prueba requiere confirmar desde el formulario.");
   }
 
   @Override
@@ -42,7 +41,6 @@ public class CompleteTestServlet extends HttpServlet {
     }
 
     UserAccount account = (UserAccount) session.getAttribute(CURRENT_USER_ATTR);
-    boolean participantSession = UserRole.PARTICIPANT.equals(account.getRole());
 
     String paramTestName = req.getParameter("testName");
     String sessionTestName = (String) session.getAttribute(CURRENT_TEST_NAME_ATTR);
@@ -50,13 +48,8 @@ public class CompleteTestServlet extends HttpServlet {
         : sessionTestName;
 
     if (testName == null || testName.trim().isEmpty()) {
-      if (participantSession) {
-        testName = "Participación general";
-        session.setAttribute(CURRENT_TEST_NAME_ATTR, testName);
-      } else {
-        redirectTo(req, resp, "/tests");
-        return;
-      }
+      redirectTo(req, resp, "/tests");
+      return;
     }
 
     String paramParticipantName = req.getParameter("participantName");
@@ -71,15 +64,6 @@ public class CompleteTestServlet extends HttpServlet {
         startedAt,
         participantName);
     session.setAttribute(CURRENT_TEST_COMPLETION_RECORDED_ATTR, Boolean.TRUE);
-
-    if (participantSession) {
-      session.removeAttribute(CURRENT_TEST_NAME_ATTR);
-      session.removeAttribute(CURRENT_TEST_STARTED_AT_ATTR);
-      session.removeAttribute(CURRENT_TEST_COMPLETION_RECORDED_ATTR);
-      session.removeAttribute(CURRENT_PARTICIPANT_NAME_ATTR);
-      redirectTo(req, resp, "/logout");
-      return;
-    }
 
     // Redirect to participant report so the evaluator can immediately assess the
     // completed test
@@ -106,7 +90,7 @@ public class CompleteTestServlet extends HttpServlet {
     if (participantName instanceof String && !((String) participantName).trim().isEmpty()) {
       return ((String) participantName).trim();
     }
-    String fallbackName = "Participante " + (System.currentTimeMillis() % 1000);
+    String fallbackName = mx.edu.utez.uxvibe.util.ParticipantIds.newFallbackName();
     session.setAttribute(CURRENT_PARTICIPANT_NAME_ATTR, fallbackName);
     return fallbackName;
   }

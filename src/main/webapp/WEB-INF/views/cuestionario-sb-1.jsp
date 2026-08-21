@@ -20,6 +20,7 @@
 
         <form class="questionnaire-form" id="questionnaireForm"
           action="${pageContext.request.contextPath}/cuestionario-sb-1" method="post">
+          <%@ include file="/WEB-INF/views/_csrf.jsp" %>
           <section class="form-section">
             <div class="form-row">
               <div class="form-group">

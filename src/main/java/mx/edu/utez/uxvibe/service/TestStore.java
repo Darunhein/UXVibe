@@ -32,20 +32,6 @@ public class TestStore implements TestDao {
   }
 
   public synchronized boolean deleteTest(String email, String testName) {
-    boolean ok = dao.deleteTest(email, testName);
-    // ensure in-memory cache in this service is also cleaned if present
-    try {
-      java.lang.reflect.Field field = dao.getClass().getDeclaredField("IN_MEMORY_TESTS_BY_USER");
-      field.setAccessible(true);
-      Object mapObj = field.get(null);
-      if (mapObj instanceof java.util.Map) {
-        @SuppressWarnings("unchecked")
-        java.util.Map<String, java.util.List<TestItem>> map = (java.util.Map<String, java.util.List<TestItem>>) mapObj;
-        map.remove(email == null ? null : email.trim().toLowerCase());
-      }
-    } catch (Throwable ignore) {
-      // ignore reflection failures; DAO already clears its cache
-    }
-    return ok;
+    return dao.deleteTest(email, testName);
   }
 }

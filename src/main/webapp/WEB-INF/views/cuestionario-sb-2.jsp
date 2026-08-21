@@ -20,6 +20,7 @@
 
         <form class="questionnaire-form" id="questionnaireForm"
           action="${pageContext.request.contextPath}/cuestionario-sb-2" method="post">
+          <%@ include file="/WEB-INF/views/_csrf.jsp" %>
           <section class="question-section">
             <h2 class="question-title">En una semana típica ¿con qué frecuencia se siente estresado/a?</h2>
             <div class="radio-group vertical">

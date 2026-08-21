@@ -14,6 +14,10 @@ public class PasswordResetStore implements PasswordResetDao {
   };
 
   private PasswordResetStore() {
+    try {
+      dao.ensureTableExists();
+    } catch (Throwable ignored) {
+    }
   }
 
   public static PasswordResetStore getInstance() {

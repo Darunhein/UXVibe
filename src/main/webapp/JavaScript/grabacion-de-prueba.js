@@ -149,9 +149,15 @@
 
       const formData = new FormData();
       formData.append("file", blob, fileName);
+      formData.append("recordingType", "TEST_SESSION");
+      const csrf = document.body.dataset.csrf || "";
+      if (csrf) {
+        formData.append("_csrf", csrf);
+      }
 
       fetch(contextPath + "/recording-upload", {
         method: "POST",
+        headers: csrf ? { "X-CSRF-Token": csrf } : {},
         body: formData
       })
         .then(function () {

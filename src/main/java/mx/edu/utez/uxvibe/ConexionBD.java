@@ -38,12 +38,49 @@ public class ConexionBD {
         } catch (ClassNotFoundException e) {
             throw new SQLException("No se encontró ojdbc11. Rebuild del WAR y redeploy en Tomcat.", e);
         }
+        if (Boolean.getBoolean("uxvibe.disable.oracle") || testsAreOnClasspath()) {
+            throw new SQLException("Faltan credenciales Oracle. (disabled for tests)");
+        }
         String rutaWallet = resolverRutaWallet();
         System.setProperty("javax.net.ssl.trustStore", rutaWallet + "/" + TRUSTSTORE);
         System.setProperty("javax.net.ssl.trustStorePassword", WALLET_PASSWORD);
         System.setProperty("javax.net.ssl.keyStore", rutaWallet + "/" + KEYSTORE);
         System.setProperty("javax.net.ssl.keyStorePassword", WALLET_PASSWORD);
         return DriverManager.getConnection(JDBC_URL, USUARIO, PASSWORD);
+    }
+
+    public static boolean isUnavailable(SQLException e) {
+        if (e == null) {
+            return false;
+        }
+        String state = e.getSQLState();
+        if (state != null && state.startsWith("08")) {
+            return true;
+        }
+        int code = e.getErrorCode();
+        if (code == 17002 || code == 17008 || code == 18730) {
+            return true;
+        }
+        String message = e.getMessage();
+        if (message == null) {
+            return e.getCause() instanceof SQLException && isUnavailable((SQLException) e.getCause());
+        }
+        String lower = message.toLowerCase();
+        return lower.contains("faltan credenciales")
+                || lower.contains("no se encontró la carpeta")
+                || lower.contains("network adapter")
+                || lower.contains("i/o error")
+                || lower.contains("io error")
+                || lower.contains("could not establish");
+    }
+
+    private static boolean testsAreOnClasspath() {
+        try {
+            Class.forName("mx.edu.utez.uxvibe.DisableOracle");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     private static String resolverRutaWallet() throws SQLException {

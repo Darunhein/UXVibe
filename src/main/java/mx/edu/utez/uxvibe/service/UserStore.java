@@ -36,4 +36,14 @@ public class UserStore implements UserDao {
   public synchronized List<UserAccount> list() {
     return dao.list();
   }
+
+  @Override
+  public synchronized boolean resetPassword(String email, String newPassword) {
+    return dao.resetPassword(email, newPassword);
+  }
+
+  @Override
+  public synchronized int upgradePlaintextPasswords() {
+    return dao.upgradePlaintextPasswords();
+  }
 }

@@ -19,6 +19,7 @@ import mx.edu.utez.uxvibe.model.TestItem;
 public interface TestDao {
   String INSERT_SQL = "INSERT INTO PRUEBAS (EMAIL_USUARIO, NOMBRE, DESCRIPCION, SYSTEM_LINK, CREATED_ON) VALUES (?, ?, ?, ?, ?)";
   String LIST_BY_USER_SQL = "SELECT NOMBRE, DESCRIPCION, SYSTEM_LINK, CREATED_ON FROM PRUEBAS WHERE LOWER(EMAIL_USUARIO)=LOWER(?) ORDER BY CREATED_ON, ID_PRUEBA";
+  String FIND_ID_SQL = "SELECT ID_PRUEBA FROM PRUEBAS WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE)=LOWER(?)";
   Map<String, List<TestItem>> IN_MEMORY_TESTS_BY_USER = new LinkedHashMap<>();
   String DELETE_TEST_SQL = "DELETE FROM PRUEBAS WHERE LOWER(EMAIL_USUARIO)=LOWER(?) AND LOWER(NOMBRE)=LOWER(?)";
 
@@ -37,8 +38,6 @@ public interface TestDao {
         description,
         systemLink,
         LocalDate.now(ZoneId.of("America/Mexico_City")));
-    IN_MEMORY_TESTS_BY_USER.computeIfAbsent(normalizedEmail, key -> new ArrayList<>()).add(test);
-
     try (
         Connection conn = ConexionBD.getInstancia().getConnection();
         PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
@@ -48,7 +47,12 @@ public interface TestDao {
       ps.setString(4, test.getSystemLink());
       ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("America/Mexico_City"))));
       ps.executeUpdate();
+      IN_MEMORY_TESTS_BY_USER.computeIfAbsent(normalizedEmail, key -> new ArrayList<>()).add(test);
     } catch (SQLException e) {
+      if (ConexionBD.isUnavailable(e)) {
+        IN_MEMORY_TESTS_BY_USER.computeIfAbsent(normalizedEmail, key -> new ArrayList<>()).add(test);
+        return;
+      }
       e.printStackTrace();
     }
   }
@@ -77,10 +81,8 @@ public interface TestDao {
           tests.add(test);
         }
       }
-      if (!tests.isEmpty()) {
-        IN_MEMORY_TESTS_BY_USER.put(normalizedEmail, new ArrayList<>(tests));
-        return tests;
-      }
+      IN_MEMORY_TESTS_BY_USER.put(normalizedEmail, new ArrayList<>(tests));
+      return tests;
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -90,6 +92,32 @@ public interface TestDao {
       return new ArrayList<>();
     }
     return new ArrayList<>(cachedTests);
+  }
+
+  default long findIdByEmailAndName(String email, String testName) {
+    String normalizedEmail = normalizeEmail(email);
+    String normalizedName = testName == null ? "" : testName.trim();
+    if (!normalizedEmail.isEmpty() && !normalizedName.isEmpty()) {
+      try (
+          Connection conn = ConexionBD.getInstancia().getConnection();
+          PreparedStatement ps = conn.prepareStatement(FIND_ID_SQL)) {
+        ps.setString(1, normalizedEmail);
+        ps.setString(2, normalizedName);
+        try (ResultSet rs = ps.executeQuery()) {
+          if (rs.next()) {
+            long id = rs.getLong("ID_PRUEBA");
+            if (!rs.wasNull() && id > 0) {
+              return id;
+            }
+          }
+        }
+      } catch (SQLException e) {
+        if (!ConexionBD.isUnavailable(e)) {
+          e.printStackTrace();
+        }
+      }
+    }
+    return -1;
   }
 
   private static String normalizeEmail(String email) {
@@ -102,19 +130,23 @@ public interface TestDao {
     if (normalizedEmail.isEmpty() || normalizedTestName.isEmpty()) {
       return false;
     }
+    boolean deletedOnDb = false;
+    int affected = 0;
     try (
         Connection conn = ConexionBD.getInstancia().getConnection();
         PreparedStatement ps = conn.prepareStatement(DELETE_TEST_SQL)) {
       ps.setString(1, normalizedEmail);
       ps.setString(2, normalizedTestName);
-      ps.executeUpdate();
+      affected = ps.executeUpdate();
+      deletedOnDb = true;
     } catch (SQLException ex) {
       ex.printStackTrace();
     }
+    boolean removedFromMemory = false;
     List<TestItem> list = IN_MEMORY_TESTS_BY_USER.get(normalizedEmail);
     if (list != null) {
-      list.removeIf(t -> normalizedTestName.equals(t.getName()));
+      removedFromMemory = list.removeIf(t -> t.getName() != null && t.getName().equalsIgnoreCase(normalizedTestName));
     }
-    return true;
+    return (deletedOnDb && affected > 0) || (!deletedOnDb && removedFromMemory);
   }
 }
