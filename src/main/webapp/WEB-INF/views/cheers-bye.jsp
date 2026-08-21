@@ -73,7 +73,7 @@
 
             <div class="audio-preview-box">
               <div class="audio-preview-header">
-                <span class="audio-preview-label">Grabación de la sesión:</span>
+                <span class="audio-preview-label">🔊 Grabación de la sesión completa:</span>
                 <a id="evaluatorDownloadLink" href="#" download="grabacion-sesion.webm"
                   class="evaluator-download-link">Descargar audio</a>
               </div>
@@ -86,16 +86,36 @@
               </div>
             </div>
 
-            <form class="modal-actions" action="${pageContext.request.contextPath}/complete-test" method="post">
-              <%@ include file="/WEB-INF/views/_csrf.jsp" %>
-              <input type="hidden" name="testName" value="<%= testName != null ? testName : "" %>" />
-              <input type="hidden" name="participantName"
-                value="<%= participantName != null ? participantName : "" %>" />
-              <button type="submit" class="btn-save-all" id="btnSaveAll">
-                <span>Guardar Respuestas y Audio</span>
-              </button>
+            <div class="modal-actions-container">
+              <form class="modal-main-form" action="${pageContext.request.contextPath}/complete-test" method="post">
+                <%@ include file="/WEB-INF/views/_csrf.jsp" %>
+                <input type="hidden" name="testName" value="<%= testName != null ? testName : "" %>" />
+                <input type="hidden" name="participantName"
+                  value="<%= participantName != null ? participantName : "" %>" />
+                <button type="submit" class="btn-save-all" id="btnSaveAll">
+                  <span>Guardar Respuestas y Audio</span>
+                </button>
+              </form>
+
+              <div class="modal-secondary-actions">
+                <form action="${pageContext.request.contextPath}/start-test" method="post" style="flex: 1;">
+                  <%@ include file="/WEB-INF/views/_csrf.jsp" %>
+                  <input type="hidden" name="testName" value="<%= testName != null ? testName : "" %>" />
+                  <button type="submit" class="btn-modal-action btn-restart-test" id="btnRestartTest">
+                    <span>🔄 Reiniciar Prueba</span>
+                  </button>
+                </form>
+
+                <form action="${pageContext.request.contextPath}/cancel-test" method="post" style="flex: 1;">
+                  <%@ include file="/WEB-INF/views/_csrf.jsp" %>
+                  <button type="submit" class="btn-modal-action btn-delete-test" id="btnDeleteTest">
+                    <span>🗑️ Borrar Prueba</span>
+                  </button>
+                </form>
+              </div>
+
               <button type="button" class="btn-modal-close" id="btnCancelModal">Volver a la pantalla de salida</button>
-            </form>
+            </div>
           </div>
         </div>
 

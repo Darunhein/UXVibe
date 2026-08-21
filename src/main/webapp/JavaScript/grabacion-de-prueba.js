@@ -138,13 +138,21 @@
 
   function uploadRecording(blob, callback) {
     const fileName = "test-session-" + Date.now() + ".webm";
+    const mimeType = blob.type || recordedMimeType || "audio/webm";
     const reader = new FileReader();
     reader.onloadend = function () {
-      const base64 = reader.result.split(",")[1];
+      const fullDataUri = reader.result;
+      const base64 = typeof fullDataUri === "string" && fullDataUri.indexOf(",") >= 0
+        ? fullDataUri.split(",")[1]
+        : "";
+
       try {
         sessionStorage.setItem("uxvibe_audio_base64", base64);
         sessionStorage.setItem("uxvibe_audio_filename", fileName);
-        sessionStorage.setItem("uxvibe_audio_mimetype", blob.type || "audio/webm");
+        sessionStorage.setItem("uxvibe_audio_mimetype", mimeType);
+        localStorage.setItem("uxvibe_audio_latest_base64", base64);
+        localStorage.setItem("uxvibe_audio_latest_filename", fileName);
+        localStorage.setItem("uxvibe_audio_latest_mime", mimeType);
       } catch (e) { }
 
       const formData = new FormData();
@@ -161,10 +169,10 @@
         body: formData
       })
         .then(function () {
-          if (typeof callback === "function") callback();
+          if (typeof callback === "function") callback(base64, fileName, mimeType);
         })
         .catch(function () {
-          if (typeof callback === "function") callback();
+          if (typeof callback === "function") callback(base64, fileName, mimeType);
         });
     };
     reader.readAsDataURL(blob);
@@ -294,8 +302,40 @@
     }
   }
 
+  const playBtn = document.querySelector(".play-button");
+
   if (timerLabel) {
     timerLabel.textContent = formatTime(timerSeconds);
+  }
+
+  // Cross-Tab Communication with Cheers Bye
+  const recChannel = typeof BroadcastChannel !== "undefined" ? new BroadcastChannel("uxvibe_recording_channel") : null;
+  if (recChannel) {
+    recChannel.onmessage = function (event) {
+      if (!event || !event.data) return;
+
+      if (event.data.type === "STOP_RECORDING_AND_UPLOAD") {
+        stopTimer();
+        stopRecording(function (uploadedBase64, fileName, mimeType) {
+          if (recChannel) {
+            recChannel.postMessage({
+              type: "RECORDING_READY",
+              base64: uploadedBase64,
+              fileName: fileName,
+              mimeType: mimeType
+            });
+          }
+        });
+      } else if (event.data.type === "CLOSE_RECORDING_TAB") {
+        stopTimer();
+        stopRecording();
+        stopMediaTracks();
+        // Give a tiny moment to finish background cleanup then close window
+        setTimeout(function () {
+          window.close();
+        }, 150);
+      }
+    };
   }
 
   // Start recording immediately on page load
@@ -311,13 +351,31 @@
     });
   }
 
+  // Play button resumes recording & closes pause menu
+  if (playBtn) {
+    playBtn.addEventListener("click", function () {
+      if (pauseDetails && pauseDetails.open) {
+        pauseDetails.open = false;
+      }
+      resumeRecording();
+    });
+  }
+
+  // When clicking "Empezar encuesta", unpause recording, update status, and open survey in new tab
   if (startSurveyLink) {
     startSurveyLink.addEventListener("click", function (event) {
       event.preventDefault();
-      stopTimer();
-      stopRecording(function () {
-        window.location.href = contextPath + "/cuestionario-sb-1";
-      });
+      if (pauseDetails) {
+        pauseDetails.open = false;
+      }
+      resumeRecording();
+
+      if (liveRecText) {
+        liveRecText.textContent = "GRABANDO EN SEGUNDO PLANO (ENCUESTA EN CURSO)";
+      }
+
+      // Open survey in a new window/tab so this recording tab stays alive capturing audio
+      window.open(contextPath + "/cuestionario-sb-1", "_blank");
     });
   }
 

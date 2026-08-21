@@ -1,4 +1,4 @@
-﻿/* =========================================
+/* =========================================
    LOGIN DEL EVALUADOR
    ========================================= */
 
@@ -300,13 +300,13 @@ body {
    ========================================= */
 
 .entrar {
-  width: 174px;
-  height: 42px;
-
-  padding: 0;
+  min-width: 220px;
+  max-width: 100%;
+  height: 52px;
+  padding: 0 28px;
 
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
 
   background: #6c8597;
 
@@ -315,20 +315,29 @@ body {
   justify-content: center;
 
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(108, 133, 151, 0.25);
+  transition: background 0.2s ease, transform 0.1s ease;
 }
 
+.entrar:hover {
+  background: #5a7283;
+  transform: translateY(-1px);
+}
+
+.entrar:active {
+  transform: translateY(0);
+}
 
 .entrar-text {
   margin: 0;
 
-  font-size: 17px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
 
   line-height: 1.15;
 
   color: #ffffff;
 }
-
 
 /* =========================================
    CREAR CUENTA
@@ -337,21 +346,37 @@ body {
 .crear-cuenta {
   width: auto;
   height: auto;
-
-  padding: 0;
+  margin-top: 6px;
+  padding: 8px 16px;
 
   border: none;
+  border-radius: 6px;
 
   background: transparent;
 
-  color: #005078;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  font-family: Inter, sans-serif;
-
-  font-size: 17px;
-  font-weight: 500;
-
+  text-decoration: none;
   cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.crear-cuenta:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.crear-cuenta-text {
+  margin: 0;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  line-height: 1.15;
+
+  color: #557283;
 }
 
 

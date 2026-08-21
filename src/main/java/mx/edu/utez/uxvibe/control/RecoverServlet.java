@@ -44,6 +44,18 @@ public class RecoverServlet extends HttpServlet {
       return;
     }
 
+    String clientKey = "recover:" + req.getRemoteAddr();
+    if (!mx.edu.utez.uxvibe.security.RateLimiter.isAllowed(clientKey)) {
+      forwardToRecover(
+          req,
+          resp,
+          "Demasiadas solicitudes de recuperación. Por favor espera 2 minutos antes de intentar de nuevo.",
+          null,
+          email);
+      return;
+    }
+    mx.edu.utez.uxvibe.security.RateLimiter.recordFailure(clientKey);
+
     // Process recovery token if account exists
     if (UserStore.getInstance().exists(email)) {
       String token = PasswordResetStore.getInstance().createToken(email);

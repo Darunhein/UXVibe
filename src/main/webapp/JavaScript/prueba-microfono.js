@@ -436,67 +436,48 @@
     }
   }
 
+  function setMicTracksEnabled(enabled) {
+    if (stream) {
+      stream.getAudioTracks().forEach(function (track) {
+        track.enabled = enabled;
+      });
+    }
+  }
+
   function startPlayback() {
-    if (!recordedBlob && !previewAudio.src && !decodedAudioBuffer) {
+    if (!recordedBlob && !decodedAudioBuffer) {
       return;
     }
 
     ensureAudioContext();
-    updatePlayButtonState(true);
 
-    const volume = getVolumeLevel();
-
-    // Strategy 1: HTML5 Audio Element playback
-    if (previewAudio && previewAudio.src) {
-      previewAudio.volume = volume;
-      const playPromise = previewAudio.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(function () {
-            setupAudioElementListeners();
-          })
-          .catch(function (err) {
-            console.warn("HTML5 audio playback blocked/failed, falling back to Web Audio API buffer:", err);
-            playBufferFallback();
-          });
-      } else {
-        setupAudioElementListeners();
-      }
-    } else {
-      playBufferFallback();
-    }
-  }
-
-  function setupAudioElementListeners() {
-    if (!previewAudio) return;
-
-    previewAudio.ontimeupdate = function () {
-      if (previewAudio.duration && !isNaN(previewAudio.duration)) {
-        const percent = (previewAudio.currentTime / previewAudio.duration) * 100;
-        if (widgetSeekBar) widgetSeekBar.value = percent;
-        if (widgetCurrentTime) widgetCurrentTime.textContent = formatDuration(previewAudio.currentTime);
-        if (widgetTotalTime) widgetTotalTime.textContent = formatDuration(previewAudio.duration);
-      }
-    };
-
-    previewAudio.onended = function () {
-      updatePlayButtonState(false);
-      if (widgetSeekBar) widgetSeekBar.value = 0;
-      if (widgetCurrentTime) widgetCurrentTime.textContent = "00:00";
-      if (recordStatus) recordStatus.textContent = "Reproducción finalizada.";
-    };
-  }
-
-  function playBufferFallback() {
-    if (!decodedAudioBuffer && recordedBlob && audioContext) {
+    if (!decodedAudioBuffer && recordedBlob) {
+      if (recordStatus) recordStatus.textContent = "Preparando audio...";
       recordedBlob.arrayBuffer().then(function (ab) {
-        audioContext.decodeAudioData(ab, function (buf) {
-          decodedAudioBuffer = buf;
-          executeBufferPlay();
-        }).catch(function () { });
+        audioContext.decodeAudioData(
+          ab,
+          function (buf) {
+            decodedAudioBuffer = buf;
+            recordedDurationSeconds = buf.duration;
+            updateDurationDisplays(buf.duration);
+            executeBufferPlay();
+          },
+          function (err) {
+            console.error("Audio decoding error:", err);
+            // Fallback to HTML5 audio element
+            if (previewAudio && previewAudio.src) {
+              previewAudio.volume = getVolumeLevel();
+              previewAudio.play().catch(function () { });
+              updatePlayButtonState(true);
+            }
+          }
+        );
+      }).catch(function (e) {
+        console.error("ArrayBuffer conversion error:", e);
       });
       return;
     }
+
     executeBufferPlay();
   }
 
@@ -506,40 +487,60 @@
       return;
     }
 
+    // Ensure audio context is un-suspended
+    if (audioContext.state === "suspended") {
+      audioContext.resume().then(runBufferSource).catch(runBufferSource);
+    } else {
+      runBufferSource();
+    }
+  }
+
+  function runBufferSource() {
     stopBufferSource();
+
+    // Mute mic track during playback to prevent OS/browser echo cancellation muting speaker output
+    setMicTracksEnabled(false);
 
     bufferSourceNode = audioContext.createBufferSource();
     bufferSourceNode.buffer = decodedAudioBuffer;
 
     bufferGainNode = audioContext.createGain();
-    bufferGainNode.gain.value = getVolumeLevel();
+    const currentVol = getVolumeLevel();
+    bufferGainNode.gain.setValueAtTime(currentVol, audioContext.currentTime);
 
+    // Connect to destination (speakers)
     bufferSourceNode.connect(bufferGainNode);
     bufferGainNode.connect(audioContext.destination);
 
-    // Also connect to analyser to visualize playback!
+    // Also connect to waveform analyser so user sees the playback waves
     if (analyser) {
       bufferGainNode.connect(analyser);
     }
 
-    const startOffset = bufferPauseOffset % decodedAudioBuffer.duration;
+    const duration = decodedAudioBuffer.duration;
+    const startOffset = bufferPauseOffset % (duration > 0 ? duration : 1);
     bufferStartTime = audioContext.currentTime - startOffset;
 
     bufferSourceNode.start(0, startOffset);
+    updatePlayButtonState(true);
 
     bufferSourceNode.onended = function () {
       if (isPlaying) {
         updatePlayButtonState(false);
         bufferPauseOffset = 0;
+        setMicTracksEnabled(true);
         if (widgetSeekBar) widgetSeekBar.value = 0;
         if (widgetCurrentTime) widgetCurrentTime.textContent = "00:00";
-        if (recordStatus) recordStatus.textContent = "Reproducción finalizada.";
-        cancelAnimationFrame(bufferRafId);
+        if (recordStatus) recordStatus.textContent = "✅ Reproducción finalizada.";
+        if (bufferRafId) {
+          cancelAnimationFrame(bufferRafId);
+          bufferRafId = null;
+        }
       }
     };
 
     function trackBufferProgress() {
-      if (!isPlaying || !audioContext) return;
+      if (!isPlaying || !audioContext || !decodedAudioBuffer) return;
       const current = audioContext.currentTime - bufferStartTime;
       const total = decodedAudioBuffer.duration;
       if (total > 0) {
@@ -548,10 +549,11 @@
         if (widgetCurrentTime) widgetCurrentTime.textContent = formatDuration(current);
         if (widgetTotalTime) widgetTotalTime.textContent = formatDuration(total);
       }
-      if (current < total) {
+      if (current < total && isPlaying) {
         bufferRafId = requestAnimationFrame(trackBufferProgress);
       }
     }
+    if (bufferRafId) cancelAnimationFrame(bufferRafId);
     bufferRafId = requestAnimationFrame(trackBufferProgress);
   }
 
@@ -563,7 +565,11 @@
       bufferPauseOffset = audioContext.currentTime - bufferStartTime;
       stopBufferSource();
     }
-    cancelAnimationFrame(bufferRafId);
+    if (bufferRafId) {
+      cancelAnimationFrame(bufferRafId);
+      bufferRafId = null;
+    }
+    setMicTracksEnabled(true);
     updatePlayButtonState(false);
   }
 
@@ -573,8 +579,12 @@
       previewAudio.currentTime = 0;
     }
     stopBufferSource();
-    cancelAnimationFrame(bufferRafId);
+    if (bufferRafId) {
+      cancelAnimationFrame(bufferRafId);
+      bufferRafId = null;
+    }
     bufferPauseOffset = 0;
+    setMicTracksEnabled(true);
     updatePlayButtonState(false);
     if (widgetSeekBar) widgetSeekBar.value = 0;
     if (widgetCurrentTime) widgetCurrentTime.textContent = "00:00";
@@ -583,9 +593,12 @@
   function stopBufferSource() {
     if (bufferSourceNode) {
       try {
+        bufferSourceNode.onended = null;
         bufferSourceNode.stop();
       } catch (e) { }
-      bufferSourceNode.disconnect();
+      try {
+        bufferSourceNode.disconnect();
+      } catch (e) { }
       bufferSourceNode = null;
     }
   }

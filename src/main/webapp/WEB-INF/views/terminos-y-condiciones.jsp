@@ -47,6 +47,7 @@
                     <a id="btnMicrofono" class="btn-secondary"
                         href="${pageContext.request.contextPath}/mic-test">Iniciar prueba de micrófono</a>
                     <a id="btnComenzar" class="btn-primary disabled"
+                        data-system-link="${sessionScope.currentSystemLink}"
                         href="${pageContext.request.contextPath}/test-recording">Comenzar prueba</a>
                 </div>
 

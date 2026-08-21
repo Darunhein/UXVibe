@@ -41,8 +41,9 @@ public class RecordingUploadServlet extends HttpServlet {
       if (filePart != null && filePart.getSize() > 0) {
         if (fileName == null || fileName.trim().isEmpty()) {
           String submitted = filePart.getSubmittedFileName();
-          if (submitted != null)
-            fileName = submitted;
+          if (submitted != null) {
+            fileName = sanitizeFileName(submitted);
+          }
         }
         try (java.io.InputStream is = filePart.getInputStream()) {
           byte[] bytes = is.readAllBytes();
@@ -64,6 +65,10 @@ public class RecordingUploadServlet extends HttpServlet {
       return;
     } catch (Exception e) {
       e.printStackTrace();
+    }
+
+    if (fileName != null) {
+      fileName = sanitizeFileName(fileName);
     }
 
     if (audioBase64 == null) {
@@ -97,5 +102,16 @@ public class RecordingUploadServlet extends HttpServlet {
 
     resp.setStatus(HttpServletResponse.SC_OK);
     resp.getWriter().write("OK");
+  }
+
+  private String sanitizeFileName(String name) {
+    if (name == null) return "recording.webm";
+    String clean = name.replace("\\", "/");
+    int lastSlash = clean.lastIndexOf('/');
+    if (lastSlash >= 0) {
+      clean = clean.substring(lastSlash + 1);
+    }
+    clean = clean.replaceAll("[^a-zA-Z0-9._-]", "_");
+    return clean.isEmpty() ? "recording.webm" : clean;
   }
 }

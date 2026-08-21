@@ -21,6 +21,20 @@ document.addEventListener("DOMContentLoaded", function () {
       e.preventDefault();
       checkbox.focus();
       alert("Debes aceptar los términos y condiciones antes de comenzar la prueba.");
+      return;
+    }
+
+    const systemLink = btnComenzar.getAttribute("data-system-link");
+    if (systemLink && systemLink.trim().length > 0) {
+      let finalUrl = systemLink.trim();
+      if (!/^https?:\/\//i.test(finalUrl)) {
+        finalUrl = "https://" + finalUrl;
+      }
+      try {
+        window.open(finalUrl, "_blank", "noopener,noreferrer");
+      } catch (err) {
+        console.warn("Could not open system link window:", err);
+      }
     }
   });
 

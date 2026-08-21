@@ -42,6 +42,7 @@ public class CreateTestServlet extends HttpServlet {
     String testName = req.getParameter(TEST_NAME_PARAM);
     String description = req.getParameter(DESCRIPTION_PARAM);
     String systemLink = req.getParameter(SYSTEM_LINK_PARAM);
+
     if (isBlank(testName)) {
       req.setAttribute(ERROR_MESSAGE_ATTR, "Ingresa el nombre de la prueba.");
       req.setAttribute(TEST_NAME_PARAM, testName);
@@ -49,6 +50,23 @@ public class CreateTestServlet extends HttpServlet {
       req.setAttribute(SYSTEM_LINK_PARAM, systemLink);
       forwardToCreateTest(req, resp);
       return;
+    }
+
+    testName = testName.trim();
+    if (testName.length() > 120) {
+      testName = testName.substring(0, 120);
+    }
+    if (description != null && description.length() > 500) {
+      description = description.substring(0, 500);
+    }
+    if (systemLink != null) {
+      systemLink = systemLink.trim();
+      if (!systemLink.isEmpty() && !systemLink.startsWith("http://") && !systemLink.startsWith("https://")) {
+        systemLink = "https://" + systemLink;
+      }
+      if (systemLink.length() > 250) {
+        systemLink = systemLink.substring(0, 250);
+      }
     }
 
     UserAccount account = (UserAccount) session.getAttribute(CURRENT_USER_ATTR);

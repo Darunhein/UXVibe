@@ -15,9 +15,9 @@ public class EmailService {
   private static final Logger LOGGER = Logger.getLogger(EmailService.class.getName());
 
   private static final String DEFAULT_SMTP_HOST = "smtp.gmail.com";
-  private static final String DEFAULT_SMTP_PORT = "587";
+  private static final String DEFAULT_SMTP_PORT = "465";
   private static final String DEFAULT_SMTP_USER = "FreeCollectorPrime@gmail.com";
-  private static final String DEFAULT_SMTP_PASS = "wnsmyndhwytdwmuv";
+  private static final String DEFAULT_SMTP_PASS = "phxjupbotgeloagd";
   private static final String DEFAULT_SMTP_FROM = "FreeCollectorPrime@gmail.com";
 
   public static boolean isConfigured() {
@@ -51,15 +51,24 @@ public class EmailService {
 
     Properties props = new Properties();
     props.put("mail.smtp.auth", "true");
-    props.put("mail.smtp.starttls.enable", "true");
-    props.put("mail.smtp.starttls.required", "true");
     props.put("mail.smtp.host", host.trim());
     props.put("mail.smtp.port", port.trim());
     props.put("mail.smtp.ssl.protocols", "TLSv1.2 TLSv1.3");
     props.put("mail.smtp.ssl.trust", host.trim());
-    props.put("mail.smtp.connectiontimeout", "15000");
-    props.put("mail.smtp.timeout", "15000");
-    props.put("mail.smtp.writetimeout", "15000");
+
+    if ("465".equals(port.trim())) {
+      props.put("mail.smtp.ssl.enable", "true");
+      props.put("mail.smtp.socketFactory.port", "465");
+      props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+      props.put("mail.smtp.socketFactory.fallback", "false");
+    } else {
+      props.put("mail.smtp.starttls.enable", "true");
+      props.put("mail.smtp.starttls.required", "true");
+    }
+
+    props.put("mail.smtp.connectiontimeout", "30000");
+    props.put("mail.smtp.timeout", "30000");
+    props.put("mail.smtp.writetimeout", "30000");
 
     final String finalUser = user.trim();
     final String finalPass = pass.trim();

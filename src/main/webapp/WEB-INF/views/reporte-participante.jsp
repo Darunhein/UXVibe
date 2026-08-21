@@ -2,6 +2,7 @@
 <%@ page import="mx.edu.utez.uxvibe.bean.ParticipantReportBean" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
+<%@ page import="mx.edu.utez.uxvibe.util.HtmlEscape" %>
 <%! 
   private String urlEncode(String value) { 
     if (value == null) { return ""; } 
@@ -13,13 +14,7 @@
   }
 
   private String escapeHtml(String value) {
-    if (value == null) { return ""; }
-    return value
-      .replace("&", "&amp;")
-      .replace("<", "&lt;")
-      .replace(">", "&gt;")
-      .replace("\"", "&quot;")
-      .replace("'", "&#39;");
+    return HtmlEscape.text(value);
   } 
 
   private boolean isInvertedSurveyQuestion(String question) { 
@@ -145,23 +140,32 @@
   String audioUrl = report.getAudioUrl();
   String micAudioUrl = report.getMicAudioUrl(); 
   List<Map<String, Object>> responses = report.getSurveyResponses();
-              double stressTotal = 0; int stressCount = 0;
-              double samTotal = 0; int samCount = 0;
-              double encuestaTotal = 0; int encuestaCount = 0;
-              if (responses != null) {
-              for (Map<String, Object> r : responses) {
-                String q = r == null ? null : String.valueOf(r.get("question"));
-                Integer numeric = parseNumeric(r);
-                if (numeric == null) continue;
-                if ("stress".equals(q) || "relaxation".equals(q)) { stressTotal += numeric; stressCount++; }
-                else if ("satisfaction".equals(q) || "impact".equals(q) || "control".equals(q)) { samTotal += numeric;
-                samCount++; }
-                else if (q != null && q.startsWith("q")) { encuestaTotal += numeric; encuestaCount++; }
-                }
+                double stressTotal = 0; int stressCount = 0;
+                double samTotal = 0; int samCount = 0;
+                double encuestaTotal = 0; int encuestaCount = 0;
+                double satisfactionScore = 0; int satisfactionCount = 0;
+                double impactScore = 0; int impactCount = 0;
+                double controlScore = 0; int controlCount = 0;
+
+                if (responses != null) {
+                  for (Map<String, Object> r : responses) {
+                    String q = r == null ? null : String.valueOf(r.get("question"));
+                    Integer numeric = parseNumeric(r);
+                    if (numeric == null) continue;
+                    if ("stress".equals(q) || "relaxation".equals(q)) { stressTotal += numeric; stressCount++; }
+                    else if ("satisfaction".equals(q)) { satisfactionScore += numeric; satisfactionCount++; samTotal += numeric; samCount++; }
+                    else if ("impact".equals(q)) { impactScore += numeric; impactCount++; samTotal += numeric; samCount++; }
+                    else if ("control".equals(q)) { controlScore += numeric; controlCount++; samTotal += numeric; samCount++; }
+                    else if (q != null && q.startsWith("q")) { encuestaTotal += numeric; encuestaCount++; }
+                  }
                 }
                 double stressAvg = stressCount == 0 ? 0.0 : stressTotal / stressCount;
                 double samAvg = samCount == 0 ? 0.0 : samTotal / samCount;
                 double encuestaAvg = encuestaCount == 0 ? 0.0 : encuestaTotal / encuestaCount;
+
+                double satisfactionAvg = satisfactionCount == 0 ? (samCount == 0 ? 5.0 : samAvg) : satisfactionScore / satisfactionCount;
+                double impactAvg = impactCount == 0 ? (samCount == 0 ? 5.0 : samAvg) : impactScore / impactCount;
+                double controlAvg = controlCount == 0 ? (samCount == 0 ? 5.0 : samAvg) : controlScore / controlCount;
 
                 double samScaled = samCount == 0 ? 0.0 : (samAvg / 9.0 * 5.0);
                 double overallAvg = 0;
@@ -274,46 +278,132 @@
                       <section class="reporte-block-1">
                         <h2>Gráficas de desempeño y bienestar</h2>
 
-                        <div class="reporte-graphs">
-                          <div class="reporte-graph-item">
-                            <div class="reporte-graph-title">Estrés / Bienestar (SB-2)</div>
-                            <div class="pie-chart" role="img" aria-label="Estrés promedio">
-                              <div class="pie"
-                                style="--pct:<%= Math.min(100, (int)(stressAvg / 5.0 * 100)) %>; --color: #FF9F80;">
-                                <div class="pie-center"><span>
-                                    <%= stressLabel %>
-                                  </span><small>/5</small></div>
+                        <div class="reporte-box reporte-box--analytics">
+                          <div class="reporte-charts-visual-grid">
+                            <!-- 1. Pie Chart: Estrés / Bienestar (SB-2) -->
+                            <div class="visual-chart-card">
+                              <div class="visual-chart-header">
+                                <span class="visual-chart-badge badge--pie">SB-2</span>
+                                <h3 class="visual-chart-title">Estrés y Bienestar</h3>
+                              </div>
+                              <div class="pie-visual-container">
+                                <% 
+                                  int stressPct = Math.max(5, Math.min(100, (int)(stressAvg / 5.0 * 100)));
+                                  String pieColor = stressAvg <= 2.5 ? "#10b981" : (stressAvg <= 3.8 ? "#f59e0b" : "#ef4444");
+                                %>
+                                <div class="minimal-pie-gauge" style="--pct: <%= stressPct %>%; --color: <%= pieColor %>;">
+                                  <div class="minimal-pie-center">
+                                    <span class="pie-val"><%= stressLabel %></span>
+                                    <span class="pie-denom">/ 5</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="chart-legend-row">
+                                <span class="legend-dot" style="background: <%= pieColor %>;"></span>
+                                <span class="legend-text">
+                                  <%= stressAvg <= 2.5 ? "Relajado / Controlado" : (stressAvg <= 3.8 ? "Tensión Moderada" : "Estrés Elevado") %>
+                                </span>
                               </div>
                             </div>
-                          </div>
 
-                          <div class="reporte-graph-item">
-                            <div class="reporte-graph-title">SAM (Promedio emocional)</div>
-                            <div class="pie-chart" role="img" aria-label="SAM promedio">
-                              <div class="pie"
-                                style="--pct:<%= Math.min(100, (int)(samAvg / 9.0 * 100)) %>; --color: #6FB1FF;">
-                                <div class="pie-center"><span>
-                                    <%= samLabel %>
-                                  </span><small>/9</small></div>
+                            <!-- 2. Spider / Radar Chart: SAM (Satisfacción, Impacto, Control) -->
+                            <div class="visual-chart-card">
+                              <div class="visual-chart-header">
+                                <span class="visual-chart-badge badge--radar">SAM</span>
+                                <h3 class="visual-chart-title">Perfil Emocional (Radar)</h3>
+                              </div>
+                              <div class="spider-visual-container">
+                                <%
+                                  // Radar triangle coordinates centered at (100, 100) with radius 70
+                                  // Top vertex (Control): angle -90 deg -> (100, 100 - r)
+                                  // Bottom-right vertex (Satisfacción): angle 30 deg -> (100 + r*cos(30), 100 + r*sin(30))
+                                  // Bottom-left vertex (Impacto): angle 150 deg -> (100 - r*cos(30), 100 + r*sin(30))
+                                  double rControl = (controlAvg / 9.0) * 65.0;
+                                  double rSat = (satisfactionAvg / 9.0) * 65.0;
+                                  double rImp = (impactAvg / 9.0) * 65.0;
+
+                                  double cx = 100.0, cy = 95.0;
+                                  double ptControlX = cx;
+                                  double ptControlY = cy - rControl;
+
+                                  double cos30 = 0.8660;
+                                  double sin30 = 0.5000;
+
+                                  double ptSatX = cx + (rSat * cos30);
+                                  double ptSatY = cy + (rSat * sin30);
+
+                                  double ptImpX = cx - (rImp * cos30);
+                                  double ptImpY = cy + (rImp * sin30);
+                                %>
+                                <svg class="spider-svg" viewBox="0 0 200 190" aria-label="Gráfica Spider SAM">
+                                  <!-- Background Web Levels -->
+                                  <polygon points="100,30 156,128 44,128" class="spider-grid-outer" />
+                                  <polygon points="100,52 137,117 63,117" class="spider-grid-mid" />
+                                  <polygon points="100,73 118,106 82,106" class="spider-grid-inner" />
+                                  <!-- Axis lines -->
+                                  <line x1="100" y1="95" x2="100" y2="30" class="spider-axis" />
+                                  <line x1="100" y1="95" x2="156" y2="128" class="spider-axis" />
+                                  <line x1="100" y1="95" x2="44" y2="128" class="spider-axis" />
+                                  <!-- Radar Filled Polygon -->
+                                  <polygon points="<%= String.format(java.util.Locale.US, "%.1f,%.1f %.1f,%.1f %.1f,%.1f", ptControlX, ptControlY, ptSatX, ptSatY, ptImpX, ptImpY) %>" class="spider-data-polygon" />
+                                  <!-- Radar Vertices -->
+                                  <circle cx="<%= String.format(java.util.Locale.US, "%.1f", ptControlX) %>" cy="<%= String.format(java.util.Locale.US, "%.1f", ptControlY) %>" r="4.5" class="spider-point" />
+                                  <circle cx="<%= String.format(java.util.Locale.US, "%.1f", ptSatX) %>" cy="<%= String.format(java.util.Locale.US, "%.1f", ptSatY) %>" r="4.5" class="spider-point" />
+                                  <circle cx="<%= String.format(java.util.Locale.US, "%.1f", ptImpX) %>" cy="<%= String.format(java.util.Locale.US, "%.1f", ptImpY) %>" r="4.5" class="spider-point" />
+                                  <!-- Axis Labels -->
+                                  <text x="100" y="20" text-anchor="middle" class="spider-label">Control</text>
+                                  <text x="165" y="142" text-anchor="start" class="spider-label">Valencia</text>
+                                  <text x="35" y="142" text-anchor="end" class="spider-label">Impacto</text>
+                                </svg>
+                              </div>
+                              <div class="chart-legend-row">
+                                <span class="legend-dot" style="background: #2563eb;"></span>
+                                <span class="legend-text">Promedio: <%= samLabel %> / 9.0</span>
                               </div>
                             </div>
-                          </div>
 
-                          <div class="reporte-graph-item">
-                            <div class="reporte-graph-title">Usabilidad (Encuestas SUS)</div>
-                            <div class="pie-chart" role="img" aria-label="Encuestas promedio">
-                              <div class="pie"
-                                style="--pct:<%= Math.min(100, (int)(encuestaAvg / 5.0 * 100)) %>; --color: #7AD29F;">
-                                <div class="pie-center"><span>
-                                    <%= encuestaLabel %>
-                                  </span><small>/5</small></div>
+                            <!-- 3. Colorful Bar Chart: Usabilidad (SUS) -->
+                            <div class="visual-chart-card">
+                              <div class="visual-chart-header">
+                                <span class="visual-chart-badge badge--bar">SUS</span>
+                                <h3 class="visual-chart-title">Usabilidad y Facilidad</h3>
+                              </div>
+                              <div class="bar-visual-container">
+                                <%
+                                  int susPct = Math.max(5, Math.min(100, (int)(encuestaAvg / 5.0 * 100)));
+                                %>
+                                <div class="sus-column-visual">
+                                  <div class="sus-column-track">
+                                    <div class="sus-column-fill" style="height: <%= susPct %>%;">
+                                      <span class="sus-column-value"><%= encuestaLabel %></span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="sus-benchmarks">
+                                  <div class="sus-bench-item <%= encuestaAvg >= 4.0 ? "is-active" : "" %>">
+                                    <span class="sus-dot" style="background: #10b981;"></span>
+                                    <span>Excelente (4-5)</span>
+                                  </div>
+                                  <div class="sus-bench-item <%= (encuestaAvg >= 3.0 && encuestaAvg < 4.0) ? "is-active" : "" %>">
+                                    <span class="sus-dot" style="background: #3b82f6;"></span>
+                                    <span>Aceptable (3-4)</span>
+                                  </div>
+                                  <div class="sus-bench-item <%= (encuestaAvg < 3.0 && encuestaCount > 0) ? "is-active" : "" %>">
+                                    <span class="sus-dot" style="background: #f43f5e;"></span>
+                                    <span>Fricción (1-3)</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="chart-legend-row">
+                                <span class="legend-dot" style="background: #10b981;"></span>
+                                <span class="legend-text"><%= susPct %>% Usabilidad Global</span>
                               </div>
                             </div>
                           </div>
                         </div>
                       </section>
 
-                      <section class="reporte-block-1">
+                    <section class="reporte-block-1">
                         <h2>Respuestas detalladas del participante</h2>
                         <div class="reporte-box">
                           <ul class="reporte-simple-list">

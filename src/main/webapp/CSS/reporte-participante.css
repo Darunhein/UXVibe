@@ -250,78 +250,288 @@ body {
 }
 
 /* ============================================================================
-   GRÁFICAS DE DESEMPEÑO Y BIENESTAR (CHARTS)
+   GRÁFICAS VISUALES (PIE, SPIDER RADAR, BARRA SUS)
    ============================================================================ */
 
-.reporte-graphs {
-  display: flex;
-  gap: 24px;
-  margin-top: 12px;
-  flex-wrap: wrap;
+.reporte-box--analytics {
+  background: var(--report-surface);
+  border: 1px solid var(--report-border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 16px rgba(67, 73, 88, 0.08);
 }
 
-.reporte-graph-item {
-  flex: 1;
-  min-width: 140px;
+.reporte-charts-visual-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  align-items: stretch;
+}
+
+.visual-chart-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 4px 12px rgba(36, 79, 109, 0.05);
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.reporte-graph-title {
-  font-size: 14px;
-  margin-bottom: 8px;
-  font-weight: 600;
+  justify-content: space-between;
   text-align: center;
-  color: var(--report-primary);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.pie-chart {
-  width: 150px;
-  height: 150px;
+.visual-chart-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(36, 79, 109, 0.1);
+}
+
+.visual-chart-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.visual-chart-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge--pie {
+  background: #fff7ed;
+  color: #ea580c;
+  border: 1px solid #ffedd5;
+}
+
+.badge--radar {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #dbeafe;
+}
+
+.badge--bar {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #dcfce7;
+}
+
+.visual-chart-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+/* 1. Minimal Colorful Pie Gauge */
+.pie-visual-container {
+  width: 140px;
+  height: 140px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 8px 0;
 }
 
-.pie {
-  width: 100%;
-  height: 100%;
+.minimal-pie-gauge {
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
-  background: conic-gradient(var(--color) var(--pct, 0%), #eeeeee 0);
+  background: conic-gradient(var(--color, #10b981) var(--pct, 0%), #f1f5f9 0);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.minimal-pie-gauge::before {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  background: #ffffff;
+  border-radius: 50%;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
-.pie::before {
-  content: "";
-  position: absolute;
-  width: 64%;
-  height: 64%;
-  background: white;
-  border-radius: 50%;
-}
-
-.pie-center {
+.minimal-pie-center {
   position: relative;
   display: flex;
   align-items: baseline;
-  gap: 4px;
-  font-weight: 700;
-  color: #304552;
+  gap: 2px;
 }
 
-.pie-center span {
-  font-size: 22px;
+.pie-val {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1e293b;
 }
 
-.pie-center small {
+.pie-denom {
+  font-size: 13px;
   font-weight: 600;
-  font-size: 14px;
-  color: #666666;
+  color: #64748b;
+}
+
+/* 2. Visual Spider / Radar SVG Chart */
+.spider-visual-container {
+  width: 100%;
+  max-width: 170px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0;
+}
+
+.spider-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.spider-grid-outer {
+  fill: #f8fafc;
+  stroke: #cbd5e1;
+  stroke-width: 1.5;
+}
+
+.spider-grid-mid {
+  fill: #f1f5f9;
+  stroke: #e2e8f0;
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+
+.spider-grid-inner {
+  fill: #ffffff;
+  stroke: #e2e8f0;
+  stroke-width: 1;
+}
+
+.spider-axis {
+  stroke: #cbd5e1;
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+
+.spider-data-polygon {
+  fill: rgba(37, 99, 235, 0.35);
+  stroke: #2563eb;
+  stroke-width: 2.5;
+}
+
+.spider-point {
+  fill: #2563eb;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+}
+
+.spider-label {
+  font-size: 11px;
+  font-weight: 700;
+  fill: #475569;
+  font-family: inherit;
+}
+
+/* 3. Colorful Bar Chart for SUS */
+.bar-visual-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  height: 140px;
+  margin: 8px 0;
+}
+
+.sus-column-visual {
+  width: 44px;
+  height: 120px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.sus-column-track {
+  width: 100%;
+  height: 100%;
+  background: #f1f5f9;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  border: 1px solid #e2e8f0;
+}
+
+.sus-column-fill {
+  width: 100%;
+  background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 4px;
+  transition: height 0.6s ease;
+  min-height: 24px;
+}
+
+.sus-column-value {
+  font-size: 11px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.sus-benchmarks {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.sus-bench-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.sus-bench-item.is-active {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.sus-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.chart-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+  width: 100%;
+  justify-content: center;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
 }
 
 /* ============================================================================

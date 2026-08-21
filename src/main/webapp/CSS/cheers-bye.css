@@ -544,14 +544,19 @@ body {
   display: none;
 }
 
-.modal-actions {
+.modal-actions-container {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+}
+
+.modal-main-form {
+  width: 100%;
 }
 
 .btn-save-all {
-  background: #2563eb;
+  width: 100%;
+  background: linear-gradient(135deg, #3f5669 0%, #244f6d 100%);
   color: #ffffff;
   font-weight: 600;
   padding: 14px 20px;
@@ -559,7 +564,8 @@ body {
   border: none;
   cursor: pointer;
   font-size: 15px;
-  transition: background 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(36, 79, 109, 0.25);
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -567,7 +573,51 @@ body {
 }
 
 .btn-save-all:hover {
-  background: #1d4ed8;
+  background: linear-gradient(135deg, #344858 0%, #1a3c54 100%);
+  transform: translateY(-1px);
+}
+
+.modal-secondary-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-modal-action {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid transparent;
+}
+
+.btn-restart-test {
+  background: #f1f5f9;
+  color: #334155;
+  border-color: #cbd5e1;
+}
+
+.btn-restart-test:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.btn-delete-test {
+  background: #fff1f2;
+  color: #e11d48;
+  border-color: #fecdd3;
+}
+
+.btn-delete-test:hover {
+  background: #ffe4e6;
+  color: #be123c;
 }
 
 .btn-modal-close {
@@ -577,6 +627,7 @@ body {
   cursor: pointer;
   font-size: 13px;
   text-decoration: underline;
+  margin-top: 4px;
   transition: color 0.2s ease;
 }
 

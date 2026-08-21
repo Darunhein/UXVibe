@@ -45,6 +45,19 @@ public class StartTestServlet extends HttpServlet {
     session.setAttribute(CURRENT_TEST_COMPLETION_RECORDED_ATTR, Boolean.FALSE);
     session.setAttribute(CURRENT_PARTICIPANT_NAME_ATTR, ParticipantIds.newFallbackName());
 
+    mx.edu.utez.uxvibe.model.UserAccount user = (mx.edu.utez.uxvibe.model.UserAccount) session.getAttribute(CURRENT_USER_ATTR);
+    if (user != null) {
+      java.util.List<mx.edu.utez.uxvibe.model.TestItem> tests = mx.edu.utez.uxvibe.service.TestStore.getInstance().listByUser(user.getEmail());
+      String systemLink = "";
+      for (mx.edu.utez.uxvibe.model.TestItem t : tests) {
+        if (t.getName() != null && t.getName().equalsIgnoreCase(testName.trim())) {
+          systemLink = t.getSystemLink();
+          break;
+        }
+      }
+      session.setAttribute("currentSystemLink", systemLink != null ? systemLink.trim() : "");
+    }
+
     resp.sendRedirect(req.getContextPath() + "/terms");
   }
 }

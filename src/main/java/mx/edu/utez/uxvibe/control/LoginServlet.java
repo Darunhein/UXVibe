@@ -65,6 +65,16 @@ public class LoginServlet extends HttpServlet {
       return;
     }
 
+    String clientKey = req.getRemoteAddr() + ":" + (email != null ? email : "");
+    if (!mx.edu.utez.uxvibe.security.RateLimiter.isAllowed(clientKey)) {
+      forwardToLogin(
+          req,
+          resp,
+          "Demasiados intentos fallidos. Por favor espera 2 minutos antes de volver a intentar.",
+          email);
+      return;
+    }
+
     UserAccount account;
     try {
       account = UserStore.getInstance().authenticate(email, password);
@@ -78,9 +88,12 @@ public class LoginServlet extends HttpServlet {
       return;
     }
     if (account == null) {
+      mx.edu.utez.uxvibe.security.RateLimiter.recordFailure(clientKey);
       forwardToLogin(req, resp, "Email o contraseña incorrectos.", email);
       return;
     }
+
+    mx.edu.utez.uxvibe.security.RateLimiter.reset(clientKey);
 
     HttpSession previous = req.getSession(false);
     if (previous != null) {

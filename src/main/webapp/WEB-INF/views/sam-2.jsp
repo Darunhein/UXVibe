@@ -22,17 +22,17 @@
 
         <div class="manikin-scale">
           <div class="manikin-item">
-            <img src="${pageContext.request.contextPath}/public/SAM 2/image-20@2x.png" alt="Sin impacto"
+            <img src="${pageContext.request.contextPath}/public/SAM 2/image-23@2x.png" alt="Sin impacto"
               class="manikin" />
           </div>
           <div class="manikin-item">
-            <img src="${pageContext.request.contextPath}/public/SAM 2/image-21@2x.png" alt="Leve" class="manikin" />
+            <img src="${pageContext.request.contextPath}/public/SAM 2/image-22@2x.png" alt="Leve" class="manikin" />
           </div>
           <div class="manikin-item">
-            <img src="${pageContext.request.contextPath}/public/SAM 2/image-22@2x.png" alt="Moderado" class="manikin" />
+            <img src="${pageContext.request.contextPath}/public/SAM 2/image-21@2x.png" alt="Moderado" class="manikin" />
           </div>
           <div class="manikin-item">
-            <img src="${pageContext.request.contextPath}/public/SAM 2/image-23@2x.png" alt="Alto" class="manikin" />
+            <img src="${pageContext.request.contextPath}/public/SAM 2/image-20@2x.png" alt="Alto" class="manikin" />
           </div>
           <div class="manikin-item">
             <img src="${pageContext.request.contextPath}/public/SAM 2/image-24@2x.png" alt="Extremo" class="manikin" />
@@ -41,28 +41,28 @@
 
         <form class="survey-form" id="impactForm" action="${pageContext.request.contextPath}/sam-2" method="post">
           <%@ include file="/WEB-INF/views/_csrf.jsp" %>
-          <div class="scale-options">
-            <% for (int i=1; i <=9; i++) { %>
-              <label class="scale-option" for="rating<%= i %>">
-                <input type="radio" id="rating<%= i %>" name="impact" value="<%= i %>" required />
-                <span class="scale-number">
-                  <%= i %>
-                </span>
-              </label>
-              <% } %>
-          </div>
+            <div class="scale-options">
+              <% for (int i=1; i <=9; i++) { %>
+                <label class="scale-option" for="rating<%= i %>">
+                  <input type="radio" id="rating<%= i %>" name="impact" value="<%= i %>" required />
+                  <span class="scale-number">
+                    <%= i %>
+                  </span>
+                </label>
+                <% } %>
+            </div>
 
-          <div class="survey-navigation">
-            <a class="btn-back" id="samBackButton" href="${pageContext.request.contextPath}/sam-1"
-              aria-label="Regresar">
-              <img src="${pageContext.request.contextPath}/public/participantes/lets-icons-back-light.svg" alt="" />
-              <span>Regresar</span>
-            </a>
-            <button type="submit" id="samNextButton" class="btn-next" aria-label="Siguiente">
-              <span>Siguiente</span>
-              <img src="${pageContext.request.contextPath}/public/SAM 1/carbon-next-outline.svg" alt="Next icon" />
-            </button>
-          </div>
+            <div class="survey-navigation">
+              <a class="btn-back" id="samBackButton" href="${pageContext.request.contextPath}/sam-1"
+                aria-label="Regresar">
+                <img src="${pageContext.request.contextPath}/public/participantes/lets-icons-back-light.svg" alt="" />
+                <span>Regresar</span>
+              </a>
+              <button type="submit" id="samNextButton" class="btn-next" aria-label="Siguiente">
+                <span>Siguiente</span>
+                <img src="${pageContext.request.contextPath}/public/SAM 1/carbon-next-outline.svg" alt="Next icon" />
+              </button>
+            </div>
         </form>
       </main>
     </div>
