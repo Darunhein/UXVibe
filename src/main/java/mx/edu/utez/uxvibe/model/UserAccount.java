@@ -7,7 +7,6 @@ public class UserAccount implements Serializable {
   private String fullName;
   private String email;
   private String password;
-  private String role = UserRole.EVALUATOR;
 
   public String getFullName() {
     return fullName;
@@ -31,13 +30,5 @@ public class UserAccount implements Serializable {
 
   public void setPassword(String password) {
     this.password = password;
-  }
-
-  public String getRole() {
-    return UserRole.isValid(role) ? role : UserRole.EVALUATOR;
-  }
-
-  public void setRole(String role) {
-    this.role = UserRole.normalize(role);
   }
 }

@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import mx.edu.utez.uxvibe.model.UserAccount;
-import mx.edu.utez.uxvibe.model.UserRole;
 import mx.edu.utez.uxvibe.service.UserStore;
 
 @WebServlet(value = "/register")
@@ -91,7 +90,6 @@ public class RegisterServlet extends HttpServlet {
     account.setFullName(fullName.trim());
     account.setEmail(email.trim());
     account.setPassword(password);
-    account.setRole(UserRole.EVALUATOR);
 
     if (UserStore.getInstance().register(account)) {
       HttpSession session = req.getSession();

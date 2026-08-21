@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import mx.edu.utez.uxvibe.model.UserAccount;
-import mx.edu.utez.uxvibe.model.UserRole;
 import mx.edu.utez.uxvibe.service.UserStore;
 
 @WebServlet(value = "/login")
@@ -74,7 +73,7 @@ public class LoginServlet extends HttpServlet {
       forwardToLogin(
           req,
           resp,
-          "No se pudo consultar USUARIOS. Si el log menciona ROL, Tomcat sigue usando la versión anterior. Rebuild y vuelve a desplegar.",
+          "No se pudo consultar USUARIOS. Revisa el log de Tomcat e inténtalo de nuevo.",
           email);
       return;
     }
@@ -123,7 +122,7 @@ public class LoginServlet extends HttpServlet {
       HttpServletResponse resp,
       UserAccount account) {
     try {
-      resp.sendRedirect(req.getContextPath() + resolveHomePath(account));
+      resp.sendRedirect(req.getContextPath() + "/tests");
     } catch (IOException e) {
       writeError(resp, REDIRECT_ERROR_MESSAGE);
     }
@@ -153,10 +152,4 @@ public class LoginServlet extends HttpServlet {
     return value == null ? null : String.valueOf(value);
   }
 
-  private String resolveHomePath(UserAccount account) {
-    if (account != null && UserRole.PARTICIPANT.equals(account.getRole())) {
-      return "/terms";
-    }
-    return "/tests";
-  }
 }

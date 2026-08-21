@@ -6,8 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import mx.edu.utez.uxvibe.model.UserAccount;
-import mx.edu.utez.uxvibe.model.UserRole;
 
 @WebServlet(value = "/cancel-test")
 public class CancelTestServlet extends HttpServlet {
@@ -22,20 +20,10 @@ public class CancelTestServlet extends HttpServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws IOException {
     HttpSession session = req.getSession(false);
-    String role = null;
     if (session != null) {
-      Object currentUserAttribute = session.getAttribute("currentUser");
-      if (currentUserAttribute instanceof UserAccount) {
-        role = ((UserAccount) currentUserAttribute).getRole();
-      }
       session.removeAttribute("currentTestName");
       session.removeAttribute("currentTestStartedAt");
       session.removeAttribute("currentTestCompletionRecorded");
-    }
-
-    if (UserRole.PARTICIPANT.equals(role)) {
-      redirectTo(req, resp, "/logout");
-      return;
     }
 
     redirectTo(req, resp, "/tests");

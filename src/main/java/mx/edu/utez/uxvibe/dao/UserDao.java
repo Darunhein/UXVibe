@@ -11,7 +11,6 @@ import java.util.Locale;
 import java.util.Map;
 import mx.edu.utez.uxvibe.ConexionBD;
 import mx.edu.utez.uxvibe.model.UserAccount;
-import mx.edu.utez.uxvibe.model.UserRole;
 import mx.edu.utez.uxvibe.security.PasswordHasher;
 
 public interface UserDao {
@@ -198,7 +197,6 @@ public interface UserDao {
     account.setEmail(rs.getString("EMAIL"));
     String storedPassword = rs.getString("PASSWORD");
     account.setPassword(storedPassword == null ? null : storedPassword.trim());
-    account.setRole(UserRole.EVALUATOR);
     return account;
   }
 
@@ -207,7 +205,6 @@ public interface UserDao {
     account.setFullName(source.getFullName());
     account.setEmail(email);
     account.setPassword(password);
-    account.setRole(source.getRole());
     return account;
   }
 
@@ -216,7 +213,6 @@ public interface UserDao {
     account.setFullName(source.getFullName());
     account.setEmail(source.getEmail());
     account.setPassword(null);
-    account.setRole(source.getRole());
     return account;
   }
 
