@@ -178,6 +178,14 @@ public interface ParticipantDao {
 
   default boolean saveAudioToDb(String email, String testName, String participantName, String fileName,
       String audioData) {
+    return saveAudioToDb(email, testName, participantName, fileName, audioData, QuestionNumbers.AUDIO);
+  }
+
+  default boolean saveAudioToDb(String email, String testName, String participantName, String fileName,
+      String audioData, int questionNumber) {
+    if (!QuestionNumbers.isAudio(questionNumber)) {
+      questionNumber = QuestionNumbers.AUDIO;
+    }
     long participantId = ensureParticipantId(email, testName, participantName);
     if (participantId <= 0) {
       LOGGER.warning("Cannot save audio: missing ID_PARTICIPANTE for " + participantName);
@@ -189,9 +197,12 @@ public interface ParticipantDao {
           + ", test=" + safeTestName(testName));
       return false;
     }
-    String storedName = fileName == null || fileName.trim().isEmpty() ? "grabacion-sesion.webm" : fileName.trim();
+    String fallbackName = questionNumber == QuestionNumbers.AUDIO_MIC
+        ? "prueba-microfono.webm"
+        : "grabacion-sesion.webm";
+    String storedName = fileName == null || fileName.trim().isEmpty() ? fallbackName : fileName.trim();
     try (Connection conn = ConexionBD.getInstancia().getConnection()) {
-      Long responseId = findResponseId(conn, participantId, QuestionNumbers.AUDIO);
+      Long responseId = findResponseId(conn, participantId, questionNumber);
       if (responseId != null) {
         try (PreparedStatement ps = conn.prepareStatement(UPDATE_AUDIO_SQL)) {
           ps.setLong(1, testId);
@@ -204,7 +215,7 @@ public interface ParticipantDao {
       try (PreparedStatement ps = conn.prepareStatement(INSERT_AUDIO_SQL)) {
         ps.setLong(1, testId);
         ps.setLong(2, participantId);
-        ps.setInt(3, QuestionNumbers.AUDIO);
+        ps.setInt(3, questionNumber);
         ps.setString(4, storedName);
         setAudioAsBlob(ps, 5, audioData);
         return ps.executeUpdate() > 0;
@@ -218,6 +229,11 @@ public interface ParticipantDao {
   }
 
   default Map<String, Object> getAudioFromDb(String email, String testName, String participantName) {
+    return getAudioFromDb(email, testName, participantName, QuestionNumbers.AUDIO);
+  }
+
+  default Map<String, Object> getAudioFromDb(String email, String testName, String participantName,
+      int questionNumber) {
     try (
         Connection conn = ConexionBD.getInstancia().getConnection();
         PreparedStatement ps = conn.prepareStatement(LIST_RESPONSES_SQL)) {
@@ -226,7 +242,7 @@ public interface ParticipantDao {
       ps.setString(3, participantName == null ? "" : participantName);
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
-          if (rs.getInt("NUMERO_PREGUNTA") != QuestionNumbers.AUDIO) {
+          if (rs.getInt("NUMERO_PREGUNTA") != questionNumber) {
             continue;
           }
           Map<String, Object> result = new LinkedHashMap<>();

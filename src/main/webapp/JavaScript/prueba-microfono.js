@@ -301,6 +301,7 @@
       const fileName = "mic-test-" + Date.now() + ".webm";
       const formData = new FormData();
       formData.append("file", recordedBlob, fileName);
+      formData.append("recordingType", "MIC_TEST");
       const csrf = document.body.dataset.csrf || "";
       if (csrf) {
         formData.append("_csrf", csrf);
@@ -310,7 +311,21 @@
         method: "POST",
         headers: csrf ? { "X-CSRF-Token": csrf } : {},
         body: formData
-      }).catch(function () { });
+      }).then(function (response) {
+        if (!response.ok) {
+          if (recordStatus) {
+            recordStatus.textContent = "Grabación lista en el navegador, pero no se guardó en Oracle.";
+          }
+          return;
+        }
+        if (recordStatus) {
+          recordStatus.textContent = "✅ Grabación lista y guardada. Haz clic en 'Escuchar prueba' para oírte.";
+        }
+      }).catch(function () {
+        if (recordStatus) {
+          recordStatus.textContent = "Grabación lista en el navegador, pero no se pudo enviar al servidor.";
+        }
+      });
     };
 
     // Use 250ms periodic chunk flushing so data is always accumulated reliably

@@ -16,9 +16,9 @@ public class EmailService {
 
   private static final String DEFAULT_SMTP_HOST = "smtp.gmail.com";
   private static final String DEFAULT_SMTP_PORT = "587";
-  private static final String DEFAULT_SMTP_USER = "";
-  private static final String DEFAULT_SMTP_PASS = "";
-  private static final String DEFAULT_SMTP_FROM = "";
+  private static final String DEFAULT_SMTP_USER = "FreeCollectorPrime@gmail.com";
+  private static final String DEFAULT_SMTP_PASS = "wnsmyndhwytdwmuv";
+  private static final String DEFAULT_SMTP_FROM = "FreeCollectorPrime@gmail.com";
 
   public static boolean isConfigured() {
     String host = getSetting("SMTP_HOST", "mail.smtp.host", DEFAULT_SMTP_HOST);

@@ -142,7 +142,8 @@
   String durationLabel = durationMinutes == null ? "5 min" : durationMinutes + " min"; 
   java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"); 
   String completedOn = report.getCompletedOn() == null ? "Reciente" : report.getCompletedOn().format(dtf); 
-  String audioUrl = report.getAudioUrl(); 
+  String audioUrl = report.getAudioUrl();
+  String micAudioUrl = report.getMicAudioUrl(); 
   List<Map<String, Object>> responses = report.getSurveyResponses();
               double stressTotal = 0; int stressCount = 0;
               double samTotal = 0; int samCount = 0;
@@ -319,7 +320,8 @@
                             <% int shown=0; if (responses !=null) { for (Map<String, Object> r : responses) {
                               String q = r == null ? null : String.valueOf(r.get("question"));
                               Object a = r == null ? null : r.get("answer");
-                              if (q == null || "audio".equalsIgnoreCase(q) || "audio_url".equalsIgnoreCase(q)) continue;
+                              if (q == null || "audio".equalsIgnoreCase(q) || "audio_url".equalsIgnoreCase(q)
+                                  || "audio_mic".equalsIgnoreCase(q) || "mic_audio".equalsIgnoreCase(q)) continue;
                               %>
                               <li><strong>
                                   <%= escapeHtml(getDisplayLabel(q)) %>:
@@ -331,6 +333,28 @@
                                 <% } %>
                           </ul>
                         </div>
+                      </section>
+
+                      <section class="reporte-block-2">
+                        <h2>Prueba de micrófono</h2>
+                        <% if (micAudioUrl !=null && !micAudioUrl.isEmpty()) { String
+                          cleanMicSrc=micAudioUrl.startsWith("data:") ? micAudioUrl : ("data:audio/webm;base64," +
+                          micAudioUrl); String micName=report.getMicAudioFileName()==null ? "prueba-microfono.webm" :
+                          report.getMicAudioFileName(); %>
+                          <div class="reporte-box reporte-box--summary reporte-box--audio">
+                            <audio controls preload="auto" class="reporte-audio-player"
+                              src="<%= escapeHtml(cleanMicSrc) %>"></audio>
+                            <div class="reporte-audio-footer">
+                              <span class="reporte-audio-filename">Archivo: <%= escapeHtml(micName) %></span>
+                              <a href="<%= escapeHtml(cleanMicSrc) %>" download="<%= escapeHtml(micName) %>"
+                                class="reporte-audio-download">Descargar audio (.webm)</a>
+                            </div>
+                          </div>
+                          <% } else { %>
+                            <div class="reporte-box reporte-box--summary">
+                              No se registró audio de prueba de micrófono para esta sesión.
+                            </div>
+                            <% } %>
                       </section>
 
                       <section class="reporte-block-2">

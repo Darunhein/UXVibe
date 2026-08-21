@@ -4,10 +4,13 @@ import java.util.Locale;
 
 /**
  * Maps survey field names to RESPUESTAS.NUMERO_PREGUNTA and back.
- * Audio uses 0 so it can live in the same table without colliding with SUS/SAM/SB.
+ * Session audio uses 0; microphone-test audio uses 26 so they do not overwrite.
  */
 public final class QuestionNumbers {
   public static final int AUDIO = 0;
+  public static final int AUDIO_MIC = 26;
+  public static final String TYPE_SESSION = "TEST_SESSION";
+  public static final String TYPE_MIC = "MIC_TEST";
   public static final int AGE = 1;
   public static final int GENDER = 2;
   public static final int EDUCATION = 3;
@@ -21,7 +24,11 @@ public final class QuestionNumbers {
   }
 
   public static boolean isAudio(int number) {
-    return number == AUDIO;
+    return number == AUDIO || number == AUDIO_MIC;
+  }
+
+  public static boolean isMicAudio(int number) {
+    return number == AUDIO_MIC;
   }
 
   public static boolean isAudioName(String question) {
@@ -29,7 +36,17 @@ public final class QuestionNumbers {
       return false;
     }
     String q = question.trim().toLowerCase(Locale.ROOT);
-    return "audio".equals(q) || "audio_url".equals(q);
+    return "audio".equals(q)
+        || "audio_url".equals(q)
+        || "audio_mic".equals(q)
+        || "mic_audio".equals(q);
+  }
+
+  public static int forRecordingType(String recordingType) {
+    if (recordingType != null && TYPE_MIC.equalsIgnoreCase(recordingType.trim())) {
+      return AUDIO_MIC;
+    }
+    return AUDIO;
   }
 
   public static int toNumber(String question) {
@@ -39,6 +56,9 @@ public final class QuestionNumbers {
     String q = question.trim().toLowerCase(Locale.ROOT);
     if (q.isEmpty()) {
       return -1;
+    }
+    if ("audio_mic".equals(q) || "mic_audio".equals(q)) {
+      return AUDIO_MIC;
     }
     if (isAudioName(q)) {
       return AUDIO;
@@ -79,6 +99,8 @@ public final class QuestionNumbers {
     switch (number) {
       case AUDIO:
         return "audio";
+      case AUDIO_MIC:
+        return "audio_mic";
       case AGE:
         return "age";
       case GENDER:

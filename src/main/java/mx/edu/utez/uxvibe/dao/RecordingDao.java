@@ -5,6 +5,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mx.edu.utez.uxvibe.util.QuestionNumbers;
 
 public interface RecordingDao {
   Logger LOGGER = Logger.getLogger(RecordingDao.class.getName());
@@ -34,14 +35,15 @@ public interface RecordingDao {
     data.put("durationSeconds", durationSeconds);
     IN_MEMORY_RECORDINGS.put(key, data);
 
+    int questionNumber = QuestionNumbers.forRecordingType(recordingType);
     boolean saved = new ParticipantDao() {
-    }.saveAudioToDb(email, testName, participantName, fileName, audioBase64);
+    }.saveAudioToDb(email, testName, participantName, fileName, audioBase64, questionNumber);
     if (saved) {
-      LOGGER.info("Saved recording into RESPUESTAS.AUDIO: key=" + key);
+      LOGGER.info("Saved recording into RESPUESTAS.AUDIO: key=" + key + " question=" + questionNumber);
       return true;
     }
-    LOGGER.log(Level.WARNING, "Database save recording failed (using memory cache): key=" + key);
-    return true;
+    LOGGER.log(Level.WARNING, "Database save recording failed: key=" + key);
+    return false;
   }
 
   default Map<String, Object> getRecording(
@@ -50,7 +52,7 @@ public interface RecordingDao {
       String participantName,
       String recordingType) {
     Map<String, Object> fromDb = new ParticipantDao() {
-    }.getAudioFromDb(email, testName, participantName);
+    }.getAudioFromDb(email, testName, participantName, QuestionNumbers.forRecordingType(recordingType));
     if (fromDb != null && fromDb.get("audioData") != null) {
       return fromDb;
     }

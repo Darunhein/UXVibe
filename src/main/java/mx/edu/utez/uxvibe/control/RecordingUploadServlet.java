@@ -72,12 +72,28 @@ public class RecordingUploadServlet extends HttpServlet {
       return;
     }
 
-    ParticipantStore.getInstance().saveAudioAsset(
+    String recordingType = req.getParameter("recordingType");
+    if (recordingType == null || recordingType.isBlank()) {
+      if (fileName != null && fileName.toLowerCase().contains("mic-test")) {
+        recordingType = mx.edu.utez.uxvibe.util.QuestionNumbers.TYPE_MIC;
+      } else {
+        recordingType = mx.edu.utez.uxvibe.util.QuestionNumbers.TYPE_SESSION;
+      }
+    }
+
+    boolean saved = ParticipantStore.getInstance().saveAudioAsset(
         account.getEmail(),
         testName,
         participantName,
         fileName,
-        audioBase64);
+        audioBase64,
+        recordingType);
+
+    if (!saved) {
+      resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      resp.getWriter().write("No se pudo guardar el audio en Oracle. Crea la prueba antes de grabar.");
+      return;
+    }
 
     resp.setStatus(HttpServletResponse.SC_OK);
     resp.getWriter().write("OK");

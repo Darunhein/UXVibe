@@ -9,6 +9,7 @@ class QuestionNumbersTest {
 
   @Test
   void mapsKnownSurveyFieldsToStableNumbers() {
+    assertEquals(QuestionNumbers.AUDIO_MIC, QuestionNumbers.toNumber("audio_mic"));
     assertEquals(QuestionNumbers.AUDIO, QuestionNumbers.toNumber("audio"));
     assertEquals(QuestionNumbers.AGE, QuestionNumbers.toNumber("age"));
     assertEquals(QuestionNumbers.SATISFACTION, QuestionNumbers.toNumber("satisfaction"));
@@ -19,6 +20,8 @@ class QuestionNumbersTest {
   @Test
   void roundTripsKnownNumbersBackToFieldNames() {
     assertEquals("audio", QuestionNumbers.toName(QuestionNumbers.AUDIO));
+    assertEquals("audio_mic", QuestionNumbers.toName(QuestionNumbers.AUDIO_MIC));
+    assertTrue(QuestionNumbers.isAudio(QuestionNumbers.AUDIO_MIC));
     assertEquals("gender", QuestionNumbers.toName(QuestionNumbers.GENDER));
     assertEquals("q5", QuestionNumbers.toName(15));
     assertEquals("q15", QuestionNumbers.toName(25));

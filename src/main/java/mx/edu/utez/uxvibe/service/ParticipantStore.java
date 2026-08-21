@@ -200,14 +200,27 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
     return renamed;
   }
 
-  public synchronized void saveAudioAsset(
+  public synchronized boolean saveAudioAsset(
       String email,
       String testName,
       String participantName,
       String fileName,
       String audioUrl) {
-    LOGGER.info("saveAudioAsset: email=" + email + ", test=" + testName + ", participant=" + participantName
-        + ", fileName=" + fileName);
+    return saveAudioAsset(email, testName, participantName, fileName, audioUrl, QuestionNumbers.TYPE_SESSION);
+  }
+
+  public synchronized boolean saveAudioAsset(
+      String email,
+      String testName,
+      String participantName,
+      String fileName,
+      String audioUrl,
+      String recordingType) {
+    String type = recordingType == null || recordingType.isBlank()
+        ? QuestionNumbers.TYPE_SESSION
+        : recordingType.trim();
+    LOGGER.info("saveAudioAsset: type=" + type + ", email=" + email + ", test=" + testName
+        + ", participant=" + participantName + ", fileName=" + fileName);
     String normalizedEmail = normalize(email);
     String normalizedTestName = normalize(testName);
     String rememberedParticipantName = resolveParticipantName(
@@ -220,20 +233,26 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
         normalizedEmail,
         normalizedTestName,
         rememberedParticipantName);
-    report.setAudioFileName(fileName);
-    report.setAudioUrl(audioUrl);
+    if (QuestionNumbers.TYPE_MIC.equalsIgnoreCase(type)) {
+      report.setMicAudioFileName(fileName);
+      report.setMicAudioUrl(audioUrl);
+    } else {
+      report.setAudioFileName(fileName);
+      report.setAudioUrl(audioUrl);
+    }
 
     try {
-      recordingDao.saveRecording(
+      return recordingDao.saveRecording(
           email,
           testName,
           rememberedParticipantName,
-          "TEST_SESSION",
+          type,
           fileName,
           audioUrl,
           report.getDurationMinutes() != null ? report.getDurationMinutes() * 60 : null);
     } catch (Throwable t) {
       t.printStackTrace();
+      return false;
     }
   }
 
@@ -244,15 +263,7 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
     String key = normalize(email) + "|" + normalize(testName) + "|" + normalize(participantName);
     ParticipantReportBean report = reportsByParticipant.get(key);
     if (report != null) {
-      if (report.getAudioUrl() == null || report.getAudioUrl().isEmpty()) {
-        Map<String, Object> rec = recordingDao.getRecording(email, testName, participantName, "TEST_SESSION");
-        if (rec != null && rec.get("audioData") != null) {
-          report.setAudioUrl(String.valueOf(rec.get("audioData")));
-          if (rec.get("fileName") != null) {
-            report.setAudioFileName(String.valueOf(rec.get("fileName")));
-          }
-        }
-      }
+      fillAudioFromStore(report, email, testName, participantName);
       return report;
     }
 
@@ -270,12 +281,7 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
         Object numericObj = row.get("numeric");
         Object audioData = row.get("audio");
         if (QuestionNumbers.isAudioName(q)) {
-          if (audioData != null && !String.valueOf(audioData).trim().isEmpty()) {
-            report.setAudioUrl(String.valueOf(audioData));
-          }
-          if (ans != null && !String.valueOf(ans).trim().isEmpty()) {
-            report.setAudioFileName(String.valueOf(ans));
-          }
+          applyAudioRow(report, q, ans, audioData);
         } else {
           Map<String, Object> r = new LinkedHashMap<>();
           r.put("question", q);
@@ -290,13 +296,7 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
         }
       }
 
-      Map<String, Object> rec = recordingDao.getRecording(email, testName, participantName, "TEST_SESSION");
-      if (rec != null && rec.get("audioData") != null) {
-        report.setAudioUrl(String.valueOf(rec.get("audioData")));
-        if (rec.get("fileName") != null) {
-          report.setAudioFileName(String.valueOf(rec.get("fileName")));
-        }
-      }
+      fillAudioFromStore(report, email, testName, participantName);
 
       reportsByParticipant.put(key, report);
       return report;
@@ -312,6 +312,54 @@ public class ParticipantStore implements ParticipantDao, RecordingDao {
     }
 
     return null;
+  }
+
+  private void fillAudioFromStore(
+      ParticipantReportBean report,
+      String email,
+      String testName,
+      String participantName) {
+    if (report.getAudioUrl() == null || report.getAudioUrl().isEmpty()) {
+      applyRecordingMap(report, recordingDao.getRecording(email, testName, participantName, QuestionNumbers.TYPE_SESSION), false);
+    }
+    if (report.getMicAudioUrl() == null || report.getMicAudioUrl().isEmpty()) {
+      applyRecordingMap(report, recordingDao.getRecording(email, testName, participantName, QuestionNumbers.TYPE_MIC), true);
+    }
+  }
+
+  private void applyAudioRow(ParticipantReportBean report, String question, Object ans, Object audioData) {
+    boolean mic = QuestionNumbers.isMicAudio(QuestionNumbers.toNumber(question));
+    if (audioData != null && !String.valueOf(audioData).trim().isEmpty()) {
+      if (mic) {
+        report.setMicAudioUrl(String.valueOf(audioData));
+      } else {
+        report.setAudioUrl(String.valueOf(audioData));
+      }
+    }
+    if (ans != null && !String.valueOf(ans).trim().isEmpty()) {
+      if (mic) {
+        report.setMicAudioFileName(String.valueOf(ans));
+      } else {
+        report.setAudioFileName(String.valueOf(ans));
+      }
+    }
+  }
+
+  private void applyRecordingMap(ParticipantReportBean report, Map<String, Object> rec, boolean mic) {
+    if (rec == null || rec.get("audioData") == null) {
+      return;
+    }
+    if (mic) {
+      report.setMicAudioUrl(String.valueOf(rec.get("audioData")));
+      if (rec.get("fileName") != null) {
+        report.setMicAudioFileName(String.valueOf(rec.get("fileName")));
+      }
+    } else {
+      report.setAudioUrl(String.valueOf(rec.get("audioData")));
+      if (rec.get("fileName") != null) {
+        report.setAudioFileName(String.valueOf(rec.get("fileName")));
+      }
+    }
   }
 
   private ParticipantReportBean ensureReport(

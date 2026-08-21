@@ -15,6 +15,8 @@ public class ParticipantReportBean {
   private LocalDateTime completedOn;
   private String audioFileName;
   private String audioUrl;
+  private String micAudioFileName;
+  private String micAudioUrl;
   private Integer age;
   private String gender;
   private String education;
@@ -74,6 +76,22 @@ public class ParticipantReportBean {
 
   public void setAudioUrl(String audioUrl) {
     this.audioUrl = audioUrl;
+  }
+
+  public String getMicAudioFileName() {
+    return micAudioFileName;
+  }
+
+  public void setMicAudioFileName(String micAudioFileName) {
+    this.micAudioFileName = micAudioFileName;
+  }
+
+  public String getMicAudioUrl() {
+    return micAudioUrl;
+  }
+
+  public void setMicAudioUrl(String micAudioUrl) {
+    this.micAudioUrl = micAudioUrl;
   }
 
   public Integer getAge() {
