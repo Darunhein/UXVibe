@@ -9,7 +9,8 @@
         "ignore": [
           "backdrop-filter",
           "user-select",
-          "min-height: auto"
+          "min-height: auto",
+          "-webkit-user-drag"
         ]
       }
     ]
