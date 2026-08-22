@@ -73,7 +73,7 @@ body {
 
 .survey-question {
     text-align: center;
-    margin-top: 110px;
+    margin-top: 40px;
 }
 
 .survey-question p {
@@ -94,108 +94,132 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding-top: 30px;
+    padding-top: 15px;
     flex: 1;
     width: 100%;
 }
 
 /* ============================================================================
-   SAM 1, 2, 3 UNIFIED 9-COLUMN SCALE GRIDS
+   SAM 1, 2, 3 PURE FLEXBOX SCALE ARCHITECTURE
    ============================================================================ */
 
 .emoji-scale,
 .manikin-scale,
 .character-scale {
-    display: grid;
-    grid-template-columns: repeat(9, 80px);
-    column-gap: 20px;
-    justify-content: center;
-    align-items: flex-end;
-    margin: 32px auto 20px auto;
-    width: auto;
-    max-width: 100%;
-}
-
-.emoji-item,
-.manikin-item,
-.character-item {
-    width: 80px;
-    height: 130px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: flex-end;
-    justify-self: center;
-}
-
-/* Image 1 -> Option 1 */
-.emoji-item:nth-child(1),
-.manikin-item:nth-child(1),
-.character-item:nth-child(1) {
-    grid-column: 1;
-}
-
-/* Image 2 -> Option 3 */
-.emoji-item:nth-child(2),
-.manikin-item:nth-child(2),
-.character-item:nth-child(2) {
-    grid-column: 3;
-}
-
-/* Image 3 -> Option 5 */
-.emoji-item:nth-child(3),
-.manikin-item:nth-child(3),
-.character-item:nth-child(3) {
-    grid-column: 5;
-}
-
-/* Image 4 -> Option 7 */
-.emoji-item:nth-child(4),
-.manikin-item:nth-child(4),
-.character-item:nth-child(4) {
-    grid-column: 7;
-}
-
-/* Image 5 -> Option 9 */
-.emoji-item:nth-child(5),
-.manikin-item:nth-child(5),
-.character-item:nth-child(5) {
-    grid-column: 9;
-}
-
-.emoji {
-    width: 80px;
-    height: 120px;
-    object-fit: contain;
-    display: block;
-}
-
-.manikin {
-    width: 80px;
-    height: 120px;
-    object-fit: contain;
-    display: block;
-}
-
-.character {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
+    width: min(100%, 820px);
+    margin: 16px auto 10px auto;
+    padding: 0 8px;
+    box-sizing: border-box;
+    background: transparent;
 }
 
 /* ============================================================================
-   OPTIONS
+   INDIVIDUAL MANIKIN RULES (SAM 1, SAM 2, SAM 3)
+   ============================================================================ */
+
+/* Base Item Cell */
+.emoji-item,
+.manikin-item,
+.character-item {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    width: 110px;
+    height: 220px;
+    flex: 0 0 110px;
+    background: transparent;
+    box-sizing: border-box;
+}
+
+/* Base Image containment */
+.emoji,
+.manikin,
+.character {
+    object-fit: contain;
+    background: transparent;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* --- SAM 1 (Valencia / Satisfacción) - Identical Dimensions for All 5 --- */
+.sam1-item-1,
+.sam1-item-2,
+.sam1-item-3,
+.sam1-item-4,
+.sam1-item-5 { 
+    width: 110px; 
+    height: 220px; 
+    flex: 0 0 110px; 
+}
+
+.sam1-img-1,
+.sam1-img-2,
+.sam1-img-3,
+.sam1-img-4,
+.sam1-img-5 { 
+    width: 100%;
+    height: 100%;
+    max-height: 220px;
+    object-fit: contain;
+    display: block;
+}
+
+/* --- SAM 2 (Activación / Impacto) - Identical Dimensions & Standard Matching SAM 1 --- */
+.sam2-item-1,
+.sam2-item-2,
+.sam2-item-3,
+.sam2-item-4,
+.sam2-item-5 { 
+    width: 110px; 
+    height: 220px; 
+    flex: 0 0 110px; 
+}
+
+.sam2-img-1,
+.sam2-img-2,
+.sam2-img-3,
+.sam2-img-4,
+.sam2-img-5 { 
+    width: 100%;
+    height: 100%;
+    max-height: 220px;
+    object-fit: contain;
+    display: block;
+}
+
+/* --- SAM 3 (Dominio / Control) - Smooth Progressive Scaling & Reduced Spacing --- */
+.sam3-item-1,
+.sam3-item-2,
+.sam3-item-3,
+.sam3-item-4,
+.sam3-item-5 { 
+    width: 110px; 
+    height: 220px; 
+    flex: 0 0 110px; 
+}
+
+.sam3-img-1 { height: 120px; width: auto; }
+.sam3-img-2 { height: 145px; width: auto; }
+.sam3-img-3 { height: 170px; width: auto; }
+.sam3-img-4 { height: 195px; width: auto; }
+.sam3-img-5 { height: 220px; width: auto; }
+
+/* ============================================================================
+   OPTIONS (PURE FLEXBOX)
    ============================================================================ */
 
 .scale-options {
-    display: grid;
-    grid-template-columns: repeat(9, 80px);
-    column-gap: 20px;
-    justify-content: center;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    width: min(100%, 820px);
     margin: 0 auto;
-    width: auto;
-    max-width: 100%;
+    padding: 0 8px;
+    box-sizing: border-box;
 }
 
 .scale-option {
@@ -203,25 +227,22 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 80px;
-    gap: 10px;
+    width: 44px;
+    gap: 8px;
     cursor: pointer;
+    background: transparent;
 }
 
 .scale-option input[type="radio"] {
+    -webkit-appearance: none;
     appearance: none;
-
-    width: 34px;
-    height: 34px;
-
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     border: 2px solid var(--text-gray);
-
-    background: var(--white);
-
+    background: transparent;
     cursor: pointer;
-
-    transition: all 0.25s ease;
+    transition: all 0.2s ease;
 }
 
 .scale-option input[type="radio"]:hover {
@@ -233,18 +254,11 @@ body {
     border-color: var(--secondary-blue);
 }
 
-.scale-option input[type="radio"] {
-    width: 30px;
-    height: 30px;
-}
-
 .scale-number {
     font-family: "Inter", sans-serif;
     font-size: 20px;
     font-weight: 700;
-
     color: var(--text-gray);
-
     text-align: center;
 }
 
@@ -257,8 +271,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     margin-top: auto;
+    padding-top: 20px;
 }
 
 .btn-back,
@@ -266,37 +280,25 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-
     gap: 10px;
-
     min-width: 180px;
-
     padding: 14px 30px;
-
     border: none;
     border-radius: 10px;
-
     background: var(--primary-blue);
-
     color: white;
-
     font-family: "Inter", sans-serif;
     font-size: 20px;
     font-weight: 600;
-
     text-decoration: none;
-
     cursor: pointer;
-
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-back:hover,
 .btn-next:hover {
     background: #4a6b7c;
-
     transform: translateY(-2px);
-
     box-shadow: 0 6px 16px rgba(90, 122, 140, 0.35);
 }
 
@@ -313,508 +315,17 @@ body {
 }
 
 /* ============================================================================
-   RESPONSIVE
+   CLEAN RESPONSIVE SUPPORT (WITHOUT SQUISHING MANIKINS)
    ============================================================================ */
 
-@media (max-width: 900px) {
-
-    .emoji,
-    .manikin {
-        width: 64px;
-        height: 110px;
-    }
-
-    .character-scale {
-        gap: 16px;
-    }
-
+@media (max-width: 768px) {
     .survey-navigation {
         flex-direction: column;
-        gap: 15px;
+        gap: 12px;
     }
 
     .btn-back,
     .btn-next {
         width: 100%;
     }
-}
-
-/* ============================================================================
-   PANTALLAS CON POCA ALTURA
-   ============================================================================ */
-
-@media (max-height: 750px) {
-
-    .satisfaction-survey-container {
-        padding: 12px;
-    }
-
-    .survey-frame {
-        width: min(96vw, 1100px);
-
-        min-height: 94vh;
-
-        padding: 24px 36px;
-    }
-
-    .survey-title {
-        font-size: 30px;
-    }
-
-    .survey-question {
-        margin-top: 8px;
-    }
-
-    .survey-question p {
-        font-size: 20px;
-    }
-
-    .emoji-scale,
-    .manikin-scale,
-    .character-scale {
-        margin-top: 18px;
-        margin-bottom: 12px;
-        grid-template-columns: repeat(9, 64px);
-        column-gap: 14px;
-    }
-
-    .emoji,
-    .manikin {
-        width: 64px;
-        height: 110px;
-    }
-
-    .emoji-item,
-    .manikin-item,
-    .character-item {
-        width: 64px;
-        height: 110px;
-    }
-
-    .character-scale {
-        gap: 30px;
-    }
-
-    .scale-options {
-        gap: 16px;
-    }
-
-    .scale-option {
-        width: 48px;
-    }
-
-    .scale-option input[type="radio"] {
-        width: 30px;
-        height: 30px;
-    }
-
-    .scale-number {
-        font-size: 20px;
-    }
-
-    .btn-back,
-    .btn-next {
-        min-width: 160px;
-
-        padding: 11px 24px;
-
-        font-size: 17px;
-    }
-
-    .btn-back img,
-    .btn-next img {
-        width: 24px;
-        height: 24px;
-    }
-}
-
-/* ============================================================================
-   TABLET
-   ============================================================================ */
-
-@media (max-width: 900px) {
-
-    .satisfaction-survey-container {
-        padding: 15px;
-    }
-
-    .survey-frame {
-        width: 100%;
-
-        min-height: 94vh;
-
-        padding: 32px 30px;
-    }
-
-    .survey-title {
-        font-size: 34px;
-    }
-
-    .survey-question p {
-        font-size: 23px;
-    }
-
-    .emoji-scale,
-    .manikin-scale {
-        gap: 14px;
-
-        margin-top: 40px;
-    }
-
-    .emoji,
-    .manikin {
-        width: 75px;
-        height: 105px;
-    }
-
-    .emoji-item,
-    .manikin-item {
-        width: 75px;
-        height: 105px;
-    }
-
-    .character-scale {
-        gap: 25px;
-
-        margin-top: 40px;
-    }
-
-    .character-item:nth-child(1) .character {
-        width: 38px;
-        height: 55px;
-    }
-
-    .character-item:nth-child(2) .character {
-        width: 54px;
-        height: 80px;
-    }
-
-    .character-item:nth-child(3) .character {
-        width: 72px;
-        height: 105px;
-    }
-
-    .character-item:nth-child(4) .character {
-        width: 88px;
-        height: 125px;
-    }
-
-    .character-item:nth-child(5) .character {
-        width: 105px;
-        height: 150px;
-    }
-
-    .scale-options {
-        gap: 14px;
-    }
-
-    .scale-option {
-        width: 48px;
-    }
-
-    .scale-option input[type="radio"] {
-        width: 30px;
-        height: 30px;
-    }
-
-    .scale-number {
-        font-size: 21px;
-    }
-
-    .survey-navigation {
-        gap: 20px;
-    }
-
-    .btn-back,
-    .btn-next {
-        min-width: 160px;
-
-        padding: 12px 22px;
-
-        font-size: 18px;
-    }
-}
-
-/* ============================================================================
-   CELULAR
-   ============================================================================ */
-
-@media (max-width: 600px) {
-
-    .satisfaction-survey-container {
-        padding: 10px;
-    }
-
-    .survey-frame {
-        width: 100%;
-
-        min-height: calc(100vh - 20px);
-
-        height: auto;
-
-        padding: 25px 16px 22px;
-
-        overflow-y: auto;
-    }
-
-    .survey-title {
-        font-size: 27px;
-    }
-
-    .survey-question {
-        margin-top: 12px;
-    }
-
-    .survey-question p {
-        font-size: 18px;
-        line-height: 1.35;
-    }
-
-    /* SAM 1 */
-
-    .emoji-scale {
-        display: grid;
-        grid-template-columns: repeat(9, 1fr);
-        width: 100%;
-        gap: 0;
-        margin-top: 25px;
-        margin-bottom: 5px;
-        align-items: center;
-    }
-
-    .emoji-item {
-        width: 100%;
-        height: 65px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .emoji {
-        width: 50px;
-        height: 65px;
-        object-fit: contain;
-    }
-
-    /* =========================================================
-   SAM 2 - CELULAR
-   ========================================================= */
-
-    .manikin-scale {
-        display: grid;
-        grid-template-columns: repeat(9, 1fr);
-        width: 100%;
-        gap: 0;
-        margin-top: 35px;
-        margin-bottom: 5px;
-        align-items: center;
-    }
-
-    .manikin-item {
-        width: 100%;
-        height: 100px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    /* Posiciones: 1, 3, 5, 7 y 9 */
-    .manikin-item:nth-child(1) {
-        grid-column: 1;
-    }
-
-    .manikin-item:nth-child(2) {
-        grid-column: 3;
-    }
-
-    .manikin-item:nth-child(3) {
-        grid-column: 5;
-    }
-
-    .manikin-item:nth-child(4) {
-        grid-column: 7;
-    }
-
-    .manikin-item:nth-child(5) {
-        grid-column: 9;
-    }
-
-    .manikin {
-        width: 65px;
-        height: 90px;
-        object-fit: contain;
-    }
-
-
-
-
-    /* =========================================================
-   SAM 3 - CELULAR
-   ========================================================= */
-
-    .character-scale {
-        display: grid;
-        grid-template-columns: repeat(9, 1fr);
-
-        width: 350px;
-        max-width: 100%;
-
-        gap: 0;
-
-        margin: 32px auto 18px auto;
-
-        align-items: end;
-    }
-
-    /* Posiciones */
-
-    .character-item:nth-child(1) {
-        grid-column: 1;
-        transform: translateX(8px);
-    }
-
-    .character-item:nth-child(2) {
-        grid-column: 3;
-        transform: translateX(4px);
-    }
-
-    .character-item:nth-child(3) {
-        grid-column: 5;
-        transform: translateX(0);
-    }
-
-    .character-item:nth-child(4) {
-        grid-column: 7;
-        transform: translateX(-4px);
-    }
-
-    .character-item:nth-child(5) {
-        grid-column: 9;
-        transform: translateX(-8px) translateY(4px);
-    }
-
-    .character-item {
-        width: 100%;
-        min-width: 0;
-
-        display: flex;
-        justify-content: center;
-        align-items: flex-end;
-    }
-
-    /* Tamaños */
-
-    .character-item:nth-child(1) .character {
-        width: 26px;
-        height: 40px;
-    }
-
-    .character-item:nth-child(2) .character {
-        width: 38px;
-        height: 56px;
-    }
-
-    .character-item:nth-child(3) .character {
-        width: 50px;
-        height: 73px;
-    }
-
-    .character-item:nth-child(4) .character {
-        width: 60px;
-        height: 88px;
-    }
-
-    .character-item:nth-child(5) .character {
-        width: 70px;
-        height: 102px;
-    }
-
-/* ============================================================================
-   CELULARES PEQUEÑOS
-   ============================================================================ */
-
-@media (max-width: 400px) {
-
-    .survey-frame {
-        padding: 20px 12px;
-    }
-
-    .survey-title {
-        font-size: 24px;
-    }
-
-    .survey-question p {
-        font-size: 16px;
-    }
-
-    .emoji-scale,
-    .manikin-scale {
-        gap: 4px;
-    }
-
-    .emoji-item,
-    .manikin-item {
-        width: 48px;
-        height: 68px;
-    }
-
-    .emoji,
-    .manikin {
-        width: 48px;
-        height: 68px;
-    }
-
-    .character-scale {
-        gap: 7px;
-    }
-
-    .character-item:nth-child(1) .character {
-        width: 24px;
-        height: 36px;
-    }
-
-    .character-item:nth-child(2) .character {
-        width: 34px;
-        height: 50px;
-    }
-
-    .character-item:nth-child(3) .character {
-        width: 45px;
-        height: 65px;
-    }
-
-    .character-item:nth-child(4) .character {
-        width: 55px;
-        height: 80px;
-    }
-
-    .character-item:nth-child(5) .character {
-        width: 65px;
-        height: 94px;
-    }
-
-    .scale-options {
-        gap: 4px;
-    }
-
-    .scale-option {
-        width: 36px;
-    }
-
-    .scale-option input[type="radio"] {
-        width: 24px;
-        height: 24px;
-    }
-
-    .scale-number {
-        font-size: 16px;
-    }
-
-    .btn-back,
-    .btn-next {
-        font-size: 16px;
-
-        padding: 10px 16px;
-    }
-}
 }

@@ -80,23 +80,26 @@
                     <%= participant.getDurationLabel() %>
                   </span>
                 </div>
-                <a class="participante-detalles"
-                  href="${pageContext.request.contextPath}/participant-report?testName=<%= encodedTestName %>&participantName=<%= encodedParticipantName %>"
-                  aria-label="Ver estadísticas de <%= escapeHtml(participant.getName()) %>">
-                  <span>Detalles</span>
-                  <img
-                    src="${pageContext.request.contextPath}/public/participantes/ant-design-ellipsis-outlined.svg"
-                    alt="" />
-                </a>
-                <form class="participante-delete"
-                  action="${pageContext.request.contextPath}/delete-participant" method="post">
-                  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-                  <input type="hidden" name="testName"
-                    value="<%= escapeHtml(selectedTestName) %>" />
-                  <input type="hidden" name="participantName"
-                    value="<%= escapeHtml(participant.getName()) %>" />
-                  <button class="participante-delete-button" type="submit">Borrar</button>
-                </form>
+                <div class="participante-actions">
+                  <a class="participante-detalles"
+                    href="${pageContext.request.contextPath}/participant-report?testName=<%= encodedTestName %>&participantName=<%= encodedParticipantName %>"
+                    aria-label="Ver estadísticas de <%= escapeHtml(participant.getName()) %>">
+                    <span>Detalles</span>
+                    <img
+                      src="${pageContext.request.contextPath}/public/participantes/ant-design-ellipsis-outlined.svg"
+                      alt="" />
+                  </a>
+                  <form class="participante-action-form--delete"
+                    action="${pageContext.request.contextPath}/delete-participant" method="post">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <input type="hidden" name="testName"
+                      value="<%= escapeHtml(selectedTestName) %>" />
+                    <input type="hidden" name="participantName"
+                      value="<%= escapeHtml(participant.getName()) %>" />
+                    <button class="participante-delete-button" type="submit"
+                      aria-label="Borrar participante <%= escapeHtml(participant.getName()) %>">Borrar</button>
+                  </form>
+                </div>
               </article>
             <% } %>
           </section>

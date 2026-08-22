@@ -89,6 +89,7 @@
       </main>
     </div>
     <script src="${pageContext.request.contextPath}/JavaScript/cuestionario-sb-2.js"></script>
+    <script src="${pageContext.request.contextPath}/JavaScript/survey-autoclose.js"></script>
   </body>
 
   </html>

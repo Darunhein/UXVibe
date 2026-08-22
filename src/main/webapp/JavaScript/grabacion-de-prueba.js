@@ -308,15 +308,55 @@
     timerLabel.textContent = formatTime(timerSeconds);
   }
 
+  function handleSessionComplete() {
+    stopTimer();
+    stopRecording();
+    stopMediaTracks();
+
+    // Try closing the tab
+    try {
+      window.close();
+    } catch (e) { }
+
+    // Fallback: If browser prevents script window.close on top-level tabs, display a clean completed state
+    setTimeout(function () {
+      if (!window.closed) {
+        document.body.innerHTML = `
+          <div style="width:100vw;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#bfc7cf;color:#fff;font-family:Inter,sans-serif;text-align:center;padding:20px;box-sizing:border-box;">
+            <div style="background:#f6f5f3;color:#2c3e50;padding:44px 36px;border-radius:12px;box-shadow:0 12px 32px rgba(67,73,88,0.2);max-width:520px;width:100%;box-sizing:border-box;">
+              <h2 style="margin-top:0;color:#5a7a8c;font-size:28px;font-weight:700;">Grabación Finalizada</h2>
+              <p style="font-size:16px;color:#5d7b94;margin:16px 0 28px;line-height:1.4;">El audio de la sesión ha sido entregado y guardado con éxito. Ya puedes cerrar esta pestaña con seguridad.</p>
+              <button id="btnFinishCloseTab" type="button" class="btn-primary" style="background:#5b7689;color:#ffffff;border:none;padding:14px 32px;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;box-shadow:0 3px 10px rgba(67,73,88,0.18);transition:all 0.22s cubic-bezier(0.4, 0, 0.2, 1);">Cerrar pestaña</button>
+            </div>
+          </div>
+        `;
+        const finishBtn = document.getElementById("btnFinishCloseTab");
+        if (finishBtn) {
+          finishBtn.addEventListener("mouseenter", function () {
+            this.style.background = "#4a6b7c";
+            this.style.transform = "translateY(-2px)";
+            this.style.boxShadow = "0 6px 18px rgba(67, 73, 88, 0.28)";
+          });
+          finishBtn.addEventListener("mouseleave", function () {
+            this.style.background = "#5b7689";
+            this.style.transform = "translateY(0)";
+            this.style.boxShadow = "0 3px 10px rgba(67, 73, 88, 0.18)";
+          });
+          finishBtn.addEventListener("mousedown", function () {
+            this.style.transform = "translateY(0) scale(0.99)";
+          });
+          finishBtn.addEventListener("click", function () {
+            window.close();
+          });
+        }
+      }
+    }, 200);
+  }
+
   // Dual Signaling: Storage event fallback to close tab
   window.addEventListener("storage", function (e) {
     if (e.key === "uxvibe_close_recording_event" && e.newValue) {
-      stopTimer();
-      stopRecording();
-      stopMediaTracks();
-      setTimeout(function () {
-        window.close();
-      }, 150);
+      handleSessionComplete();
     }
   });
 
@@ -339,13 +379,7 @@
           }
         });
       } else if (event.data.type === "CLOSE_RECORDING_TAB") {
-        stopTimer();
-        stopRecording();
-        stopMediaTracks();
-        // Give a tiny moment to finish background cleanup then close window
-        setTimeout(function () {
-          window.close();
-        }, 150);
+        handleSessionComplete();
       }
     };
   }
@@ -390,21 +424,49 @@
     });
   }
 
+  function broadcastCloseSurveyTab() {
+    if (recChannel) {
+      recChannel.postMessage({ type: "CLOSE_SURVEY_TAB" });
+    }
+    try {
+      localStorage.setItem("uxvibe_close_survey_event", String(Date.now()));
+    } catch (e) { }
+  }
+
   if (restartBtn) {
-    restartBtn.addEventListener("click", function () {
+    restartBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      broadcastCloseSurveyTab();
       sessionStorage.removeItem(storageKey);
       sessionStorage.removeItem("uxvibe_audio_base64");
       sessionStorage.removeItem("uxvibe_audio_filename");
-      timerSeconds = 0;
-      if (timerLabel) {
-        timerLabel.textContent = formatTime(timerSeconds);
-      }
+      sessionStorage.removeItem("uxvibe_audio_mimetype");
+      sessionStorage.removeItem("uxvibe-grabacion-tiempo");
+      try {
+        localStorage.removeItem("uxvibe_audio_latest_base64");
+        localStorage.removeItem("uxvibe_audio_latest_filename");
+        localStorage.removeItem("uxvibe_audio_latest_mime");
+      } catch (e) { }
+
       stopRecording(function () {
-        if (pauseDetails) {
-          pauseDetails.open = false;
-        }
-        beginRecording();
+        stopMediaTracks();
+        window.location.href = contextPath + "/terms";
       });
+    });
+  }
+
+  // Cancel test form submit handler
+  const cancelTestForm = document.querySelector(".pause-menu__item-form");
+  if (cancelTestForm) {
+    cancelTestForm.addEventListener("submit", function () {
+      broadcastCloseSurveyTab();
+      sessionStorage.removeItem(storageKey);
+      sessionStorage.removeItem("uxvibe_audio_base64");
+      sessionStorage.removeItem("uxvibe_audio_filename");
+      sessionStorage.removeItem("uxvibe_audio_mimetype");
+      sessionStorage.removeItem("uxvibe-grabacion-tiempo");
+      stopRecording();
+      stopMediaTracks();
     });
   }
 

@@ -21,25 +21,25 @@
         </section>
 
         <div class="character-scale">
-          <div class="character-item">
+          <div class="character-item sam3-item-1">
             <img src="${pageContext.request.contextPath}/public/SAM 3/image-26@2x.png" alt="Sin control"
-              class="character" />
+              class="character sam3-img-1" />
           </div>
-          <div class="character-item">
+          <div class="character-item sam3-item-2">
             <img src="${pageContext.request.contextPath}/public/SAM 3/image-25@2x.png" alt="Bajo control"
-              class="character" />
+              class="character sam3-img-2" />
           </div>
-          <div class="character-item">
+          <div class="character-item sam3-item-3">
             <img src="${pageContext.request.contextPath}/public/SAM 3/image-29@2x.png" alt="Moderado"
-              class="character" />
+              class="character sam3-img-3" />
           </div>
-          <div class="character-item">
+          <div class="character-item sam3-item-4">
             <img src="${pageContext.request.contextPath}/public/SAM 3/image-28@2x.png" alt="Buen control"
-              class="character" />
+              class="character sam3-img-4" />
           </div>
-          <div class="character-item">
+          <div class="character-item sam3-item-5">
             <img src="${pageContext.request.contextPath}/public/SAM 3/image-27@2x.png" alt="Total control"
-              class="character" />
+              class="character sam3-img-5" />
           </div>
         </div>
 
@@ -71,6 +71,7 @@
       </main>
     </div>
     <script src="${pageContext.request.contextPath}/JavaScript/sam-3.js"></script>
+    <script src="${pageContext.request.contextPath}/JavaScript/survey-autoclose.js"></script>
   </body>
 
   </html>

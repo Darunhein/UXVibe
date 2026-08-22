@@ -26,7 +26,7 @@ public class CancelTestServlet extends HttpServlet {
       session.removeAttribute("currentTestCompletionRecorded");
     }
 
-    redirectTo(req, resp, "/tests");
+    redirectTo(req, resp, "/terms");
   }
 
   private void redirectTo(

@@ -21,23 +21,25 @@
         </section>
 
         <div class="emoji-scale">
-          <div class="emoji-item">
+          <div class="emoji-item sam1-item-1">
             <img src="${pageContext.request.contextPath}/public/SAM 1/image-19@2x.png" alt="Muy satisfecho"
-              class="emoji" />
+              class="emoji sam1-img-1" />
           </div>
-          <div class="emoji-item">
-            <img src="${pageContext.request.contextPath}/public/SAM 1/image-18@2x.png" alt="Satisfecho" class="emoji" />
+          <div class="emoji-item sam1-item-2">
+            <img src="${pageContext.request.contextPath}/public/SAM 1/image-18@2x.png" alt="Satisfecho"
+              class="emoji sam1-img-2" />
           </div>
-          <div class="emoji-item">
-            <img src="${pageContext.request.contextPath}/public/SAM 1/image-17@2x.png" alt="Neutral" class="emoji" />
+          <div class="emoji-item sam1-item-3">
+            <img src="${pageContext.request.contextPath}/public/SAM 1/image-17@2x.png" alt="Neutral"
+              class="emoji sam1-img-3" />
           </div>
-          <div class="emoji-item">
+          <div class="emoji-item sam1-item-4">
             <img src="${pageContext.request.contextPath}/public/SAM 1/image-16@2x.png" alt="Insatisfecho"
-              class="emoji" />
+              class="emoji sam1-img-4" />
           </div>
-          <div class="emoji-item">
+          <div class="emoji-item sam1-item-5">
             <img src="${pageContext.request.contextPath}/public/SAM 1/image-15@2x.png" alt="Muy insatisfecho"
-              class="emoji" />
+              class="emoji sam1-img-5" />
           </div>
         </div>
 
@@ -69,6 +71,7 @@
       </main>
     </div>
     <script src="${pageContext.request.contextPath}/JavaScript/sam-1.js"></script>
+    <script src="${pageContext.request.contextPath}/JavaScript/survey-autoclose.js"></script>
   </body>
 
   </html>

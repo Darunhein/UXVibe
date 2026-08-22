@@ -21,21 +21,25 @@
         </section>
 
         <div class="manikin-scale">
-          <div class="manikin-item">
+          <div class="manikin-item sam2-item-1">
             <img src="${pageContext.request.contextPath}/public/SAM 2/image-23@2x.png" alt="Sin impacto"
-              class="manikin" />
+              class="manikin sam2-img-1" />
           </div>
-          <div class="manikin-item">
-            <img src="${pageContext.request.contextPath}/public/SAM 2/image-22@2x.png" alt="Leve" class="manikin" />
+          <div class="manikin-item sam2-item-2">
+            <img src="${pageContext.request.contextPath}/public/SAM 2/image-22@2x.png" alt="Leve"
+              class="manikin sam2-img-2" />
           </div>
-          <div class="manikin-item">
-            <img src="${pageContext.request.contextPath}/public/SAM 2/image-21@2x.png" alt="Moderado" class="manikin" />
+          <div class="manikin-item sam2-item-3">
+            <img src="${pageContext.request.contextPath}/public/SAM 2/image-21@2x.png" alt="Moderado"
+              class="manikin sam2-img-3" />
           </div>
-          <div class="manikin-item">
-            <img src="${pageContext.request.contextPath}/public/SAM 2/image-20@2x.png" alt="Alto" class="manikin" />
+          <div class="manikin-item sam2-item-4">
+            <img src="${pageContext.request.contextPath}/public/SAM 2/image-20@2x.png" alt="Alto"
+              class="manikin sam2-img-4" />
           </div>
-          <div class="manikin-item">
-            <img src="${pageContext.request.contextPath}/public/SAM 2/image-24@2x.png" alt="Extremo" class="manikin" />
+          <div class="manikin-item sam2-item-5">
+            <img src="${pageContext.request.contextPath}/public/SAM 2/image-24@2x.png" alt="Extremo"
+              class="manikin sam2-img-5" />
           </div>
         </div>
 
@@ -67,6 +71,7 @@
       </main>
     </div>
     <script src="${pageContext.request.contextPath}/JavaScript/sam-2.js"></script>
+    <script src="${pageContext.request.contextPath}/JavaScript/survey-autoclose.js"></script>
   </body>
 
   </html>

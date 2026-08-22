@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const contextPath = document.body.getAttribute("data-context-path") || "";
     const recordingUrl = contextPath + "/test-recording";
-    const surveyUrl = contextPath + "/cuestionario-sb-1";
 
     // 1. Open the external system link in a new tab if provided
     const systemLink = btnComenzar.getAttribute("data-system-link");
@@ -44,15 +43,8 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    // 2. Open test recording in a child window so it can be programmatically closed later
-    try {
-      window.open(recordingUrl, "UXVibeRecorder", "width=800,height=600,menubar=no,toolbar=no,location=no,status=no");
-    } catch (err) {
-      console.warn("Popup blocked, navigating directly:", err);
-    }
-
-    // 3. Navigate the main tab into the first survey questionnaire
-    window.location.href = surveyUrl;
+    // 2. Navigate the active tab directly to the test recording screen
+    window.location.href = recordingUrl;
   });
 
   checkbox.addEventListener("change", updateState);
